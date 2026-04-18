@@ -28,9 +28,7 @@ export default function ComparisonPanel({
   const [timing, setTiming] = useState<TimingMethodKey>("GameTime");
   const [bigSplits, setBigSplits] = useState<boolean>(true);
   const [generateError, setGenerateError] = useState<string | null>(null);
-  const [webImport, setWebImport] = useState<WebImportKey | "">(
-    (Object.keys(WebLSS)[0] as WebImportKey) || "",
-  );
+  const [webImport, setWebImport] = useState<WebImportKey | "">("");
 
   const handleImport = async () => {
     setImportError(null);
@@ -131,6 +129,16 @@ export default function ComparisonPanel({
         <Button onClick={handleWebImport} disabled={!webImport}>
           Import ComSOB from Web
         </Button>
+        <Button
+          variant="secondary"
+          disabled={!webImport}
+          onClick={() => {
+            if (!webImport) return;
+            window.open(WebLSS[webImport].sheet_url, "_blank", "noopener,noreferrer");
+          }}
+        >
+          Go to Sheet
+        </Button>
       </div>
       {imported && importedFileName && (
         <div className="mt-4 rounded-lg border border-green-200 bg-green-50 p-4 text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-200">
@@ -179,11 +187,7 @@ export default function ComparisonPanel({
             Big Splits
           </span>
         </label>
-        <Button
-          variant="secondary"
-          onClick={handleGenerate}
-          disabled={!imported}
-        >
+        <Button onClick={handleGenerate} disabled={!imported}>
           Generate Comparison
         </Button>
       </div>

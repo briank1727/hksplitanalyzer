@@ -44,10 +44,14 @@ export default function HelpPanel({ open, onClose }: HelpPanelProps) {
           from a LiveSplit (.lss) file or directly from supported web sources.
           <br />
           <br />
-          Use the dropdowns to select which comparisons and timing methods you
-          want to use, and the differences will be displayed in the main view.
-          This can help you identify where you are gaining or losing time in
-          your runs and track your progress over time.
+          How to Use:
+          <br />
+          <br />
+          First import a LiveSplit file or fetch splits from a supported web
+          source. Once you have imported your splits, use the dropdowns to
+          select which comparisons and timing methods you want to use, and click
+          "Generate Comparison" on each comparison panel to see the results (for
+          ComSOBs it doesn't matter since they are just one time anyway).
           <br />
           <br />
           Check the{" "}
@@ -62,9 +66,14 @@ export default function HelpPanel({ open, onClose }: HelpPanelProps) {
           if you want to treat segments with multiple split times as a single
           segment, using the best time among them. This is useful for runs where
           you have multiple attempts at the same segment and want to see your
-          best performance for that segment. It is not simply a sum of best
-          segments, but rather a way to compress segments with multiple split
-          times into one segment for comparison purposes.
+          best performance for that segment. You do not necessarily have to turn
+          it off for lss files that don't have subsplits.
+          <br />
+          <br />
+          Once you've generated a comparison for both comparisons, you can
+          scroll down to the Delta section and click compare to see the
+          difference between the two comparisons for each split and
+          cumulatively.
           <br />
           <br />
           Important Note: DeltaSOB will not consider any split times that are
