@@ -3,9 +3,6 @@ import type { Timespan } from "@/lib/timespan";
 import { TS_ZERO } from "@/lib/timespan";
 
 export type LiveSplit = {
-  gameTitle: string;
-  categoryName: string;
-  offset: Timespan;
   segments: Segment[];
 };
 
@@ -85,9 +82,8 @@ export function parse_lss(contents: string): LiveSplit {
   });
 
   return {
-    gameTitle: String(run.GameName ?? ""),
-    categoryName: String(run.CategoryName ?? ""),
-    offset: readTimespan(run.Offset),
+    // gameTitle: String(run.GameName ?? ""),
+    // categoryName: String(run.CategoryName ?? ""),
     segments,
   };
 }

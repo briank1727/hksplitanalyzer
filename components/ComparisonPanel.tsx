@@ -3,13 +3,14 @@
 import { useState, type Dispatch, type SetStateAction } from "react";
 import Button from "@/components/Button";
 import LiveSplitView from "@/components/LiveSplitView";
-import { import_lss } from "@/lib/import_lss";
+import { import_lss, WebLSS } from "@/lib/import_lss";
 import { Comparison } from "@/lib/comparison";
 import { TimingMethod } from "@/lib/timing_method";
 import { parse_lss, type LiveSplit } from "@/lib/lss_logic";
 
 type ComparisonKey = keyof typeof Comparison;
 type TimingMethodKey = keyof typeof TimingMethod;
+type WebImportKey = keyof typeof WebLSS;
 
 export default function ComparisonPanel({
   title,
@@ -27,6 +28,9 @@ export default function ComparisonPanel({
   const [timing, setTiming] = useState<TimingMethodKey>("GameTime");
   const [bigSplits, setBigSplits] = useState<boolean>(true);
   const [generateError, setGenerateError] = useState<string | null>(null);
+  const [webImport, setWebImport] = useState<WebImportKey | "">(
+    (Object.keys(WebLSS)[0] as WebImportKey) || "",
+  );
 
   const handleImport = async () => {
     setImportError(null);
@@ -65,10 +69,42 @@ export default function ComparisonPanel({
           bigSplits,
         ),
       );
+      console.log(
+        Comparison[choice].generate_comparison(
+          imported,
+          TimingMethod[timing],
+          bigSplits,
+        ),
+      );
     } catch (e) {
       setGenerated(null);
       setGenerateError(
         e instanceof Error ? e.message : "Failed to generate comparison",
+      );
+    }
+  };
+
+  const handleWebImport = async () => {
+    if (!webImport) return;
+    setImportError(null);
+    setGenerated(null);
+    setGenerateError(null);
+    try {
+      const result = await WebLSS[webImport].fetch_lss();
+      if (result.success) {
+        setImported(result.data);
+        setImportedFileName(WebLSS[webImport].name);
+        console.log(result.data);
+      } else {
+        setImported(null);
+        setImportedFileName(null);
+        setImportError(result.error);
+      }
+    } catch (e) {
+      setImported(null);
+      setImportedFileName(null);
+      setImportError(
+        e instanceof Error ? e.message : "Failed to import from web",
       );
     }
   };
@@ -78,7 +114,24 @@ export default function ComparisonPanel({
       <h2 className="mb-4 text-2xl font-semibold tracking-tight text-black dark:text-zinc-50">
         {title}
       </h2>
-      <Button onClick={handleImport}>Import LSS</Button>
+      <Button onClick={handleImport}>Import LSS File</Button>
+      <div className="mt-4 flex items-center gap-2">
+        <select
+          value={webImport}
+          onChange={(e) => setWebImport(e.target.value as WebImportKey | "")}
+          className="h-11 rounded-full border border-black/10 bg-white px-4 text-base text-black dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
+        >
+          <option value="">Select Web Source...</option>
+          {(Object.keys(WebLSS) as WebImportKey[]).map((key) => (
+            <option key={key} value={key}>
+              {WebLSS[key].name}
+            </option>
+          ))}
+        </select>
+        <Button onClick={handleWebImport} disabled={!webImport}>
+          Import LSS from Web
+        </Button>
+      </div>
       {imported && importedFileName && (
         <div className="mt-4 rounded-lg border border-green-200 bg-green-50 p-4 text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-200">
           Successfully imported from {importedFileName}

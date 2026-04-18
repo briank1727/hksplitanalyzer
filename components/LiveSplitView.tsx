@@ -1,11 +1,7 @@
 import { type LiveSplit } from "@/lib/lss_logic";
 import { TimingMethod } from "@/lib/timing_method";
-import {
-  TS_ZERO,
-  formatTsDisplay,
-  tsAdd,
-  type Timespan,
-} from "@/lib/timespan";
+import { TS_ZERO, formatTsDisplay, tsAdd, type Timespan } from "@/lib/timespan";
+import { useEffect, useState } from "react";
 
 type TimingMethodKey = keyof typeof TimingMethod;
 

@@ -110,3 +110,31 @@ export function formatTsDisplay(ts: Timespan): string {
   }
   return `${sign}${minutes.toString()}:${seconds.toString().padStart(2, "0")}${fracStr}`;
 }
+
+// Format time strings in various formats (HH:MM:SS, MM:SS, H:MM:SS, etc.) into standard Timespan format
+export function formatTimespan(timeStr: string): Timespan {
+  if (!timeStr || timeStr.trim() === "") return TS_ZERO;
+
+  const trimmed = timeStr.trim();
+  const parts = trimmed.split(":");
+
+  // Handle HH:MM:SS or H:MM:SS or M:SS formats
+  if (parts.length === 3) {
+    // HH:MM:SS[.fffffff] format
+    const [hours, minutes, secondsPart] = parts;
+    const h = hours.padStart(2, "0");
+    const m = minutes.padStart(2, "0");
+    const s = secondsPart.padStart(2, "0");
+    return `${h}:${m}:${s}` as Timespan;
+  } else if (parts.length === 2) {
+    // MM:SS format (no hours)
+    const [minutes, seconds] = parts;
+    const h = "00";
+    const m = minutes.padStart(2, "0");
+    const s = seconds.padStart(2, "0");
+    return `${h}:${m}:${s}` as Timespan;
+  }
+
+  // Fallback to zero if format is unrecognized
+  return TS_ZERO;
+}
