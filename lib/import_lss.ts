@@ -1,4 +1,7 @@
-export function import_lss(): Promise<string | null> {
+export function import_lss(): Promise<{
+  content: string;
+  fileName: string;
+} | null> {
   return new Promise((resolve) => {
     const input = document.createElement("input");
     input.type = "file";
@@ -10,7 +13,8 @@ export function import_lss(): Promise<string | null> {
         return;
       }
       const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as string);
+      reader.onload = () =>
+        resolve({ content: reader.result as string, fileName: file.name });
       reader.onerror = () => resolve(null);
       reader.readAsText(file);
     };
