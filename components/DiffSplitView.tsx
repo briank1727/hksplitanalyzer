@@ -3,10 +3,12 @@
 import { useState } from "react";
 import Button from "@/components/Button";
 import type { LiveSplit } from "@/lib/lss_logic";
+import { DiffTime, DiffSortBy } from "@/lib/comparison";
 import { TimingMethod } from "@/lib/timing_method";
 import { formatTsDisplay, ticksToTs, tsToTicks } from "@/lib/timespan";
 
 type TimingMethodKey = keyof typeof TimingMethod;
+type DiffSortByKey = keyof typeof DiffSortBy;
 
 function formatDiff(ticks: bigint): string {
   if (ticks === 0n) return formatTsDisplay(ticksToTs(0n));
@@ -21,6 +23,7 @@ function formatPercent(p: number): string {
 }
 
 const PERCENT_FULL_INTENSITY = 20;
+const DIFF_FULL_INTENSITY_MS = 30000; // 30 seconds in milliseconds
 
 function percentBgStyle(p: number | null): { backgroundColor?: string } {
   if (p === null || p === 0) return {};
@@ -30,8 +33,35 @@ function percentBgStyle(p: number | null): { backgroundColor?: string } {
   const [from, to] =
     p > 0
       ? [
-          [254, 202, 202], // red-200
-          [127, 29, 29], //   red-900
+          [255, 170, 170], // red-200
+          [200, 20, 20], //   red-900
+        ]
+      : [
+          [187, 247, 208], // green-200
+          [20, 83, 45], //    green-900
+        ];
+  const r = Math.round(lerp(from[0], to[0]));
+  const g = Math.round(lerp(from[1], to[1]));
+  const b = Math.round(lerp(from[2], to[2]));
+  const a = lerp(0.35, 0.9).toFixed(3);
+  return { backgroundColor: `rgba(${r}, ${g}, ${b}, ${a})` };
+}
+
+function diffBgStyle(
+  ticks: bigint | null,
+  maxMs: number,
+): { backgroundColor?: string } {
+  if (ticks === null || ticks === 0n || maxMs === 0) return {};
+  // Convert ticks to milliseconds (10000 ticks = 1ms)
+  const ms = Number(ticks < 0n ? -ticks : ticks) / 10000;
+  const t = Math.min(ms / maxMs, 1);
+  const lerp = (a: number, b: number) => a + (b - a) * t;
+  // light → dark, with alpha also ramping up so the dark bg still shows through low magnitudes
+  const [from, to] =
+    ticks > 0n
+      ? [
+          [255, 170, 170], // red-200
+          [200, 20, 20], //   red-900
         ]
       : [
           [187, 247, 208], // green-200
@@ -53,6 +83,8 @@ export default function DiffSplitView({
 }) {
   const [error, setError] = useState<string | null>(null);
   const [warning, setWarning] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<DiffSortByKey>("Order");
+  const [isAscending, setIsAscending] = useState(true);
   const [timing, setTiming] = useState<TimingMethodKey>("GameTime");
   const [local1, setLocal1] = useState<LiveSplit | null>(null);
   const [local2, setLocal2] = useState<LiveSplit | null>(null);
@@ -82,11 +114,6 @@ export default function DiffSplitView({
     for (let i = 0; i < copy1.segments.length; i++) {
       const a = copy1.segments[i];
       const b = copy2.segments[i];
-      if (a.name !== b.name) {
-        mismatches.push(
-          `Split ${i + 1}: name "${a.name}" vs "${b.name}"`,
-        );
-      }
       if (a.auto_split_name !== b.auto_split_name) {
         mismatches.push(
           `Split ${i + 1}: auto split "${a.auto_split_name}" vs "${b.auto_split_name}"`,
@@ -113,24 +140,36 @@ export default function DiffSplitView({
 
   const tm = TimingMethod[timing];
   const rows = showDiff
-    ? local1!.segments.map((seg1, i) => {
-        const seg2 = local2!.segments[i];
-        const t1 =
-          seg1.split_times.length === 1
-            ? tsToTicks(tm.time_of_split(seg1.split_times[0]))
-            : null;
-        const t2 =
-          seg2.split_times.length === 1
-            ? tsToTicks(tm.time_of_split(seg2.split_times[0]))
-            : null;
-        const diff = t1 !== null && t2 !== null ? t1 - t2 : null;
-        const percent =
-          diff !== null && t2 !== null && t2 !== 0n
-            ? (Number(diff) / Number(t2)) * 100
-            : null;
-        return { name: seg1.name, t1, t2, diff, percent };
-      })
+    ? (local1!.segments
+        .map((seg1, i) => {
+          const seg2 = local2!.segments[i];
+          const time1 =
+            seg1.split_times.length === 1
+              ? tm.time_of_split(seg1.split_times[0])
+              : null;
+          const time2 =
+            seg2.split_times.length === 1
+              ? tm.time_of_split(seg2.split_times[0])
+              : null;
+          if (time1 === null || time2 === null) return null;
+          return new DiffTime(seg1.name, time1, time2);
+        })
+        .filter((row) => row !== null) as DiffTime[])
     : [];
+
+  // Calculate max absolute diff in milliseconds for gradient scaling
+  const maxDiffMs =
+    rows.length > 0
+      ? Math.max(...rows.map((r) => Math.abs(Number(r.diff())) / 10000))
+      : 0;
+  // Use at least 1ms as threshold to avoid division by zero
+  const diffThresholdMs = Math.max(maxDiffMs, 1);
+
+  // Apply sorting
+  let sortedRows = DiffSortBy[sortBy].sort(rows);
+  if (!isAscending) {
+    sortedRows = sortedRows.reverse();
+  }
 
   return (
     <div>
@@ -138,10 +177,7 @@ export default function DiffSplitView({
         Diff
       </h2>
       <div className="flex items-center gap-2">
-        <Button
-          onClick={handleCompare}
-          disabled={!comparison1 || !comparison2}
-        >
+        <Button onClick={handleCompare} disabled={!comparison1 || !comparison2}>
           Compare
         </Button>
         <Button
@@ -162,6 +198,23 @@ export default function DiffSplitView({
             </option>
           ))}
         </select>
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value as DiffSortByKey)}
+          className="h-11 rounded-full border border-black/10 bg-white px-4 text-base text-black dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
+        >
+          {(Object.keys(DiffSortBy) as DiffSortByKey[]).map((key) => (
+            <option key={key} value={key}>
+              {DiffSortBy[key].name}
+            </option>
+          ))}
+        </select>
+        <Button
+          variant="secondary"
+          onClick={() => setIsAscending(!isAscending)}
+        >
+          {isAscending ? "Ascending" : "Descending"}
+        </Button>
       </div>
       {error && (
         <div
@@ -208,26 +261,26 @@ export default function DiffSplitView({
               </tr>
             </thead>
             <tbody>
-              {rows.map((row, i) => (
-                <tr
-                  key={i}
-                  className="border-b border-white/5 last:border-b-0"
-                >
+              {sortedRows.map((row, i) => (
+                <tr key={i} className="border-b border-white/5 last:border-b-0">
                   <td className="text-left px-4 py-1.5">{row.name}</td>
                   <td className="text-right px-4 py-1.5 tabular-nums font-semibold whitespace-nowrap">
-                    {row.t1 !== null ? formatTsDisplay(ticksToTs(row.t1)) : ""}
+                    {formatTsDisplay(row.time1)}
                   </td>
                   <td className="text-right px-4 py-1.5 tabular-nums font-semibold whitespace-nowrap">
-                    {row.t2 !== null ? formatTsDisplay(ticksToTs(row.t2)) : ""}
-                  </td>
-                  <td className="text-right px-4 py-1.5 tabular-nums font-semibold whitespace-nowrap">
-                    {row.diff !== null ? formatDiff(row.diff) : ""}
+                    {formatTsDisplay(row.time2)}
                   </td>
                   <td
-                    style={percentBgStyle(row.percent)}
+                    style={diffBgStyle(row.diff(), diffThresholdMs)}
                     className="text-right px-4 py-1.5 tabular-nums font-semibold whitespace-nowrap"
                   >
-                    {row.percent !== null ? formatPercent(row.percent) : ""}
+                    {formatDiff(row.diff())}
+                  </td>
+                  <td
+                    style={percentBgStyle(row.percent())}
+                    className="text-right px-4 py-1.5 tabular-nums font-semibold whitespace-nowrap"
+                  >
+                    {formatPercent(row.percent())}
                   </td>
                 </tr>
               ))}

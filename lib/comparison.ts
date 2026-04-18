@@ -1,5 +1,6 @@
 import type { LiveSplit } from "@/lib/lss_logic";
 import type { TimingMethodKind } from "@/lib/timing_method";
+import type { Timespan } from "@/lib/timespan";
 import { TS_ZERO, tsAdd, tsAvg, tsCompare, tsToTicks } from "@/lib/timespan";
 
 export type ComparisonKind = {
@@ -10,6 +11,118 @@ export type ComparisonKind = {
     bigSplits: boolean,
   ) => LiveSplit;
 };
+
+export class DiffTime {
+  name: string;
+  time1: Timespan;
+  time2: Timespan;
+
+  constructor(name: string, time1: Timespan, time2: Timespan) {
+    this.name = name;
+    this.time1 = time1;
+    this.time2 = time2;
+  }
+
+  diff(): bigint {
+    const t1 = tsToTicks(this.time1);
+    const t2 = tsToTicks(this.time2);
+    return t1 - t2;
+  }
+
+  percent(): number {
+    const t1 = tsToTicks(this.time1);
+    const t2 = tsToTicks(this.time2);
+    if (t2 === 0n) return 0;
+    const diff = t1 - t2;
+    return (Number(diff) / Number(t2)) * 100;
+  }
+}
+
+type DiffSortByKind = {
+  name: string;
+  sort(rows: DiffTime[]): DiffTime[];
+};
+
+export const DiffSortBy = {
+  Order: {
+    name: "Order",
+    sort(rows: DiffTime[]): DiffTime[] {
+      return rows;
+    },
+  } as DiffSortByKind,
+  Name: {
+    name: "Name",
+    sort(rows: DiffTime[]): DiffTime[] {
+      return [...rows]
+        .map((row, index) => ({ row, index }))
+        .sort((a, b) => {
+          const cmp = a.row.name.localeCompare(b.row.name);
+          return cmp !== 0 ? cmp : a.index - b.index;
+        })
+        .map(({ row }) => row);
+    },
+  } as DiffSortByKind,
+  Comparison1: {
+    name: "Comparison 1",
+    sort(rows: DiffTime[]): DiffTime[] {
+      return [...rows]
+        .map((row, index) => ({ row, index }))
+        .sort((a, b) => {
+          const aVal = tsToTicks(a.row.time1);
+          const bVal = tsToTicks(b.row.time1);
+          if (aVal < bVal) return -1;
+          if (aVal > bVal) return 1;
+          return a.index - b.index;
+        })
+        .map(({ row }) => row);
+    },
+  } as DiffSortByKind,
+  Comparison2: {
+    name: "Comparison 2",
+    sort(rows: DiffTime[]): DiffTime[] {
+      return [...rows]
+        .map((row, index) => ({ row, index }))
+        .sort((a, b) => {
+          const aVal = tsToTicks(a.row.time2);
+          const bVal = tsToTicks(b.row.time2);
+          if (aVal < bVal) return -1;
+          if (aVal > bVal) return 1;
+          return a.index - b.index;
+        })
+        .map(({ row }) => row);
+    },
+  } as DiffSortByKind,
+  Diff: {
+    name: "Diff",
+    sort(rows: DiffTime[]): DiffTime[] {
+      return [...rows]
+        .map((row, index) => ({ row, index }))
+        .sort((a, b) => {
+          const aVal = a.row.diff();
+          const bVal = b.row.diff();
+          if (aVal < bVal) return -1;
+          if (aVal > bVal) return 1;
+          return a.index - b.index;
+        })
+        .map(({ row }) => row);
+    },
+  } as DiffSortByKind,
+  Percent: {
+    name: "Percent",
+    sort(rows: DiffTime[]): DiffTime[] {
+      return [...rows]
+        .map((row, index) => ({ row, index }))
+        .sort((a, b) => {
+          const aVal = a.row.percent();
+          const bVal = b.row.percent();
+          if (aVal < bVal) return -1;
+          if (aVal > bVal) return 1;
+          return a.index - b.index;
+        })
+        .map(({ row }) => row);
+    },
+  } as DiffSortByKind,
+} as const satisfies Record<string, DiffSortByKind>;
 
 function compress_big_splits(ls: LiveSplit): LiveSplit {
   const result: typeof ls.segments = [];
