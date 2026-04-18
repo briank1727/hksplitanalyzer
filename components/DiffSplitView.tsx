@@ -1,0 +1,240 @@
+"use client";
+
+import { useState } from "react";
+import Button from "@/components/Button";
+import type { LiveSplit } from "@/lib/lss_logic";
+import { TimingMethod } from "@/lib/timing_method";
+import { formatTsDisplay, ticksToTs, tsToTicks } from "@/lib/timespan";
+
+type TimingMethodKey = keyof typeof TimingMethod;
+
+function formatDiff(ticks: bigint): string {
+  if (ticks === 0n) return formatTsDisplay(ticksToTs(0n));
+  const sign = ticks > 0n ? "+" : "-";
+  const abs = ticks < 0n ? -ticks : ticks;
+  return sign + formatTsDisplay(ticksToTs(abs));
+}
+
+function formatPercent(p: number): string {
+  const sign = p > 0 ? "+" : "";
+  return `${sign}${p.toFixed(2)}%`;
+}
+
+const PERCENT_FULL_INTENSITY = 20;
+
+function percentBgStyle(p: number | null): { backgroundColor?: string } {
+  if (p === null || p === 0) return {};
+  const t = Math.min(Math.abs(p) / PERCENT_FULL_INTENSITY, 1);
+  const lerp = (a: number, b: number) => a + (b - a) * t;
+  // light → dark, with alpha also ramping up so the dark bg still shows through low magnitudes
+  const [from, to] =
+    p > 0
+      ? [
+          [254, 202, 202], // red-200
+          [127, 29, 29], //   red-900
+        ]
+      : [
+          [187, 247, 208], // green-200
+          [20, 83, 45], //    green-900
+        ];
+  const r = Math.round(lerp(from[0], to[0]));
+  const g = Math.round(lerp(from[1], to[1]));
+  const b = Math.round(lerp(from[2], to[2]));
+  const a = lerp(0.35, 0.9).toFixed(3);
+  return { backgroundColor: `rgba(${r}, ${g}, ${b}, ${a})` };
+}
+
+export default function DiffSplitView({
+  comparison1,
+  comparison2,
+}: {
+  comparison1: LiveSplit | null;
+  comparison2: LiveSplit | null;
+}) {
+  const [error, setError] = useState<string | null>(null);
+  const [warning, setWarning] = useState<string | null>(null);
+  const [timing, setTiming] = useState<TimingMethodKey>("GameTime");
+  const [local1, setLocal1] = useState<LiveSplit | null>(null);
+  const [local2, setLocal2] = useState<LiveSplit | null>(null);
+
+  const handleCompare = () => {
+    setError(null);
+    setWarning(null);
+    setLocal1(null);
+    setLocal2(null);
+
+    if (!comparison1 || !comparison2) {
+      setError("Both comparisons must be generated before comparing.");
+      return;
+    }
+
+    if (comparison1.segments.length !== comparison2.segments.length) {
+      setError(
+        `Comparisons have different numbers of splits (${comparison1.segments.length} vs ${comparison2.segments.length}).`,
+      );
+      return;
+    }
+
+    const copy1 = structuredClone(comparison1);
+    const copy2 = structuredClone(comparison2);
+
+    const mismatches: string[] = [];
+    for (let i = 0; i < copy1.segments.length; i++) {
+      const a = copy1.segments[i];
+      const b = copy2.segments[i];
+      if (a.name !== b.name) {
+        mismatches.push(
+          `Split ${i + 1}: name "${a.name}" vs "${b.name}"`,
+        );
+      }
+      if (a.auto_split_name !== b.auto_split_name) {
+        mismatches.push(
+          `Split ${i + 1}: auto split "${a.auto_split_name}" vs "${b.auto_split_name}"`,
+        );
+      }
+    }
+
+    if (mismatches.length > 0) {
+      setWarning(
+        `Segment metadata differs between comparisons; proceeding anyway:\n${mismatches.join("\n")}`,
+      );
+    }
+    setLocal1(copy1);
+    setLocal2(copy2);
+  };
+
+  const handleSwap = () => {
+    setLocal1(local2);
+    setLocal2(local1);
+  };
+
+  const valid = local1 !== null && local2 !== null;
+  const showDiff = valid;
+
+  const tm = TimingMethod[timing];
+  const rows = showDiff
+    ? local1!.segments.map((seg1, i) => {
+        const seg2 = local2!.segments[i];
+        const t1 =
+          seg1.split_times.length === 1
+            ? tsToTicks(tm.time_of_split(seg1.split_times[0]))
+            : null;
+        const t2 =
+          seg2.split_times.length === 1
+            ? tsToTicks(tm.time_of_split(seg2.split_times[0]))
+            : null;
+        const diff = t1 !== null && t2 !== null ? t1 - t2 : null;
+        const percent =
+          diff !== null && t2 !== null && t2 !== 0n
+            ? (Number(diff) / Number(t2)) * 100
+            : null;
+        return { name: seg1.name, t1, t2, diff, percent };
+      })
+    : [];
+
+  return (
+    <div>
+      <h2 className="mb-4 text-2xl font-semibold tracking-tight text-black dark:text-zinc-50">
+        Diff
+      </h2>
+      <div className="flex items-center gap-2">
+        <Button
+          onClick={handleCompare}
+          disabled={!comparison1 || !comparison2}
+        >
+          Compare
+        </Button>
+        <Button
+          variant="secondary"
+          onClick={handleSwap}
+          disabled={!local1 && !local2}
+        >
+          Swap
+        </Button>
+        <select
+          value={timing}
+          onChange={(e) => setTiming(e.target.value as TimingMethodKey)}
+          className="h-11 rounded-full border border-black/10 bg-white px-4 text-base text-black dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
+        >
+          {(Object.keys(TimingMethod) as TimingMethodKey[]).map((key) => (
+            <option key={key} value={key}>
+              {TimingMethod[key].name}
+            </option>
+          ))}
+        </select>
+      </div>
+      {error && (
+        <div
+          role="alert"
+          className="mt-4 text-sm rounded p-3 border border-red-500/40 bg-red-500/10 text-red-700 dark:text-red-300"
+        >
+          <div className="font-semibold">Comparison failed</div>
+          <div className="mt-1 break-words">{error}</div>
+        </div>
+      )}
+      {warning && (
+        <div
+          role="alert"
+          className="mt-4 text-sm rounded p-3 border border-yellow-500/40 bg-yellow-500/10 text-yellow-700 dark:text-yellow-300"
+        >
+          <div className="font-semibold">Warning</div>
+          <pre className="mt-1 whitespace-pre-wrap break-words font-sans">
+            {warning}
+          </pre>
+        </div>
+      )}
+      {valid && !warning && (
+        <div
+          role="status"
+          className="mt-4 text-sm rounded p-3 border border-green-500/40 bg-green-500/10 text-green-700 dark:text-green-300"
+        >
+          Comparisons are valid.
+        </div>
+      )}
+      {showDiff && (
+        <div className="mt-4 max-h-[60vh] overflow-auto rounded bg-[#2a1f3d] text-zinc-100 text-sm">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="border-b border-white/10 text-zinc-300">
+                <th className="text-left font-semibold px-4 py-2"></th>
+                <th className="text-right font-semibold px-4 py-2">
+                  Comparison 1 Segment
+                </th>
+                <th className="text-right font-semibold px-4 py-2">
+                  Comparison 2 Segment
+                </th>
+                <th className="text-right font-semibold px-4 py-2">+/-</th>
+                <th className="text-right font-semibold px-4 py-2">%</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, i) => (
+                <tr
+                  key={i}
+                  className="border-b border-white/5 last:border-b-0"
+                >
+                  <td className="text-left px-4 py-1.5">{row.name}</td>
+                  <td className="text-right px-4 py-1.5 tabular-nums font-semibold whitespace-nowrap">
+                    {row.t1 !== null ? formatTsDisplay(ticksToTs(row.t1)) : ""}
+                  </td>
+                  <td className="text-right px-4 py-1.5 tabular-nums font-semibold whitespace-nowrap">
+                    {row.t2 !== null ? formatTsDisplay(ticksToTs(row.t2)) : ""}
+                  </td>
+                  <td className="text-right px-4 py-1.5 tabular-nums font-semibold whitespace-nowrap">
+                    {row.diff !== null ? formatDiff(row.diff) : ""}
+                  </td>
+                  <td
+                    style={percentBgStyle(row.percent)}
+                    className="text-right px-4 py-1.5 tabular-nums font-semibold whitespace-nowrap"
+                  >
+                    {row.percent !== null ? formatPercent(row.percent) : ""}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}

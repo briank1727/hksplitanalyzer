@@ -1,18 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import Button from "@/components/Button";
 import LiveSplitView from "@/components/LiveSplitView";
 import { import_lss } from "@/lib/import_lss";
-import { Comparison, parse_lss, type LiveSplit } from "@/lib/lss_logic";
+import { Comparison } from "@/lib/comparison";
+import { TimingMethod } from "@/lib/timing_method";
+import { parse_lss, type LiveSplit } from "@/lib/lss_logic";
 
 type ComparisonKey = keyof typeof Comparison;
+type TimingMethodKey = keyof typeof TimingMethod;
 
-export default function ComparisonPanel({ title }: { title: string }) {
+export default function ComparisonPanel({
+  title,
+  generated,
+  setGenerated,
+}: {
+  title: string;
+  generated: LiveSplit | null;
+  setGenerated: Dispatch<SetStateAction<LiveSplit | null>>;
+}) {
   const [imported, setImported] = useState<LiveSplit | null>(null);
   const [importError, setImportError] = useState<string | null>(null);
   const [choice, setChoice] = useState<ComparisonKey>("PersonalBest");
-  const [generated, setGenerated] = useState<LiveSplit | null>(null);
+  const [timing, setTiming] = useState<TimingMethodKey>("GameTime");
   const [generateError, setGenerateError] = useState<string | null>(null);
 
   const handleImport = async () => {
@@ -42,7 +53,9 @@ export default function ComparisonPanel({ title }: { title: string }) {
     if (!imported) return;
     setGenerateError(null);
     try {
-      setGenerated(Comparison[choice].generate_comparison(imported));
+      setGenerated(
+        Comparison[choice].generate_comparison(imported, TimingMethod[timing]),
+      );
     } catch (e) {
       setGenerated(null);
       setGenerateError(
@@ -61,6 +74,7 @@ export default function ComparisonPanel({ title }: { title: string }) {
         data={imported}
         error={importError}
         errorTitle="Import failed"
+        timingMethod={timing}
       />
       <div className="mt-6 flex items-center gap-2">
         <select
@@ -72,6 +86,18 @@ export default function ComparisonPanel({ title }: { title: string }) {
           {(Object.keys(Comparison) as ComparisonKey[]).map((key) => (
             <option key={key} value={key}>
               {Comparison[key].name}
+            </option>
+          ))}
+        </select>
+        <select
+          value={timing}
+          onChange={(e) => setTiming(e.target.value as TimingMethodKey)}
+          disabled={!imported}
+          className="h-11 rounded-full border border-black/10 bg-white px-4 text-base text-black disabled:opacity-50 disabled:pointer-events-none dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
+        >
+          {(Object.keys(TimingMethod) as TimingMethodKey[]).map((key) => (
+            <option key={key} value={key}>
+              {TimingMethod[key].name}
             </option>
           ))}
         </select>
@@ -87,6 +113,7 @@ export default function ComparisonPanel({ title }: { title: string }) {
         data={generated}
         error={generateError}
         errorTitle="Comparison failed"
+        timingMethod={timing}
       />
     </>
   );
