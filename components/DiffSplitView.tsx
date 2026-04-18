@@ -174,7 +174,7 @@ export default function DiffSplitView({
   return (
     <div>
       <h2 className="mb-4 text-2xl font-semibold tracking-tight text-black dark:text-zinc-50">
-        Diff
+        Delta
       </h2>
       <div className="flex items-center gap-2">
         <Button onClick={handleCompare} disabled={!comparison1 || !comparison2}>

@@ -129,7 +129,7 @@ export default function ComparisonPanel({
           ))}
         </select>
         <Button onClick={handleWebImport} disabled={!webImport}>
-          Import LSS from Web
+          Import ComSOB from Web
         </Button>
       </div>
       {imported && importedFileName && (
