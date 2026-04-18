@@ -3,7 +3,7 @@
 import { useState, type Dispatch, type SetStateAction } from "react";
 import Button from "@/components/Button";
 import LiveSplitView from "@/components/LiveSplitView";
-import { import_lss, WebLSS } from "@/lib/import_lss";
+import { import_lss, WebLSS, fetch_web_lss } from "@/lib/import_lss";
 import { Comparison } from "@/lib/comparison";
 import { TimingMethod } from "@/lib/timing_method";
 import { parse_lss, type LiveSplit } from "@/lib/lss_logic";
@@ -90,7 +90,7 @@ export default function ComparisonPanel({
     setGenerated(null);
     setGenerateError(null);
     try {
-      const result = await WebLSS[webImport].fetch_lss();
+      const result = await fetch_web_lss(WebLSS[webImport]);
       if (result.success) {
         setImported(result.data);
         setImportedFileName(WebLSS[webImport].name);

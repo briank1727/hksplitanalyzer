@@ -92,17 +92,15 @@ export function csv_to_lss(
   return { segments };
 }
 
-export function fetch_and_parse_lss(
-  topLeftCell: string,
-  bottomRightCell: string,
-  sheetUrl: string,
-  splitNamesIdx: number,
-  autoSplitNamesIdx: number,
-  realTimesIdx: number,
-  gameTimesIdx: number,
+export function fetch_web_lss(
+  source: WebLSSKind,
 ): Promise<FetchLSSResult> {
   return new Promise(async (resolve) => {
-    const result = await extract_cells(topLeftCell, bottomRightCell, sheetUrl);
+    const result = await extract_cells(
+      source.top_left_cell,
+      source.bottom_right_cell,
+      source.sheet_url,
+    );
     if (!result.success) {
       resolve({ success: false, error: result.error });
       return;
@@ -110,10 +108,10 @@ export function fetch_and_parse_lss(
     try {
       const liveSplit: LiveSplit = csv_to_lss(
         result.data,
-        splitNamesIdx,
-        autoSplitNamesIdx,
-        realTimesIdx,
-        gameTimesIdx,
+        source.split_names_idx,
+        source.auto_split_names_idx,
+        source.real_times_idx,
+        source.game_times_idx,
       );
       resolve({ success: true, data: liveSplit });
     } catch (error) {
@@ -124,94 +122,82 @@ export function fetch_and_parse_lss(
   });
 }
 
-type WebLSSKind = {
+export type WebLSSKind = {
   name: string;
-  fetch_lss: () => Promise<FetchLSSResult>;
+  top_left_cell: string;
+  bottom_right_cell: string;
+  sheet_url: string;
+  split_names_idx: number;
+  auto_split_names_idx: number;
+  real_times_idx: number;
+  game_times_idx: number;
 };
 
 export const WebLSS = {
   TrueEnding891New: {
     name: "True Ending 891 (New)",
-    fetch_lss: async () => {
-      return await fetch_and_parse_lss(
-        "B5",
-        "D68",
-        "https://docs.google.com/spreadsheets/d/1xZk3XRwhGBW64vsMfUhLkfUdud0V1iuWYxjg8v9ssGs/edit?gid=463520651#gid=463520651",
-        0,
-        1,
-        2,
-        2,
-      );
-    },
+    top_left_cell: "B5",
+    bottom_right_cell: "D68",
+    sheet_url:
+      "https://docs.google.com/spreadsheets/d/1xZk3XRwhGBW64vsMfUhLkfUdud0V1iuWYxjg8v9ssGs/edit?gid=463520651#gid=463520651",
+    split_names_idx: 0,
+    auto_split_names_idx: 1,
+    real_times_idx: 2,
+    game_times_idx: 2,
   },
   TrueEnding891Old: {
     name: "True Ending 891 (Old)",
-    fetch_lss: async () => {
-      return await fetch_and_parse_lss(
-        "B3",
-        "D61",
-        "https://docs.google.com/spreadsheets/d/1xZk3XRwhGBW64vsMfUhLkfUdud0V1iuWYxjg8v9ssGs/edit?gid=1416049146#gid=1416049146",
-        0,
-        1,
-        2,
-        2,
-      );
-    },
+    top_left_cell: "B3",
+    bottom_right_cell: "D61",
+    sheet_url:
+      "https://docs.google.com/spreadsheets/d/1xZk3XRwhGBW64vsMfUhLkfUdud0V1iuWYxjg8v9ssGs/edit?gid=1416049146#gid=1416049146",
+    split_names_idx: 0,
+    auto_split_names_idx: 1,
+    real_times_idx: 2,
+    game_times_idx: 2,
   },
   AnyKeyRoute: {
     name: "Any% Key Route",
-    fetch_lss: async () => {
-      return await fetch_and_parse_lss(
-        "B4",
-        "D25",
-        "https://docs.google.com/spreadsheets/d/1-Hy5k_h9dBUUPlwh_I14K-DEwGcNdVQ0utI-KX56d8c/edit?gid=2094941807#gid=2094941807",
-        0,
-        1,
-        2,
-        2,
-      );
-    },
+    top_left_cell: "B4",
+    bottom_right_cell: "D25",
+    sheet_url:
+      "https://docs.google.com/spreadsheets/d/1-Hy5k_h9dBUUPlwh_I14K-DEwGcNdVQ0utI-KX56d8c/edit?gid=2094941807#gid=2094941807",
+    split_names_idx: 0,
+    auto_split_names_idx: 1,
+    real_times_idx: 2,
+    game_times_idx: 2,
   },
   AnyKeyRouteOldComsobPoints: {
     name: "Any% Key Route (Old ComSOB Points)",
-    fetch_lss: async () => {
-      return await fetch_and_parse_lss(
-        "B4",
-        "D23",
-        "https://docs.google.com/spreadsheets/d/1-Hy5k_h9dBUUPlwh_I14K-DEwGcNdVQ0utI-KX56d8c/edit?gid=443305765#gid=443305765",
-        0,
-        1,
-        2,
-        2,
-      );
-    },
+    top_left_cell: "B4",
+    bottom_right_cell: "D23",
+    sheet_url:
+      "https://docs.google.com/spreadsheets/d/1-Hy5k_h9dBUUPlwh_I14K-DEwGcNdVQ0utI-KX56d8c/edit?gid=443305765#gid=443305765",
+    split_names_idx: 0,
+    auto_split_names_idx: 1,
+    real_times_idx: 2,
+    game_times_idx: 2,
   },
   AnyBellsRoute: {
     name: "Any% Bells Route",
-    fetch_lss: async () => {
-      return await fetch_and_parse_lss(
-        "B4",
-        "D26",
-        "https://docs.google.com/spreadsheets/d/1-Hy5k_h9dBUUPlwh_I14K-DEwGcNdVQ0utI-KX56d8c/edit?gid=7316953#gid=7316953",
-        0,
-        1,
-        2,
-        2,
-      );
-    },
+    top_left_cell: "B4",
+    bottom_right_cell: "D26",
+    sheet_url:
+      "https://docs.google.com/spreadsheets/d/1-Hy5k_h9dBUUPlwh_I14K-DEwGcNdVQ0utI-KX56d8c/edit?gid=7316953#gid=7316953",
+    split_names_idx: 0,
+    auto_split_names_idx: 1,
+    real_times_idx: 2,
+    game_times_idx: 2,
   },
   AnyBellsRouteOldComsobPoints: {
     name: "Any% Bells Route (Old ComSOB Points)",
-    fetch_lss: async () => {
-      return await fetch_and_parse_lss(
-        "B4",
-        "D25",
-        "https://docs.google.com/spreadsheets/d/1-Hy5k_h9dBUUPlwh_I14K-DEwGcNdVQ0utI-KX56d8c/edit?gid=43527522#gid=43527522",
-        0,
-        1,
-        2,
-        2,
-      );
-    },
+    top_left_cell: "B4",
+    bottom_right_cell: "D25",
+    sheet_url:
+      "https://docs.google.com/spreadsheets/d/1-Hy5k_h9dBUUPlwh_I14K-DEwGcNdVQ0utI-KX56d8c/edit?gid=43527522#gid=43527522",
+    split_names_idx: 0,
+    auto_split_names_idx: 1,
+    real_times_idx: 2,
+    game_times_idx: 2,
   },
 } as const satisfies Record<string, WebLSSKind>;

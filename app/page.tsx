@@ -3,14 +3,25 @@
 import { useState } from "react";
 import ComparisonPanel from "@/components/ComparisonPanel";
 import DiffSplitView from "@/components/DiffSplitView";
+import HelpPanel from "@/components/HelpPanel";
 import type { LiveSplit } from "@/lib/lss_logic";
 
 export default function Home() {
   const [comparison1, setComparison1] = useState<LiveSplit | null>(null);
   const [comparison2, setComparison2] = useState<LiveSplit | null>(null);
+  const [helpOpen, setHelpOpen] = useState(false);
 
   return (
     <div className="flex flex-col flex-1 bg-zinc-50 font-sans dark:bg-black">
+      <button
+        type="button"
+        aria-label="Help"
+        onClick={() => setHelpOpen(true)}
+        className="fixed top-4 right-4 z-40 inline-flex h-10 w-10 items-center justify-center rounded-full border border-black/10 bg-white/80 text-black backdrop-blur hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40 dark:border-white/15 dark:bg-black/60 dark:text-zinc-50 dark:hover:bg-white/10 dark:focus-visible:ring-white/40"
+      >
+        <span className="text-lg font-semibold">?</span>
+      </button>
+      <HelpPanel open={helpOpen} onClose={() => setHelpOpen(false)} />
       <header className="flex flex-col items-center justify-center text-center basis-1/3 px-8 pt-12">
         <h1 className="text-5xl sm:text-6xl font-semibold tracking-tight text-black dark:text-zinc-50">
           DeltaSOB
