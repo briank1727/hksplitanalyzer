@@ -2,6 +2,7 @@
 
 import { useState, type Dispatch, type SetStateAction } from "react";
 import Button from "@/components/Button";
+import Dialog from "@/components/Dialog";
 import LiveSplitView from "@/components/LiveSplitView";
 import { import_lss, WebLSS, fetch_web_lss } from "@/lib/import_lss";
 import { Comparison } from "@/lib/comparison";
@@ -12,7 +13,7 @@ type ComparisonKey = keyof typeof Comparison;
 type TimingMethodKey = keyof typeof TimingMethod;
 type WebImportKey = keyof typeof WebLSS;
 
-export default function ComparisonPanel({
+export default function TimelinePanel({
   title,
   generated,
   setGenerated,
@@ -28,7 +29,7 @@ export default function ComparisonPanel({
   const [timing, setTiming] = useState<TimingMethodKey>("GameTime");
   const [bigSplits, setBigSplits] = useState<boolean>(true);
   const [generateError, setGenerateError] = useState<string | null>(null);
-  const [webImport, setWebImport] = useState<WebImportKey | "">("");
+  const [webDialogOpen, setWebDialogOpen] = useState<boolean>(false);
 
   const handleImport = async () => {
     setImportError(null);
@@ -82,16 +83,16 @@ export default function ComparisonPanel({
     }
   };
 
-  const handleWebImport = async () => {
-    if (!webImport) return;
+  const handleWebImport = async (key: WebImportKey) => {
+    setWebDialogOpen(false);
     setImportError(null);
     setGenerated(null);
     setGenerateError(null);
     try {
-      const result = await fetch_web_lss(WebLSS[webImport]);
+      const result = await fetch_web_lss(WebLSS[key]);
       if (result.success) {
         setImported(result.data);
-        setImportedFileName(WebLSS[webImport].name);
+        setImportedFileName(WebLSS[key].name);
         console.log(result.data);
       } else {
         setImported(null);
@@ -112,34 +113,37 @@ export default function ComparisonPanel({
       <h2 className="mb-4 text-2xl font-semibold tracking-tight text-black dark:text-zinc-50">
         {title}
       </h2>
-      <Button onClick={handleImport}>Import LSS File</Button>
-      <div className="mt-4 flex items-center gap-2">
-        <select
-          value={webImport}
-          onChange={(e) => setWebImport(e.target.value as WebImportKey | "")}
-          className="h-11 rounded-full border border-black/10 bg-white px-4 text-base text-black dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
-        >
-          <option value="">Select Web Source...</option>
-          {(Object.keys(WebLSS) as WebImportKey[]).map((key) => (
-            <option key={key} value={key}>
-              {WebLSS[key].name}
-            </option>
-          ))}
-        </select>
-        <Button onClick={handleWebImport} disabled={!webImport}>
-          Import ComSOB from Web
-        </Button>
-        <Button
-          variant="secondary"
-          disabled={!webImport}
-          onClick={() => {
-            if (!webImport) return;
-            window.open(WebLSS[webImport].sheet_url, "_blank", "noopener,noreferrer");
-          }}
-        >
-          Go to Sheet
-        </Button>
+      <div className="flex items-center gap-2">
+        <Button onClick={handleImport}>Import LSS File</Button>
+        <Button onClick={() => setWebDialogOpen(true)}>Import from Web</Button>
       </div>
+      <Dialog
+        open={webDialogOpen}
+        onClose={() => setWebDialogOpen(false)}
+        title="Import from Web"
+      >
+        <ul className="max-h-80 space-y-2 overflow-y-auto">
+          {(Object.keys(WebLSS) as WebImportKey[]).map((key) => (
+            <li key={key} className="flex items-center gap-6">
+              <button
+                type="button"
+                onClick={() => handleWebImport(key)}
+                className="h-11 flex-1 rounded-full border border-black/15 bg-white px-5 text-center text-base font-medium text-black shadow-sm transition-colors hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40 dark:border-white/20 dark:bg-zinc-100 dark:text-black dark:hover:bg-white"
+              >
+                {WebLSS[key].name}
+              </button>
+              <a
+                href={WebLSS[key].sheet_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-base text-blue-600 underline hover:no-underline dark:text-blue-400"
+              >
+                Sheet
+              </a>
+            </li>
+          ))}
+        </ul>
+      </Dialog>
       {imported && importedFileName && (
         <div className="mt-4 rounded-lg border border-green-200 bg-green-50 p-4 text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-200">
           Successfully imported from {importedFileName}
@@ -151,30 +155,40 @@ export default function ComparisonPanel({
         </div>
       )}
       <div className="mt-6 flex items-center gap-2">
-        <select
-          value={choice}
-          onChange={(e) => setChoice(e.target.value as ComparisonKey)}
-          disabled={!imported}
-          className="h-11 rounded-full border border-black/10 bg-white px-4 text-base text-black disabled:opacity-50 disabled:pointer-events-none dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
-        >
-          {(Object.keys(Comparison) as ComparisonKey[]).map((key) => (
-            <option key={key} value={key}>
-              {Comparison[key].name}
-            </option>
-          ))}
-        </select>
-        <select
-          value={timing}
-          onChange={(e) => setTiming(e.target.value as TimingMethodKey)}
-          disabled={!imported}
-          className="h-11 rounded-full border border-black/10 bg-white px-4 text-base text-black disabled:opacity-50 disabled:pointer-events-none dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
-        >
-          {(Object.keys(TimingMethod) as TimingMethodKey[]).map((key) => (
-            <option key={key} value={key}>
-              {TimingMethod[key].name}
-            </option>
-          ))}
-        </select>
+        <label className="flex items-center gap-2 disabled:opacity-50 disabled:pointer-events-none">
+          <span className="text-base text-black dark:text-zinc-50">
+            Select Comparison
+          </span>
+          <select
+            value={choice}
+            onChange={(e) => setChoice(e.target.value as ComparisonKey)}
+            disabled={!imported}
+            className="h-11 rounded-full border border-black/10 bg-white px-4 text-base text-black disabled:opacity-50 disabled:pointer-events-none dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
+          >
+            {(Object.keys(Comparison) as ComparisonKey[]).map((key) => (
+              <option key={key} value={key}>
+                {Comparison[key].name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="flex items-center gap-2 disabled:opacity-50 disabled:pointer-events-none">
+          <span className="text-base text-black dark:text-zinc-50">
+            Select Timing Method
+          </span>
+          <select
+            value={timing}
+            onChange={(e) => setTiming(e.target.value as TimingMethodKey)}
+            disabled={!imported}
+            className="h-11 rounded-full border border-black/10 bg-white px-4 text-base text-black disabled:opacity-50 disabled:pointer-events-none dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
+          >
+            {(Object.keys(TimingMethod) as TimingMethodKey[]).map((key) => (
+              <option key={key} value={key}>
+                {TimingMethod[key].name}
+              </option>
+            ))}
+          </select>
+        </label>
         <label className="flex items-center gap-2 disabled:opacity-50 disabled:pointer-events-none">
           <input
             type="checkbox"
@@ -187,14 +201,16 @@ export default function ComparisonPanel({
             Big Splits
           </span>
         </label>
+      </div>
+      <div className="mt-4 flex justify-center">
         <Button onClick={handleGenerate} disabled={!imported}>
-          Generate Comparison
+          Generate Timeline
         </Button>
       </div>
       <LiveSplitView
         data={generated}
         error={generateError}
-        errorTitle="Comparison failed"
+        errorTitle="Timeline failed"
         timingMethod={timing}
       />
     </>

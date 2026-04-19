@@ -75,11 +75,11 @@ function diffBgStyle(
 }
 
 export default function DiffSplitView({
-  comparison1,
-  comparison2,
+  timeline1,
+  timeline2,
 }: {
-  comparison1: LiveSplit | null;
-  comparison2: LiveSplit | null;
+  timeline1: LiveSplit | null;
+  timeline2: LiveSplit | null;
 }) {
   const [error, setError] = useState<string | null>(null);
   const [warning, setWarning] = useState<string | null>(null);
@@ -95,20 +95,20 @@ export default function DiffSplitView({
     setLocal1(null);
     setLocal2(null);
 
-    if (!comparison1 || !comparison2) {
-      setError("Both comparisons must be generated before comparing.");
+    if (!timeline1 || !timeline2) {
+      setError("Both timelines must be generated before comparing.");
       return;
     }
 
-    if (comparison1.segments.length !== comparison2.segments.length) {
+    if (timeline1.segments.length !== timeline2.segments.length) {
       setError(
-        `Comparisons have different numbers of splits (${comparison1.segments.length} vs ${comparison2.segments.length}).`,
+        `Timelines have different numbers of splits (${timeline1.segments.length} vs ${timeline2.segments.length}).`,
       );
       return;
     }
 
-    const copy1 = structuredClone(comparison1);
-    const copy2 = structuredClone(comparison2);
+    const copy1 = structuredClone(timeline1);
+    const copy2 = structuredClone(timeline2);
 
     const mismatches: string[] = [];
     for (let i = 0; i < copy1.segments.length; i++) {
@@ -123,7 +123,7 @@ export default function DiffSplitView({
 
     if (mismatches.length > 0) {
       setWarning(
-        `Segment metadata differs between comparisons; proceeding anyway:\n${mismatches.join("\n")}`,
+        `Segment metadata differs between timelines; proceeding anyway:\n${mismatches.join("\n")}`,
       );
     }
     setLocal1(copy1);
@@ -177,7 +177,7 @@ export default function DiffSplitView({
         Delta
       </h2>
       <div className="flex items-center gap-2">
-        <Button onClick={handleCompare} disabled={!comparison1 || !comparison2}>
+        <Button onClick={handleCompare} disabled={!timeline1 || !timeline2}>
           Compare
         </Button>
         <Button
@@ -185,30 +185,40 @@ export default function DiffSplitView({
           onClick={handleSwap}
           disabled={!local1 && !local2}
         >
-          Swap
+          Swap Timelines
         </Button>
-        <select
-          value={timing}
-          onChange={(e) => setTiming(e.target.value as TimingMethodKey)}
-          className="h-11 rounded-full border border-black/10 bg-white px-4 text-base text-black dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
-        >
-          {(Object.keys(TimingMethod) as TimingMethodKey[]).map((key) => (
-            <option key={key} value={key}>
-              {TimingMethod[key].name}
-            </option>
-          ))}
-        </select>
-        <select
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as DiffSortByKey)}
-          className="h-11 rounded-full border border-black/10 bg-white px-4 text-base text-black dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
-        >
-          {(Object.keys(DiffSortBy) as DiffSortByKey[]).map((key) => (
-            <option key={key} value={key}>
-              {DiffSortBy[key].name}
-            </option>
-          ))}
-        </select>
+        <label className="flex items-center gap-2">
+          <span className="text-base text-black dark:text-zinc-50">
+            Select Timing Method
+          </span>
+          <select
+            value={timing}
+            onChange={(e) => setTiming(e.target.value as TimingMethodKey)}
+            className="h-11 rounded-full border border-black/10 bg-white px-4 text-base text-black dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
+          >
+            {(Object.keys(TimingMethod) as TimingMethodKey[]).map((key) => (
+              <option key={key} value={key}>
+                {TimingMethod[key].name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="flex items-center gap-2">
+          <span className="text-base text-black dark:text-zinc-50">
+            Sort By
+          </span>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as DiffSortByKey)}
+            className="h-11 rounded-full border border-black/10 bg-white px-4 text-base text-black dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
+          >
+            {(Object.keys(DiffSortBy) as DiffSortByKey[]).map((key) => (
+              <option key={key} value={key}>
+                {DiffSortBy[key].name}
+              </option>
+            ))}
+          </select>
+        </label>
         <Button
           variant="secondary"
           onClick={() => setIsAscending(!isAscending)}
@@ -251,10 +261,10 @@ export default function DiffSplitView({
               <tr className="border-b border-white/10 text-zinc-300">
                 <th className="text-left font-semibold px-4 py-2"></th>
                 <th className="text-right font-semibold px-4 py-2">
-                  Comparison 1 Segment
+                  Timeline 1 Segment
                 </th>
                 <th className="text-right font-semibold px-4 py-2">
-                  Comparison 2 Segment
+                  Timeline 2 Segment
                 </th>
                 <th className="text-right font-semibold px-4 py-2">+/-</th>
                 <th className="text-right font-semibold px-4 py-2">%</th>

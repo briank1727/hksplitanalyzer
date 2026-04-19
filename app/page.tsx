@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import ComparisonPanel from "@/components/ComparisonPanel";
+import TimelinePanel from "@/components/TimelinePanel";
 import DiffSplitView from "@/components/DiffSplitView";
 import HelpPanel from "@/components/HelpPanel";
 import type { LiveSplit } from "@/lib/lss_logic";
 
 export default function Home() {
-  const [comparison1, setComparison1] = useState<LiveSplit | null>(null);
-  const [comparison2, setComparison2] = useState<LiveSplit | null>(null);
+  const [timeline1, setTimeline1] = useState<LiveSplit | null>(null);
+  const [timeline2, setTimeline2] = useState<LiveSplit | null>(null);
   const [helpOpen, setHelpOpen] = useState(false);
 
   return (
@@ -33,25 +33,22 @@ export default function Home() {
       <main className="flex flex-col basis-2/3 px-8 pb-12 gap-4">
         <div className="flex flex-row gap-4">
           <section className="flex-1 p-4 border-r border-black/10 dark:border-white/15">
-            <ComparisonPanel
-              title="Comparison 1"
-              generated={comparison1}
-              setGenerated={setComparison1}
+            <TimelinePanel
+              title="Timeline 1"
+              generated={timeline1}
+              setGenerated={setTimeline1}
             />
           </section>
           <section className="flex-1 p-4">
-            <ComparisonPanel
-              title="Comparison 2"
-              generated={comparison2}
-              setGenerated={setComparison2}
+            <TimelinePanel
+              title="Timeline 2"
+              generated={timeline2}
+              setGenerated={setTimeline2}
             />
           </section>
         </div>
         <section className="p-4 border-t border-black/10 dark:border-white/15">
-          <DiffSplitView
-            comparison1={comparison1}
-            comparison2={comparison2}
-          />
+          <DiffSplitView timeline1={timeline1} timeline2={timeline2} />
         </section>
       </main>
     </div>
