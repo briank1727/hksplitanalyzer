@@ -1,6 +1,6 @@
 import { ButtonHTMLAttributes } from "react";
 
-type Variant = "primary" | "secondary";
+type Variant = "primary" | "secondary" | "success";
 type Size = "sm" | "md" | "lg";
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -13,6 +13,8 @@ const variantStyles: Record<Variant, string> = {
     "bg-black text-white hover:bg-zinc-800 dark:bg-zinc-50 dark:text-black dark:hover:bg-zinc-200",
   secondary:
     "border border-black/10 text-black hover:bg-black/5 dark:border-white/15 dark:text-zinc-50 dark:hover:bg-white/10",
+  success:
+    "bg-green-600 text-white hover:bg-green-700 dark:bg-green-500 dark:text-white dark:hover:bg-green-400",
 };
 
 const sizeStyles: Record<Size, string> = {

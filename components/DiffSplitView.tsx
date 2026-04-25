@@ -5,7 +5,7 @@ import Button from "@/components/Button";
 import type { LiveSplit } from "@/lib/lss_logic";
 import { DiffTime, DiffSortBy } from "@/lib/comparison";
 import { TimingMethod } from "@/lib/timing_method";
-import { formatTsDisplay, ticksToTs, tsToTicks } from "@/lib/timespan";
+import { formatTsDisplay, ticksToTs } from "@/lib/timespan";
 
 type TimingMethodKey = keyof typeof TimingMethod;
 type DiffSortByKey = keyof typeof DiffSortBy;
@@ -173,28 +173,40 @@ export default function DiffSplitView({
 
   return (
     <div>
-      <h2 className="mb-4 text-2xl font-semibold tracking-tight text-black dark:text-zinc-50">
+      <h2 className="mb-3 text-lg font-semibold tracking-tight text-black dark:text-zinc-50">
         Delta
       </h2>
-      <div className="flex items-center gap-2">
-        <Button onClick={handleCompare} disabled={!timeline1 || !timeline2}>
-          Compare
-        </Button>
+      <div className="flex flex-wrap items-center gap-2">
+        <span
+          title={
+            !timeline1 || !timeline2
+              ? "Generate two timelines first"
+              : undefined
+          }
+        >
+          <Button
+            size="sm"
+            variant="success"
+            onClick={handleCompare}
+            disabled={!timeline1 || !timeline2}
+          >
+            Compare
+          </Button>
+        </span>
         <Button
+          size="sm"
           variant="secondary"
           onClick={handleSwap}
           disabled={!local1 && !local2}
         >
           Swap Timelines
         </Button>
-        <label className="flex items-center gap-2">
-          <span className="text-base text-black dark:text-zinc-50">
-            Select Timing Method
-          </span>
+        <label className="flex items-center gap-1.5">
+          <span className="text-sm text-black dark:text-zinc-50">Timing</span>
           <select
             value={timing}
             onChange={(e) => setTiming(e.target.value as TimingMethodKey)}
-            className="h-11 rounded-full border border-black/10 bg-white px-4 text-base text-black dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
+            className="h-9 rounded-full border border-black/10 bg-white px-3 text-sm text-black dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
           >
             {(Object.keys(TimingMethod) as TimingMethodKey[]).map((key) => (
               <option key={key} value={key}>
@@ -203,14 +215,12 @@ export default function DiffSplitView({
             ))}
           </select>
         </label>
-        <label className="flex items-center gap-2">
-          <span className="text-base text-black dark:text-zinc-50">
-            Sort By
-          </span>
+        <label className="flex items-center gap-1.5">
+          <span className="text-sm text-black dark:text-zinc-50">Sort By</span>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as DiffSortByKey)}
-            className="h-11 rounded-full border border-black/10 bg-white px-4 text-base text-black dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
+            className="h-9 rounded-full border border-black/10 bg-white px-3 text-sm text-black dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
           >
             {(Object.keys(DiffSortBy) as DiffSortByKey[]).map((key) => (
               <option key={key} value={key}>
@@ -220,6 +230,7 @@ export default function DiffSplitView({
           </select>
         </label>
         <Button
+          size="sm"
           variant="secondary"
           onClick={() => setIsAscending(!isAscending)}
         >
@@ -255,40 +266,36 @@ export default function DiffSplitView({
         </div>
       )}
       {showDiff && (
-        <div className="mt-4 max-h-[60vh] overflow-auto rounded bg-[#2a1f3d] text-zinc-100 text-sm">
+        <div className="mt-3 max-h-[60vh] overflow-auto rounded bg-[#2a1f3d] text-zinc-100 text-xs">
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-white/10 text-zinc-300">
-                <th className="text-left font-semibold px-4 py-2"></th>
-                <th className="text-right font-semibold px-4 py-2">
-                  Timeline 1 Segment
-                </th>
-                <th className="text-right font-semibold px-4 py-2">
-                  Timeline 2 Segment
-                </th>
-                <th className="text-right font-semibold px-4 py-2">+/-</th>
-                <th className="text-right font-semibold px-4 py-2">%</th>
+                <th className="text-left font-semibold px-2 py-1.5"></th>
+                <th className="text-right font-semibold px-2 py-1.5">T1</th>
+                <th className="text-right font-semibold px-2 py-1.5">T2</th>
+                <th className="text-right font-semibold px-2 py-1.5">+/-</th>
+                <th className="text-right font-semibold px-2 py-1.5">%</th>
               </tr>
             </thead>
             <tbody>
               {sortedRows.map((row, i) => (
                 <tr key={i} className="border-b border-white/5 last:border-b-0">
-                  <td className="text-left px-4 py-1.5">{row.name}</td>
-                  <td className="text-right px-4 py-1.5 tabular-nums font-semibold whitespace-nowrap">
+                  <td className="text-left px-2 py-1">{row.name}</td>
+                  <td className="text-right px-2 py-1 tabular-nums font-semibold whitespace-nowrap">
                     {formatTsDisplay(row.time1)}
                   </td>
-                  <td className="text-right px-4 py-1.5 tabular-nums font-semibold whitespace-nowrap">
+                  <td className="text-right px-2 py-1 tabular-nums font-semibold whitespace-nowrap">
                     {formatTsDisplay(row.time2)}
                   </td>
                   <td
                     style={diffBgStyle(row.diff(), diffThresholdMs)}
-                    className="text-right px-4 py-1.5 tabular-nums font-semibold whitespace-nowrap"
+                    className="text-right px-2 py-1 tabular-nums font-semibold whitespace-nowrap"
                   >
                     {formatDiff(row.diff())}
                   </td>
                   <td
                     style={percentBgStyle(row.percent())}
-                    className="text-right px-4 py-1.5 tabular-nums font-semibold whitespace-nowrap"
+                    className="text-right px-2 py-1 tabular-nums font-semibold whitespace-nowrap"
                   >
                     {formatPercent(row.percent())}
                   </td>

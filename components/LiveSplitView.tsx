@@ -1,7 +1,6 @@
 import { type LiveSplit } from "@/lib/lss_logic";
 import { TimingMethod } from "@/lib/timing_method";
 import { TS_ZERO, formatTsDisplay, tsAdd, type Timespan } from "@/lib/timespan";
-import { useEffect, useState } from "react";
 
 type TimingMethodKey = keyof typeof TimingMethod;
 
@@ -41,8 +40,8 @@ export default function LiveSplitView({
   }
 
   return (
-    <div className="mt-4 max-h-[60vh] overflow-auto rounded bg-[#2a1f3d] text-zinc-100 text-sm">
-      <div className="grid grid-cols-[1fr_auto_auto] gap-x-6 px-4 py-2 border-b border-white/10 font-semibold text-zinc-300">
+    <div className="mt-3 max-h-[60vh] overflow-auto rounded bg-[#2a1f3d] text-zinc-100 text-xs">
+      <div className="grid grid-cols-[1fr_auto_auto] gap-x-3 px-2 py-1.5 border-b border-white/10 font-semibold text-zinc-300">
         <div></div>
         <div className="text-right">Time</div>
         <div className="text-right">Segment</div>
@@ -50,7 +49,7 @@ export default function LiveSplitView({
       {data.segments.map((seg, i) => (
         <div
           key={i}
-          className="grid grid-cols-[1fr_auto_auto] gap-x-6 px-4 py-1.5 border-b border-white/5 last:border-b-0"
+          className="grid grid-cols-[1fr_auto_auto] gap-x-3 px-2 py-1 border-b border-white/5 last:border-b-0"
         >
           <div className="truncate">{seg.name}</div>
           <div className="text-right tabular-nums font-semibold">

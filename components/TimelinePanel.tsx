@@ -110,12 +110,12 @@ export default function TimelinePanel({
 
   return (
     <>
-      <h2 className="mb-4 text-2xl font-semibold tracking-tight text-black dark:text-zinc-50">
+      <h2 className="mb-3 text-lg font-semibold tracking-tight text-black dark:text-zinc-50">
         {title}
       </h2>
-      <div className="flex items-center gap-2">
-        <Button onClick={handleImport}>Import LSS File</Button>
-        <Button onClick={() => setWebDialogOpen(true)}>Import from Web</Button>
+      <div className="flex flex-wrap items-center gap-2">
+        <Button size="sm" onClick={handleImport}>Import LSS File</Button>
+        <Button size="sm" onClick={() => setWebDialogOpen(true)}>Import from Web</Button>
       </div>
       <Dialog
         open={webDialogOpen}
@@ -128,7 +128,7 @@ export default function TimelinePanel({
               <button
                 type="button"
                 onClick={() => handleWebImport(key)}
-                className="h-11 flex-1 rounded-full border border-black/15 bg-white px-5 text-center text-base font-medium text-black shadow-sm transition-colors hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40 dark:border-white/20 dark:bg-zinc-100 dark:text-black dark:hover:bg-white"
+                className="h-9 flex-1 rounded-full border border-black/15 bg-white px-4 text-center text-sm font-medium text-black shadow-sm transition-colors hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40 dark:border-white/20 dark:bg-zinc-100 dark:text-black dark:hover:bg-white"
               >
                 {WebLSS[key].name}
               </button>
@@ -136,7 +136,7 @@ export default function TimelinePanel({
                 href={WebLSS[key].sheet_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-base text-blue-600 underline hover:no-underline dark:text-blue-400"
+                className="text-sm text-blue-600 underline hover:no-underline dark:text-blue-400"
               >
                 Sheet
               </a>
@@ -145,25 +145,25 @@ export default function TimelinePanel({
         </ul>
       </Dialog>
       {imported && importedFileName && (
-        <div className="mt-4 rounded-lg border border-green-200 bg-green-50 p-4 text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-200">
+        <div className="mt-3 rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-200">
           Successfully imported from {importedFileName}
         </div>
       )}
       {importError && (
-        <div className="mt-4 rounded-lg border border-red-200 bg-red-50 p-4 text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
+        <div className="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
           Import failed: {importError}
         </div>
       )}
-      <div className="mt-6 flex items-center gap-2">
-        <label className="flex items-center gap-2 disabled:opacity-50 disabled:pointer-events-none">
-          <span className="text-base text-black dark:text-zinc-50">
-            Select Comparison
+      <div className="mt-4 flex flex-wrap items-center gap-2">
+        <label className="flex items-center gap-1.5 disabled:opacity-50 disabled:pointer-events-none">
+          <span className="text-sm text-black dark:text-zinc-50">
+            Comparison
           </span>
           <select
             value={choice}
             onChange={(e) => setChoice(e.target.value as ComparisonKey)}
             disabled={!imported}
-            className="h-11 rounded-full border border-black/10 bg-white px-4 text-base text-black disabled:opacity-50 disabled:pointer-events-none dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
+            className="h-9 rounded-full border border-black/10 bg-white px-3 text-sm text-black disabled:opacity-50 disabled:pointer-events-none dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
           >
             {(Object.keys(Comparison) as ComparisonKey[]).map((key) => (
               <option key={key} value={key}>
@@ -172,15 +172,15 @@ export default function TimelinePanel({
             ))}
           </select>
         </label>
-        <label className="flex items-center gap-2 disabled:opacity-50 disabled:pointer-events-none">
-          <span className="text-base text-black dark:text-zinc-50">
-            Select Timing Method
+        <label className="flex items-center gap-1.5 disabled:opacity-50 disabled:pointer-events-none">
+          <span className="text-sm text-black dark:text-zinc-50">
+            Timing
           </span>
           <select
             value={timing}
             onChange={(e) => setTiming(e.target.value as TimingMethodKey)}
             disabled={!imported}
-            className="h-11 rounded-full border border-black/10 bg-white px-4 text-base text-black disabled:opacity-50 disabled:pointer-events-none dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
+            className="h-9 rounded-full border border-black/10 bg-white px-3 text-sm text-black disabled:opacity-50 disabled:pointer-events-none dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
           >
             {(Object.keys(TimingMethod) as TimingMethodKey[]).map((key) => (
               <option key={key} value={key}>
@@ -189,7 +189,7 @@ export default function TimelinePanel({
             ))}
           </select>
         </label>
-        <label className="flex items-center gap-2 disabled:opacity-50 disabled:pointer-events-none">
+        <label className="flex items-center gap-1.5 disabled:opacity-50 disabled:pointer-events-none">
           <input
             type="checkbox"
             checked={bigSplits}
@@ -197,13 +197,13 @@ export default function TimelinePanel({
             disabled={!imported}
             className="rounded border border-black/10 dark:border-white/15"
           />
-          <span className="text-base text-black dark:text-zinc-50">
+          <span className="text-sm text-black dark:text-zinc-50">
             Big Splits
           </span>
         </label>
       </div>
-      <div className="mt-4 flex justify-center">
-        <Button onClick={handleGenerate} disabled={!imported}>
+      <div className="mt-3 flex justify-center">
+        <Button size="sm" onClick={handleGenerate} disabled={!imported}>
           Generate Timeline
         </Button>
       </div>

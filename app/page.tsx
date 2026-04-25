@@ -30,24 +30,22 @@ export default function Home() {
           A speedrunner&apos;s tool for comparing times.
         </p>
       </header>
-      <main className="flex flex-col basis-2/3 px-8 pb-12 gap-4">
-        <div className="flex flex-row gap-4">
-          <section className="flex-1 p-4 border-r border-black/10 dark:border-white/15">
-            <TimelinePanel
-              title="Timeline 1"
-              generated={timeline1}
-              setGenerated={setTimeline1}
-            />
-          </section>
-          <section className="flex-1 p-4">
-            <TimelinePanel
-              title="Timeline 2"
-              generated={timeline2}
-              setGenerated={setTimeline2}
-            />
-          </section>
-        </div>
-        <section className="p-4 border-t border-black/10 dark:border-white/15">
+      <main className="flex flex-row basis-2/3 px-8 pb-12 gap-4">
+        <section className="flex-1 p-4 border-r border-black/10 dark:border-white/15">
+          <TimelinePanel
+            title="Timeline 1"
+            generated={timeline1}
+            setGenerated={setTimeline1}
+          />
+        </section>
+        <section className="flex-1 p-4 border-r border-black/10 dark:border-white/15">
+          <TimelinePanel
+            title="Timeline 2"
+            generated={timeline2}
+            setGenerated={setTimeline2}
+          />
+        </section>
+        <section className="flex-1 p-4">
           <DiffSplitView timeline1={timeline1} timeline2={timeline2} />
         </section>
       </main>
