@@ -92,9 +92,7 @@ export function csv_to_lss(
   return { segments };
 }
 
-export function fetch_web_lss(
-  source: WebLSSKind,
-): Promise<FetchLSSResult> {
+export function fetch_web_lss(source: WebLSSKind): Promise<FetchLSSResult> {
   return new Promise(async (resolve) => {
     const result = await extract_cells(
       source.top_left_cell,
@@ -134,45 +132,12 @@ export type WebLSSKind = {
 };
 
 export const WebLSS = {
-  TrueEnding891New: {
-    name: "True Ending 891 (New)",
-    top_left_cell: "B5",
-    bottom_right_cell: "D68",
-    sheet_url:
-      "https://docs.google.com/spreadsheets/d/1xZk3XRwhGBW64vsMfUhLkfUdud0V1iuWYxjg8v9ssGs/edit?gid=463520651#gid=463520651",
-    split_names_idx: 0,
-    auto_split_names_idx: 1,
-    real_times_idx: 2,
-    game_times_idx: 2,
-  },
-  TrueEnding891Old: {
-    name: "True Ending 891 (Old)",
-    top_left_cell: "B3",
-    bottom_right_cell: "D61",
-    sheet_url:
-      "https://docs.google.com/spreadsheets/d/1xZk3XRwhGBW64vsMfUhLkfUdud0V1iuWYxjg8v9ssGs/edit?gid=1416049146#gid=1416049146",
-    split_names_idx: 0,
-    auto_split_names_idx: 1,
-    real_times_idx: 2,
-    game_times_idx: 2,
-  },
   AnyKeyRoute: {
-    name: "Any% Key Route",
+    name: "Any% Key Route (RP)",
     top_left_cell: "B4",
     bottom_right_cell: "D25",
     sheet_url:
       "https://docs.google.com/spreadsheets/d/1-Hy5k_h9dBUUPlwh_I14K-DEwGcNdVQ0utI-KX56d8c/edit?gid=2094941807#gid=2094941807",
-    split_names_idx: 0,
-    auto_split_names_idx: 1,
-    real_times_idx: 2,
-    game_times_idx: 2,
-  },
-  AnyKeyRouteOldComsobPoints: {
-    name: "Any% Key Route (Old ComSOB Points)",
-    top_left_cell: "B4",
-    bottom_right_cell: "D23",
-    sheet_url:
-      "https://docs.google.com/spreadsheets/d/1-Hy5k_h9dBUUPlwh_I14K-DEwGcNdVQ0utI-KX56d8c/edit?gid=443305765#gid=443305765",
     split_names_idx: 0,
     auto_split_names_idx: 1,
     real_times_idx: 2,
@@ -189,12 +154,78 @@ export const WebLSS = {
     real_times_idx: 2,
     game_times_idx: 2,
   },
+  TrueEnding891New: {
+    name: "True Ending (891)",
+    top_left_cell: "B5",
+    bottom_right_cell: "D68",
+    sheet_url:
+      "https://docs.google.com/spreadsheets/d/1xZk3XRwhGBW64vsMfUhLkfUdud0V1iuWYxjg8v9ssGs/edit?gid=463520651#gid=463520651",
+    split_names_idx: 0,
+    auto_split_names_idx: 1,
+    real_times_idx: 2,
+    game_times_idx: 2,
+  },
+  OneHundredPercentMonstahlerV6: {
+    name: "100% Monstahler V6 (891)",
+    top_left_cell: "B4",
+    bottom_right_cell: "D102",
+    sheet_url:
+      "https://docs.google.com/spreadsheets/d/1pam4Xeu3fC4VrDLcHGtacHD2oEbwDo_RX2rctOLvyX0/edit?gid=1808861139#gid=1808861139",
+    split_names_idx: 0,
+    auto_split_names_idx: 1,
+    real_times_idx: 2,
+    game_times_idx: 2,
+  },
+  AnyKeyRouteOldComsobPoints: {
+    name: "Any% Key Route (Old ComSOB Points)",
+    top_left_cell: "B4",
+    bottom_right_cell: "D23",
+    sheet_url:
+      "https://docs.google.com/spreadsheets/d/1-Hy5k_h9dBUUPlwh_I14K-DEwGcNdVQ0utI-KX56d8c/edit?gid=443305765#gid=443305765",
+    split_names_idx: 0,
+    auto_split_names_idx: 1,
+    real_times_idx: 2,
+    game_times_idx: 2,
+  },
   AnyBellsRouteOldComsobPoints: {
     name: "Any% Bells Route (Old ComSOB Points)",
     top_left_cell: "B4",
     bottom_right_cell: "D25",
     sheet_url:
       "https://docs.google.com/spreadsheets/d/1-Hy5k_h9dBUUPlwh_I14K-DEwGcNdVQ0utI-KX56d8c/edit?gid=43527522#gid=43527522",
+    split_names_idx: 0,
+    auto_split_names_idx: 1,
+    real_times_idx: 2,
+    game_times_idx: 2,
+  },
+  TrueEnding891Old: {
+    name: "True Ending (891) (Old)",
+    top_left_cell: "B3",
+    bottom_right_cell: "D61",
+    sheet_url:
+      "https://docs.google.com/spreadsheets/d/1xZk3XRwhGBW64vsMfUhLkfUdud0V1iuWYxjg8v9ssGs/edit?gid=1416049146#gid=1416049146",
+    split_names_idx: 0,
+    auto_split_names_idx: 1,
+    real_times_idx: 2,
+    game_times_idx: 2,
+  },
+  OneHundredPercentMathuluV2_1: {
+    name: "100% Mathulu V2.1 (LP)",
+    top_left_cell: "B4",
+    bottom_right_cell: "D103",
+    sheet_url:
+      "https://docs.google.com/spreadsheets/d/1pam4Xeu3fC4VrDLcHGtacHD2oEbwDo_RX2rctOLvyX0/edit?gid=1396866315#gid=1396866315",
+    split_names_idx: 0,
+    auto_split_names_idx: 1,
+    real_times_idx: 2,
+    game_times_idx: 2,
+  },
+  OneHundredPercentMonstahlerV6BB: {
+    name: "100% Monstahler V6 (891) Old Bilewater Backup",
+    top_left_cell: "B4",
+    bottom_right_cell: "D102",
+    sheet_url:
+      "https://docs.google.com/spreadsheets/d/1pam4Xeu3fC4VrDLcHGtacHD2oEbwDo_RX2rctOLvyX0/edit?gid=1151571350#gid=1151571350",
     split_names_idx: 0,
     auto_split_names_idx: 1,
     real_times_idx: 2,
