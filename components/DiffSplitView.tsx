@@ -2,77 +2,20 @@
 
 import { useState } from "react";
 import Button from "@/components/Button";
+import SplitPieChart, { type SplitPieSlice } from "@/components/SplitPieChart";
 import type { LiveSplit } from "@/lib/lss_logic";
 import { DiffTime, DiffSortBy } from "@/lib/comparison";
+import {
+  diffBgStyle,
+  formatDiff,
+  formatPercent,
+  percentBgStyle,
+} from "@/lib/diff_format";
 import { TimingMethod } from "@/lib/timing_method";
-import { formatTsDisplay, ticksToTs } from "@/lib/timespan";
+import { formatTsDisplay } from "@/lib/timespan";
 
 type TimingMethodKey = keyof typeof TimingMethod;
 type DiffSortByKey = keyof typeof DiffSortBy;
-
-function formatDiff(ticks: bigint): string {
-  if (ticks === 0n) return formatTsDisplay(ticksToTs(0n));
-  const sign = ticks > 0n ? "+" : "-";
-  const abs = ticks < 0n ? -ticks : ticks;
-  return sign + formatTsDisplay(ticksToTs(abs));
-}
-
-function formatPercent(p: number): string {
-  const sign = p > 0 ? "+" : "";
-  return `${sign}${p.toFixed(2)}%`;
-}
-
-const PERCENT_FULL_INTENSITY = 20;
-const DIFF_FULL_INTENSITY_MS = 30000; // 30 seconds in milliseconds
-
-function percentBgStyle(p: number | null): { backgroundColor?: string } {
-  if (p === null || p === 0) return {};
-  const t = Math.min(Math.abs(p) / PERCENT_FULL_INTENSITY, 1);
-  const lerp = (a: number, b: number) => a + (b - a) * t;
-  // light → dark, with alpha also ramping up so the dark bg still shows through low magnitudes
-  const [from, to] =
-    p > 0
-      ? [
-          [255, 170, 170], // red-200
-          [200, 20, 20], //   red-900
-        ]
-      : [
-          [187, 247, 208], // green-200
-          [20, 83, 45], //    green-900
-        ];
-  const r = Math.round(lerp(from[0], to[0]));
-  const g = Math.round(lerp(from[1], to[1]));
-  const b = Math.round(lerp(from[2], to[2]));
-  const a = lerp(0.35, 0.9).toFixed(3);
-  return { backgroundColor: `rgba(${r}, ${g}, ${b}, ${a})` };
-}
-
-function diffBgStyle(
-  ticks: bigint | null,
-  maxMs: number,
-): { backgroundColor?: string } {
-  if (ticks === null || ticks === 0n || maxMs === 0) return {};
-  // Convert ticks to milliseconds (10000 ticks = 1ms)
-  const ms = Number(ticks < 0n ? -ticks : ticks) / 10000;
-  const t = Math.min(ms / maxMs, 1);
-  const lerp = (a: number, b: number) => a + (b - a) * t;
-  // light → dark, with alpha also ramping up so the dark bg still shows through low magnitudes
-  const [from, to] =
-    ticks > 0n
-      ? [
-          [255, 170, 170], // red-200
-          [200, 20, 20], //   red-900
-        ]
-      : [
-          [187, 247, 208], // green-200
-          [20, 83, 45], //    green-900
-        ];
-  const r = Math.round(lerp(from[0], to[0]));
-  const g = Math.round(lerp(from[1], to[1]));
-  const b = Math.round(lerp(from[2], to[2]));
-  const a = lerp(0.35, 0.9).toFixed(3);
-  return { backgroundColor: `rgba(${r}, ${g}, ${b}, ${a})` };
-}
 
 export default function DiffSplitView({
   timeline1,
@@ -170,6 +113,22 @@ export default function DiffSplitView({
   if (!isAscending) {
     sortedRows = sortedRows.reverse();
   }
+
+  // Build pie slices from positive-only diffs (in ms). Non-positive diffs
+  // contribute 0, so when every split was at-or-ahead the total is 0.
+  const pieSlices: SplitPieSlice[] = sortedRows.map((row) => ({
+    name: row.name,
+    time: Math.max(0, Number(row.diff()) / 10000),
+  }));
+  const pieTotal = pieSlices.reduce((sum, s) => sum + s.time, 0);
+  const hasPieData = pieTotal > 0;
+
+  const percentSlices: SplitPieSlice[] = sortedRows.map((row) => ({
+    name: row.name,
+    time: Math.max(0, row.percent()),
+  }));
+  const percentTotal = percentSlices.reduce((sum, s) => sum + s.time, 0);
+  const hasPercentData = percentTotal > 0;
 
   return (
     <div>
@@ -303,6 +262,20 @@ export default function DiffSplitView({
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+      {showDiff && (
+        <div className="mt-4">
+          <h3 className="mb-2 text-md font-semibold tracking-tight text-black dark:text-zinc-50">
+            Time Lost By Split
+          </h3>
+          {hasPieData ? (
+            <SplitPieChart slices={pieSlices} />
+          ) : (
+            <div className="text-sm rounded p-3 border border-black/10 bg-white/5 text-black dark:border-white/15 dark:text-zinc-300">
+              No time was lost on any split — nothing to chart.
+            </div>
+          )}
         </div>
       )}
     </div>
