@@ -15,7 +15,7 @@ export default function SplitsCompareTable({
   diffThresholdMs: number;
 }) {
   return (
-    <div className="flex-1 min-w-0 max-h-[60vh] overflow-auto rounded bg-[#2a1f3d] text-zinc-100 text-base">
+    <div className="flex-1 min-w-0 max-h-[60vh] overflow-auto rounded bg-gray-900 text-zinc-100 text-base">
       <table className="w-full border-collapse">
         <thead>
           <tr className="border-b border-white/10 text-zinc-300">

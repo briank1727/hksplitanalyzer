@@ -83,7 +83,7 @@ export default function DiffSplitView({
   const hasPieData = pieTotal > 0;
 
   return (
-    <div>
+    <div className="mb-8">
       <h2 className="mb-3 text-lg font-semibold tracking-tight text-black dark:text-zinc-50">
         Delta
       </h2>

@@ -10,24 +10,29 @@ type HelpDialogProps = {
 export default function HelpDialog({ open, onClose }: HelpDialogProps) {
   return (
     <Dialog open={open} onClose={onClose} title="Help">
-      DeltaSOB (Delta Sum Of Best) is a tool for speedrunners to compare their
+      Hollow Knight Split Analyzer is a tool for speedrunners to compare their
       splits against different comparisons, such as their Personal Best, Best
-      Segments, or a custom comparison.
+      Segments, or the Community Sum of Best (ComSOB).
       <br />
       <br />
-      It allows you to see the difference in time for each split and the
-      cumulative difference throughout the run. You can import your splits from
-      a LiveSplit (.lss) file or directly from supported web sources.
+      Important Note: HKSA will not consider any segment times that are manually
+      inputted, so only splits which happened in a real run will be included in
+      the analysis.
       <br />
       <br />
       How to Use:
       <br />
       <br />
-      First import a LiveSplit file or fetch splits from a supported web source.
-      Once you have imported your splits, use the dropdown to select which
-      comparison you want to use, and click "Generate Timeline" on each timeline
-      panel to see the results (for ComSOBs it doesn't matter since they are
-      just one time anyway).
+      First select the tab you want to use at the top. The "Compare to ComSOB"
+      tab allows you to import your splits and compare them to the ComSOB for
+      your category, while the "Analyze Livesplit File" tab allows you to import
+      a single LiveSplit file and analyze it on its own.
+      <br />
+      <br />
+      The analysis includes a splits table showing your segment times, the
+      comparison times, and the difference between them. Segments where you are
+      ahead of the comparison will be highlighted in green, while segments where
+      you are behind will be highlighted in red.
       <br />
       <br />
       Check the{" "}
@@ -40,20 +45,10 @@ export default function HelpDialog({ open, onClose }: HelpDialogProps) {
         big splits option
       </a>{" "}
       if you want to treat segments with multiple split times as a single
-      segment, using the best time among them. This is useful for runs where you
-      have multiple attempts at the same segment and want to see your best
-      performance for that segment. You do not necessarily have to turn it off
-      for lss files that don't have subsplits.
+      segment, using the best time among them (it won't impact lss files that
+      don't have subsplits).
       <br />
       <br />
-      Once you've generated a timeline for both timelines, you can scroll down
-      to the Delta section and click compare to see the difference between the
-      two timelines for each split and cumulatively.
-      <br />
-      <br />
-      Important Note: DeltaSOB will not consider any split times that are zero,
-      so make sure your splits are properly recorded in your LiveSplit file for
-      accurate comparisons.
     </Dialog>
   );
 }

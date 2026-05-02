@@ -34,7 +34,7 @@ export default function SplitsTable({
   }
 
   return (
-    <div className="mt-3 max-h-[60vh] overflow-auto rounded bg-[#2a1f3d] text-zinc-100 text-base">
+    <div className="mt-3 max-h-[60vh] overflow-auto rounded bg-gray-900 text-zinc-100 text-base">
       <div className="grid grid-cols-[1fr_auto_auto] gap-x-3 px-2 py-1.5 border-b border-white/10 font-semibold text-zinc-300">
         <div>Name</div>
         <div className="text-right">Time</div>
