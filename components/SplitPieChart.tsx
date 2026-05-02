@@ -109,18 +109,20 @@ export default function SplitPieChart({
         )}
       </div>
       <ul className="w-48 shrink-0 overflow-y-auto text-sm text-black dark:text-zinc-50 space-y-1 pr-1">
-        {data.map((entry) => (
-          <li key={entry.name} className="flex items-center gap-2">
-            <span
-              aria-hidden
-              className="inline-block h-3 w-3 shrink-0 rounded-sm"
-              style={{ backgroundColor: entry.fill }}
-            />
-            <span className="truncate" title={entry.name}>
-              {entry.name}
-            </span>
-          </li>
-        ))}
+        {data
+          .filter((entry) => entry.percent > 0)
+          .map((entry, i) => (
+            <li key={i} className="flex items-center gap-2">
+              <span
+                aria-hidden
+                className="inline-block h-3 w-3 shrink-0 rounded-sm"
+                style={{ backgroundColor: entry.fill }}
+              />
+              <span className="truncate" title={entry.name}>
+                {entry.name}
+              </span>
+            </li>
+          ))}
       </ul>
     </div>
   );
