@@ -1,36 +1,24 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Hollow Knight Split Analyzer
 
-## Getting Started
+Hollow Knight Split Analyzer is a tool for speedrunners to compare their
+splits against different comparisons, such as their Personal Best, Best
+Segments, or the Community Sum of Best (ComSOB).
 
-First, run the development server:
+Important Note: HKSA will not consider any segment times that are manually inputted, so only splits which happened in a real run will be included in the analysis.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## How to Use:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+First select the tab you want to use at the top. The "Compare to ComSOB"
+tab allows you to import your splits and compare them to the ComSOB for
+your category, while the "Analyze Livesplit File" tab allows you to import
+a single LiveSplit file and analyze it on its own.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The analysis includes a splits table showing your segment times, the
+comparison times, and the difference between them. Segments where you are
+ahead of the comparison will be highlighted in green, while segments where
+you are behind will be highlighted in red.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Check the [big splits option](https://www.speedrun.com/forums/speedrunning/xn8jj#rw8sp)
+if you want to treat segments with multiple split times as a single
+segment, using the best time among them (it won't impact lss files that
+don't have subsplits).
