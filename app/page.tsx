@@ -38,6 +38,7 @@ export default function Home() {
             type="button"
             className={tabClass(tab === "compare")}
             onClick={() => setTab("compare")}
+            style={{ fontFamily: "var(--font-trajan)" }}
           >
             Compare to ComSOB
           </button>
@@ -45,6 +46,7 @@ export default function Home() {
             type="button"
             className={tabClass(tab === "analyze")}
             onClick={() => setTab("analyze")}
+            style={{ fontFamily: "var(--font-trajan)" }}
           >
             Analyze Livesplit File
           </button>
