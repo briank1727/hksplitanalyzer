@@ -13,11 +13,7 @@ export default function ComsobPage() {
   const [showDiff, setShowDiff] = useState(false);
 
   const compareDisabledReason =
-    !timeline || !comsob
-      ? "Generate both timelines first"
-      : timeline.segments.length !== comsob.segments.length
-        ? `Timelines have different numbers of splits (${timeline.segments.length} vs ${comsob.segments.length})`
-        : undefined;
+    !timeline || !comsob ? "Generate both timelines first" : undefined;
   const canCompare = compareDisabledReason === undefined;
 
   if (showDiff && timeline && comsob) {

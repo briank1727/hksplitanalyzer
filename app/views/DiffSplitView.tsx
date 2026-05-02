@@ -29,8 +29,14 @@ export default function DiffSplitView({
   const t1 = swapped ? timeline2 : timeline1;
   const t2 = swapped ? timeline1 : timeline2;
 
+  const compareLen = Math.min(t1.segments.length, t2.segments.length);
+  const lengthError =
+    t1.segments.length !== t2.segments.length
+      ? `Timelines have different numbers of splits (${t1.segments.length} vs ${t2.segments.length}); comparing the first ${compareLen}.`
+      : null;
+
   const mismatches: string[] = [];
-  for (let i = 0; i < t1.segments.length; i++) {
+  for (let i = 0; i < compareLen; i++) {
     const a = t1.segments[i];
     const b = t2.segments[i];
     if (a.auto_split_name !== b.auto_split_name) {
@@ -45,6 +51,7 @@ export default function DiffSplitView({
       : null;
 
   const rows = t1.segments
+    .slice(0, compareLen)
     .map((seg1, i) => {
       const seg2 = t2.segments[i];
       const time1 =
@@ -109,6 +116,15 @@ export default function DiffSplitView({
           {isAscending ? "Ascending" : "Descending"}
         </Button>
       </div>
+      {lengthError && (
+        <div
+          role="alert"
+          className="mt-4 text-sm rounded p-3 border border-red-200 bg-red-50 text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200"
+        >
+          <div className="font-semibold">Error</div>
+          <div className="mt-1">{lengthError}</div>
+        </div>
+      )}
       {warning && (
         <div
           role="alert"
