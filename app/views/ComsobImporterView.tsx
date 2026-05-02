@@ -10,7 +10,7 @@ import { formatTsDisplay, tsAdd, TS_ZERO, type Timespan } from "@/lib/timespan";
 
 type WebImportKey = keyof typeof WebLSS;
 
-export default function ComsobImporter({
+export default function ComsobImporterView({
   title,
   generated,
   setGenerated,

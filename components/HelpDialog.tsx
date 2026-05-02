@@ -2,12 +2,12 @@
 
 import Dialog from "@/components/Dialog";
 
-type HelpPanelProps = {
+type HelpDialogProps = {
   open: boolean;
   onClose: () => void;
 };
 
-export default function HelpPanel({ open, onClose }: HelpPanelProps) {
+export default function HelpDialog({ open, onClose }: HelpDialogProps) {
   return (
     <Dialog open={open} onClose={onClose} title="Help">
       DeltaSOB (Delta Sum Of Best) is a tool for speedrunners to compare their

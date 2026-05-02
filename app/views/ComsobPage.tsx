@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import Button from "@/components/Button";
-import ComsobImporter from "@/components/ComsobImporter";
-import DiffSplitView from "@/components/DiffSplitView";
-import LiveSplitImporter from "@/components/LiveSplitImporter";
+import ComsobImporterView from "@/app/views/ComsobImporterView";
+import DiffSplitView from "@/app/views/DiffSplitView";
+import LiveSplitImporter from "@/app/views/LiveSplitImporterView";
 import type { LiveSplit } from "@/lib/lss_logic";
 
 export default function ComsobPage() {
@@ -66,7 +66,7 @@ export default function ComsobPage() {
               />
             </section>
             <section className="flex-1 p-4">
-              <ComsobImporter
+              <ComsobImporterView
                 title="Comsob"
                 generated={comsob}
                 setGenerated={setComsob}

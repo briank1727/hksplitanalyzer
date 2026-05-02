@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import ComsobPage from "@/components/ComsobPage";
+import ComsobPage from "@/app/views/ComsobPage";
 
 type Tab = "compare" | "analyze";
 
