@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import Button from "@/components/Button";
+import HelpDialog from "@/components/HelpDialog";
 import ComsobPage from "@/app/views/ComsobPage";
 import AnalyzeLSSPage from "@/app/views/AnalyzeLSSPage";
 
@@ -8,6 +10,7 @@ type Tab = "compare" | "analyze";
 
 export default function Home() {
   const [tab, setTab] = useState<Tab>("compare");
+  const [helpOpen, setHelpOpen] = useState(false);
 
   const tabClass = (active: boolean) =>
     `px-4 py-2 text-lg font-medium border-b-2 -mb-px transition-colors ${
@@ -18,8 +21,15 @@ export default function Home() {
 
   return (
     <div className="flex flex-col flex-1 bg-zinc-50 font-sans dark:bg-black">
-      <header className="flex flex-col items-center justify-center text-center px-4 py-2">
+      <header className="flex flex-col items-center justify-center text-center px-4 py-2 relative">
         <img src="/logo.png" alt="DeltaSOB" className="h-auto max-h-64" />
+        <Button
+          size="sm"
+          onClick={() => setHelpOpen(true)}
+          className="absolute right-4 top-4 rounded-full w-10 h-10 flex items-center justify-center p-0 text-lg"
+        >
+          ?
+        </Button>
       </header>
 
       <div className="flex justify-center border-b border-black/10 dark:border-white/15 px-8">
@@ -53,6 +63,8 @@ export default function Home() {
           <AnalyzeLSSPage />
         </div>
       </main>
+
+      <HelpDialog open={helpOpen} onClose={() => setHelpOpen(false)} />
     </div>
   );
 }
