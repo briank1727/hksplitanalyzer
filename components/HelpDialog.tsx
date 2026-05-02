@@ -10,6 +10,29 @@ type HelpDialogProps = {
 export default function HelpDialog({ open, onClose }: HelpDialogProps) {
   return (
     <Dialog open={open} onClose={onClose} title="Help">
+      Check out the{" "}
+      <a
+        href="https://github.com/briank1727/hksplitanalyzer"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="underline hover:no-underline"
+      >
+        GitHub
+      </a>{" "}
+      for the source code, and feel free to submit any issues or feature
+      requests. Join the{" "}
+      <a
+        href="https://discord.gg/EaDb9vSY"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="underline hover:no-underline"
+      >
+        Speedruninng Discord
+      </a>{" "}
+      to get started and ask any questions you have about the tool or
+      speedrunning in general!
+      <br />
+      <br />
       Hollow Knight Split Analyzer is a tool for speedrunners to compare their
       splits against different comparisons, such as their Personal Best, Best
       Segments, or the Community Sum of Best (ComSOB).
