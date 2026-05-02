@@ -15,6 +15,11 @@ export default function HelpDialog({ open, onClose }: HelpDialogProps) {
       Segments, or the Community Sum of Best (ComSOB).
       <br />
       <br />
+      For ComSOBs, HKSA will automatically fetch the most recent times from
+      linked Google Sheets (click the links in the ComSOB dialogue to see the
+      raw data).
+      <br />
+      <br />
       Important Note: HKSA will not consider any segment times that are manually
       inputted, so only splits which happened in a real run will be included in
       the analysis.

@@ -6,6 +6,8 @@ https://hksplitanalyzer.vercel.app/
 
 Hollow Knight Split Analyzer is a tool for speedrunners to compare their splits against different comparisons, such as their Personal Best, Best Segments, or the Community Sum of Best (ComSOB).
 
+For ComSOBs, HKSA will automatically fetch the most recent times from linked Google Sheets (click the links in the ComSOB dialogue to see the raw data).
+
 Important Note: HKSA will not consider any segment times that are manually inputted, so only splits which happened in a real run will be included in the analysis.
 
 ## How to Use:
