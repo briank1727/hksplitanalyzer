@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Button from "@/components/Button";
-import SplitsView from "@/components/SplitsView";
+import SplitsTable from "@/components/SplitsTable";
 import DiffSplitView from "@/app/views/DiffSplitView";
 import { import_lss } from "@/lib/import_lss";
 import { Comparison } from "@/lib/comparison";
@@ -57,8 +57,12 @@ export default function AnalyzeLSSPage() {
     if (!imported) return;
     setGenerateError(null);
     try {
-      setTimeline1(Comparison[choice1].generate_comparison(imported, bigSplits));
-      setTimeline2(Comparison[choice2].generate_comparison(imported, bigSplits));
+      setTimeline1(
+        Comparison[choice1].generate_comparison(imported, bigSplits),
+      );
+      setTimeline2(
+        Comparison[choice2].generate_comparison(imported, bigSplits),
+      );
     } catch (e) {
       setTimeline1(null);
       setTimeline2(null);
@@ -90,10 +94,11 @@ export default function AnalyzeLSSPage() {
       <div className="flex justify-center">
         <span title={compareDisabledReason}>
           <Button
-            size="sm"
+            size="lg"
             variant="success"
             disabled={!canCompare}
             onClick={() => setShowDiff(true)}
+            className="text-2xl"
           >
             Compare
           </Button>
@@ -165,14 +170,14 @@ export default function AnalyzeLSSPage() {
       )}
       <div className="flex flex-row">
         <section className="flex-1 p-4 border-r border-black/10 dark:border-white/15">
-          <SplitsView
+          <SplitsTable
             data={timeline1}
             error={generateError}
             errorTitle="Timeline failed"
           />
         </section>
         <section className="flex-1 p-4">
-          <SplitsView
+          <SplitsTable
             data={timeline2}
             error={generateError}
             errorTitle="Timeline failed"

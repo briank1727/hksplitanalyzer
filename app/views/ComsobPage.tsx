@@ -38,10 +38,11 @@ export default function ComsobPage() {
       <div className="flex justify-center">
         <span title={compareDisabledReason}>
           <Button
-            size="sm"
+            size="lg"
             variant="success"
             disabled={!canCompare}
             onClick={() => setShowDiff(true)}
+            className="text-2xl"
           >
             Compare
           </Button>

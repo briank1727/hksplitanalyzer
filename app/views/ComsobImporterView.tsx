@@ -3,7 +3,7 @@
 import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import Button from "@/components/Button";
 import Dialog from "@/components/Dialog";
-import SplitsView from "@/components/SplitsView";
+import SplitsTable from "@/components/SplitsTable";
 import { WebLSS, fetch_web_lss } from "@/lib/import_lss";
 import { type LiveSplit } from "@/lib/lss_logic";
 import { formatTsDisplay, tsAdd, TS_ZERO, type Timespan } from "@/lib/timespan";
@@ -77,13 +77,13 @@ export default function ComsobImporterView({
           <ul className="max-h-80 space-y-2 overflow-y-auto">
             {(Object.keys(WebLSS) as WebImportKey[]).map((key) => (
               <li key={key} className="flex items-center gap-6">
-                <button
-                  type="button"
+                <Button
+                  size="sm"
                   onClick={() => handleWebImport(key)}
-                  className="h-9 flex-1 rounded-full border border-black/15 bg-white px-4 text-center text-sm font-medium text-black shadow-sm transition-colors hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40 dark:border-white/20 dark:bg-zinc-100 dark:text-black dark:hover:bg-white"
+                  className="flex-1"
                 >
                   {WebLSS[key].name}
-                </button>
+                </Button>
                 <a
                   href={WebLSS[key].sheet_url}
                   target="_blank"
@@ -113,7 +113,7 @@ export default function ComsobImporterView({
           </div>
         )}
       </div>
-      <SplitsView
+      <SplitsTable
         data={generated}
         error={importError}
         errorTitle="Comsob failed"

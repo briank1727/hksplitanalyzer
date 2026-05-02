@@ -27,7 +27,7 @@ const trajanPro = localFont({
 const perpetua = localFont({
   src: [
     {
-      path: "../public/Perpetua-Regular.otf",
+      path: "../public/Perpetua-Bold.otf",
       weight: "400",
       style: "normal",
     },

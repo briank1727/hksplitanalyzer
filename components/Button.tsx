@@ -10,17 +10,17 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const variantStyles: Record<Variant, string> = {
   primary:
-    "bg-black text-white hover:bg-zinc-800 dark:bg-zinc-50 dark:text-black dark:hover:bg-zinc-200",
+    "bg-gray-900 text-white border border-white hover:bg-black dark:bg-gray-800 dark:text-white dark:hover:bg-gray-900",
   secondary:
-    "border border-black/10 text-black hover:bg-black/5 dark:border-white/15 dark:text-zinc-50 dark:hover:bg-white/10",
+    "bg-black text-white hover:bg-zinc-800 dark:bg-zinc-50 dark:text-black dark:hover:bg-zinc-200",
   success:
     "bg-green-600 text-white hover:bg-green-700 dark:bg-green-500 dark:text-white dark:hover:bg-green-400",
 };
 
 const sizeStyles: Record<Size, string> = {
-  sm: "h-9 px-4 text-sm",
-  md: "h-11 px-5 text-base",
-  lg: "h-13 px-7 text-lg",
+  sm: "h-9 px-4 text-base",
+  md: "h-11 px-5 text-lg",
+  lg: "h-13 px-7 text-xl",
 };
 
 export default function Button({

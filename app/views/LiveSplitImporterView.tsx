@@ -2,7 +2,7 @@
 
 import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import Button from "@/components/Button";
-import SplitsView from "@/components/SplitsView";
+import SplitsTable from "@/components/SplitsTable";
 import { import_lss } from "@/lib/import_lss";
 import { Comparison } from "@/lib/comparison";
 import { parse_lss, type LiveSplit } from "@/lib/lss_logic";
@@ -76,9 +76,7 @@ export default function LiveSplitImporter({
     if (!imported) return;
     setGenerateError(null);
     try {
-      setGenerated(
-        Comparison[choice].generate_comparison(imported, bigSplits),
-      );
+      setGenerated(Comparison[choice].generate_comparison(imported, bigSplits));
       console.log(Comparison[choice].generate_comparison(imported, bigSplits));
     } catch (e) {
       setGenerated(null);
@@ -100,25 +98,25 @@ export default function LiveSplitImporter({
           </Button>
         </div>
         {imported && importedFileName && importedStats && (
-          <div className="mt-3 rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-200">
+          <div className="mt-3 rounded-lg border border-green-200 bg-green-50 p-3 text-base text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-200">
             <div>Successfully imported {importedFileName}</div>
           </div>
         )}
         {importError && (
-          <div className="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
+          <div className="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 text-base text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
             Import failed: {importError}
           </div>
         )}
         <div className="mt-4 flex flex-wrap items-center gap-2">
           <label className="flex items-center gap-1.5 disabled:opacity-50 disabled:pointer-events-none">
-            <span className="text-sm text-black dark:text-zinc-50">
+            <span className="text-base text-black dark:text-zinc-50">
               Comparison
             </span>
             <select
               value={choice}
               onChange={(e) => setChoice(e.target.value as ComparisonKey)}
               disabled={!imported}
-              className="h-9 rounded-full border border-black/10 bg-white px-3 text-sm text-black disabled:opacity-50 disabled:pointer-events-none dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
+              className="h-9 rounded-full border border-black/10 bg-white px-3 text-base text-black disabled:opacity-50 disabled:pointer-events-none dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
             >
               {(Object.keys(Comparison) as ComparisonKey[]).map((key) => (
                 <option key={key} value={key}>
@@ -135,7 +133,7 @@ export default function LiveSplitImporter({
               disabled={!imported}
               className="rounded border border-black/10 dark:border-white/15"
             />
-            <span className="text-sm text-black dark:text-zinc-50">
+            <span className="text-base text-black dark:text-zinc-50">
               Big Splits
             </span>
           </label>
@@ -146,7 +144,7 @@ export default function LiveSplitImporter({
           </Button>
         </div>
         {generated && generatedStats && (
-          <div className="mt-3 rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-200">
+          <div className="mt-3 rounded-lg border border-green-200 bg-green-50 p-3 text-base text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-200">
             <div>
               Timeline generated successfully ({generatedStats.numSplits} split
               {generatedStats.numSplits === 1 ? "" : "s"}
@@ -157,7 +155,7 @@ export default function LiveSplitImporter({
           </div>
         )}
       </div>
-      <SplitsView
+      <SplitsTable
         data={generated}
         error={generateError}
         errorTitle="Timeline failed"

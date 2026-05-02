@@ -10,7 +10,7 @@ export default function Home() {
   const [tab, setTab] = useState<Tab>("compare");
 
   const tabClass = (active: boolean) =>
-    `px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
+    `px-4 py-2 text-lg font-medium border-b-2 -mb-px transition-colors ${
       active
         ? "border-black text-black dark:border-zinc-50 dark:text-zinc-50"
         : "border-transparent text-zinc-500 hover:text-black dark:text-zinc-400 dark:hover:text-zinc-50"

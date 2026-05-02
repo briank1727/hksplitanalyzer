@@ -95,11 +95,13 @@ export default function DiffSplitView({
           Swap Timelines
         </Button>
         <label className="flex items-center gap-1.5">
-          <span className="text-sm text-black dark:text-zinc-50">Sort By</span>
+          <span className="text-base text-black dark:text-zinc-50">
+            Sort By
+          </span>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as DiffSortByKey)}
-            className="h-9 rounded-full border border-black/10 bg-white px-3 text-sm text-black dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
+            className="h-9 rounded-full border border-black/10 bg-white px-3 text-base text-black dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
           >
             {(Object.keys(DiffSortBy) as DiffSortByKey[]).map((key) => (
               <option key={key} value={key}>

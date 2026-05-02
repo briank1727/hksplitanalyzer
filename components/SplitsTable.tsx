@@ -1,7 +1,7 @@
 import { type LiveSplit } from "@/lib/lss_logic";
 import { TS_ZERO, formatTsDisplay, tsAdd, type Timespan } from "@/lib/timespan";
 
-export default function SplitsView({
+export default function SplitsTable({
   data,
   error,
   errorTitle,
@@ -34,7 +34,7 @@ export default function SplitsView({
   }
 
   return (
-    <div className="mt-3 max-h-[60vh] overflow-auto rounded bg-[#2a1f3d] text-zinc-100 text-xs">
+    <div className="mt-3 max-h-[60vh] overflow-auto rounded bg-[#2a1f3d] text-zinc-100 text-base">
       <div className="grid grid-cols-[1fr_auto_auto] gap-x-3 px-2 py-1.5 border-b border-white/10 font-semibold text-zinc-300">
         <div>Name</div>
         <div className="text-right">Time</div>
