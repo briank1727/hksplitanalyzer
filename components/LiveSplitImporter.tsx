@@ -90,71 +90,73 @@ export default function LiveSplitImporter({
 
   return (
     <>
-      <h2 className="mb-3 text-lg font-semibold tracking-tight text-black dark:text-zinc-50">
-        {title}
-      </h2>
-      <div className="flex flex-wrap items-center gap-2">
-        <Button size="sm" onClick={handleImport}>
-          Import LSS File
-        </Button>
-      </div>
-      {imported && importedFileName && importedStats && (
-        <div className="mt-3 rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-200">
-          <div>Successfully imported {importedFileName}</div>
+      <div className="h-80 overflow-hidden">
+        <h2 className="mb-3 text-lg font-semibold tracking-tight text-black dark:text-zinc-50">
+          {title}
+        </h2>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button size="sm" onClick={handleImport}>
+            Import LSS File
+          </Button>
         </div>
-      )}
-      {importError && (
-        <div className="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
-          Import failed: {importError}
-        </div>
-      )}
-      <div className="mt-4 flex flex-wrap items-center gap-2">
-        <label className="flex items-center gap-1.5 disabled:opacity-50 disabled:pointer-events-none">
-          <span className="text-sm text-black dark:text-zinc-50">
-            Comparison
-          </span>
-          <select
-            value={choice}
-            onChange={(e) => setChoice(e.target.value as ComparisonKey)}
-            disabled={!imported}
-            className="h-9 rounded-full border border-black/10 bg-white px-3 text-sm text-black disabled:opacity-50 disabled:pointer-events-none dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
-          >
-            {(Object.keys(Comparison) as ComparisonKey[]).map((key) => (
-              <option key={key} value={key}>
-                {Comparison[key].name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="flex items-center gap-1.5 disabled:opacity-50 disabled:pointer-events-none">
-          <input
-            type="checkbox"
-            checked={bigSplits}
-            onChange={(e) => setBigSplits(e.target.checked)}
-            disabled={!imported}
-            className="rounded border border-black/10 dark:border-white/15"
-          />
-          <span className="text-sm text-black dark:text-zinc-50">
-            Big Splits
-          </span>
-        </label>
-      </div>
-      <div className="mt-3 flex justify-center">
-        <Button size="sm" onClick={handleGenerate} disabled={!imported}>
-          Generate Timeline
-        </Button>
-      </div>
-      {generated && generatedStats && (
-        <div className="mt-3 rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-200">
-          <div>
-            Timeline generated successfully ({generatedStats.numSplits} split
-            {generatedStats.numSplits === 1 ? "" : "s"}
-            {generatedStats.totalTime !== null &&
-              `, total time: ${formatTsDisplay(generatedStats.totalTime)}`}
-            )
+        {imported && importedFileName && importedStats && (
+          <div className="mt-3 rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-200">
+            <div>Successfully imported {importedFileName}</div>
           </div>
+        )}
+        {importError && (
+          <div className="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
+            Import failed: {importError}
+          </div>
+        )}
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          <label className="flex items-center gap-1.5 disabled:opacity-50 disabled:pointer-events-none">
+            <span className="text-sm text-black dark:text-zinc-50">
+              Comparison
+            </span>
+            <select
+              value={choice}
+              onChange={(e) => setChoice(e.target.value as ComparisonKey)}
+              disabled={!imported}
+              className="h-9 rounded-full border border-black/10 bg-white px-3 text-sm text-black disabled:opacity-50 disabled:pointer-events-none dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
+            >
+              {(Object.keys(Comparison) as ComparisonKey[]).map((key) => (
+                <option key={key} value={key}>
+                  {Comparison[key].name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="flex items-center gap-1.5 disabled:opacity-50 disabled:pointer-events-none">
+            <input
+              type="checkbox"
+              checked={bigSplits}
+              onChange={(e) => setBigSplits(e.target.checked)}
+              disabled={!imported}
+              className="rounded border border-black/10 dark:border-white/15"
+            />
+            <span className="text-sm text-black dark:text-zinc-50">
+              Big Splits
+            </span>
+          </label>
         </div>
-      )}
+        <div className="mt-3 flex justify-center">
+          <Button size="sm" onClick={handleGenerate} disabled={!imported}>
+            Generate Timeline
+          </Button>
+        </div>
+        {generated && generatedStats && (
+          <div className="mt-3 rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-200">
+            <div>
+              Timeline generated successfully ({generatedStats.numSplits} split
+              {generatedStats.numSplits === 1 ? "" : "s"}
+              {generatedStats.totalTime !== null &&
+                `, total time: ${formatTsDisplay(generatedStats.totalTime)}`}
+              )
+            </div>
+          </div>
+        )}
+      </div>
       <SplitsView
         data={generated}
         error={generateError}

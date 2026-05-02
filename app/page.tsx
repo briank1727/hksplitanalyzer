@@ -45,8 +45,15 @@ export default function Home() {
         </div>
       </div>
 
-      <main className="flex flex-col flex-1 px-8 py-6">
-        {tab === "compare" ? <ComsobPage /> : <div />}
+      <main className="flex flex-col flex-1 min-h-0">
+        <div
+          className={`flex flex-col flex-1 min-h-0 ${tab === "compare" ? "" : "hidden"}`}
+        >
+          <ComsobPage />
+        </div>
+        <div
+          className={`flex flex-col flex-1 min-h-0 ${tab === "analyze" ? "" : "hidden"}`}
+        />
       </main>
     </div>
   );
