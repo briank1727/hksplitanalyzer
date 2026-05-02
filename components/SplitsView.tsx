@@ -4,7 +4,7 @@ import { TS_ZERO, formatTsDisplay, tsAdd, type Timespan } from "@/lib/timespan";
 
 type TimingMethodKey = keyof typeof TimingMethod;
 
-export default function LiveSplitView({
+export default function SplitsView({
   data,
   error,
   errorTitle,

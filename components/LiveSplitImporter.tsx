@@ -2,24 +2,17 @@
 
 import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import Button from "@/components/Button";
-import Dialog from "@/components/Dialog";
-import LiveSplitView from "@/components/LiveSplitView";
-import { import_lss, WebLSS, fetch_web_lss } from "@/lib/import_lss";
+import SplitsView from "@/components/SplitsView";
+import { import_lss } from "@/lib/import_lss";
 import { Comparison } from "@/lib/comparison";
 import { TimingMethod } from "@/lib/timing_method";
 import { parse_lss, type LiveSplit } from "@/lib/lss_logic";
-import {
-  formatTsDisplay,
-  tsAdd,
-  TS_ZERO,
-  type Timespan,
-} from "@/lib/timespan";
+import { formatTsDisplay, tsAdd, TS_ZERO, type Timespan } from "@/lib/timespan";
 
 type ComparisonKey = keyof typeof Comparison;
 type TimingMethodKey = keyof typeof TimingMethod;
-type WebImportKey = keyof typeof WebLSS;
 
-export default function TimelinePanel({
+export default function LiveSplitImporter({
   title,
   generated,
   setGenerated,
@@ -35,7 +28,6 @@ export default function TimelinePanel({
   const [timing, setTiming] = useState<TimingMethodKey>("GameTime");
   const [bigSplits, setBigSplits] = useState<boolean>(true);
   const [generateError, setGenerateError] = useState<string | null>(null);
-  const [webDialogOpen, setWebDialogOpen] = useState<boolean>(false);
 
   const importedStats = useMemo(() => {
     if (!imported) return null;
@@ -110,31 +102,6 @@ export default function TimelinePanel({
     }
   };
 
-  const handleWebImport = async (key: WebImportKey) => {
-    setWebDialogOpen(false);
-    setImportError(null);
-    setGenerated(null);
-    setGenerateError(null);
-    try {
-      const result = await fetch_web_lss(WebLSS[key]);
-      if (result.success) {
-        setImported(result.data);
-        setImportedFileName(WebLSS[key].name);
-        console.log(result.data);
-      } else {
-        setImported(null);
-        setImportedFileName(null);
-        setImportError(result.error);
-      }
-    } catch (e) {
-      setImported(null);
-      setImportedFileName(null);
-      setImportError(
-        e instanceof Error ? e.message : "Failed to import from web",
-      );
-    }
-  };
-
   return (
     <>
       <h2 className="mb-3 text-lg font-semibold tracking-tight text-black dark:text-zinc-50">
@@ -144,44 +111,10 @@ export default function TimelinePanel({
         <Button size="sm" onClick={handleImport}>
           Import LSS File
         </Button>
-        <Button size="sm" onClick={() => setWebDialogOpen(true)}>
-          Compare to ComSOB
-        </Button>
       </div>
-      <Dialog
-        open={webDialogOpen}
-        onClose={() => setWebDialogOpen(false)}
-        title="Compare to ComSOB"
-      >
-        <ul className="max-h-80 space-y-2 overflow-y-auto">
-          {(Object.keys(WebLSS) as WebImportKey[]).map((key) => (
-            <li key={key} className="flex items-center gap-6">
-              <button
-                type="button"
-                onClick={() => handleWebImport(key)}
-                className="h-9 flex-1 rounded-full border border-black/15 bg-white px-4 text-center text-sm font-medium text-black shadow-sm transition-colors hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40 dark:border-white/20 dark:bg-zinc-100 dark:text-black dark:hover:bg-white"
-              >
-                {WebLSS[key].name}
-              </button>
-              <a
-                href={WebLSS[key].sheet_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-blue-600 underline hover:no-underline dark:text-blue-400"
-              >
-                Sheet
-              </a>
-            </li>
-          ))}
-        </ul>
-      </Dialog>
       {imported && importedFileName && importedStats && (
         <div className="mt-3 rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-200">
-          <div>Successfully imported from {importedFileName}</div>
-          <div>
-            {importedStats.numSplits} split
-            {importedStats.numSplits === 1 ? "" : "s"}
-          </div>
+          <div>Successfully imported {importedFileName}</div>
         </div>
       )}
       {importError && (
@@ -242,16 +175,16 @@ export default function TimelinePanel({
       </div>
       {generated && generatedStats && (
         <div className="mt-3 rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-200">
-          <div>Timeline generated successfully</div>
           <div>
-            {generatedStats.numSplits} split
+            Timeline generated successfully ({generatedStats.numSplits} split
             {generatedStats.numSplits === 1 ? "" : "s"}
             {generatedStats.totalTime !== null &&
-              `, total ${formatTsDisplay(generatedStats.totalTime)}`}
+              `, total time: ${formatTsDisplay(generatedStats.totalTime)}`}
+            )
           </div>
         </div>
       )}
-      <LiveSplitView
+      <SplitsView
         data={generated}
         error={generateError}
         errorTitle="Timeline failed"
