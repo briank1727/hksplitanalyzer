@@ -1,19 +1,14 @@
 import { type LiveSplit } from "@/lib/lss_logic";
-import { TimingMethod } from "@/lib/timing_method";
 import { TS_ZERO, formatTsDisplay, tsAdd, type Timespan } from "@/lib/timespan";
-
-type TimingMethodKey = keyof typeof TimingMethod;
 
 export default function SplitsView({
   data,
   error,
   errorTitle,
-  timingMethod,
 }: {
   data: LiveSplit | null;
   error: string | null;
   errorTitle: string;
-  timingMethod: TimingMethodKey;
 }) {
   if (error) {
     return (
@@ -28,9 +23,8 @@ export default function SplitsView({
   }
   if (!data) return null;
 
-  const tm = TimingMethod[timingMethod];
   const segmentDeltas: (Timespan | null)[] = data.segments.map((seg) =>
-    seg.split_times.length === 1 ? tm.time_of_split(seg.split_times[0]) : null,
+    seg.split_times.length === 1 ? seg.split_times[0].game_time : null,
   );
   const times: (Timespan | null)[] = [];
   for (let i = 0; i < segmentDeltas.length; i++) {

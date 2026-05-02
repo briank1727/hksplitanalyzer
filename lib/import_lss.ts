@@ -69,7 +69,6 @@ export function csv_to_lss(
   data: string[][],
   splitNamesIdx: number,
   autoSplitNamesIdx: number,
-  realTimesIdx: number,
   gameTimesIdx: number,
 ): LiveSplit {
   if (data.length === 0) {
@@ -83,7 +82,6 @@ export function csv_to_lss(
     split_times: [
       {
         id: 0,
-        real_time: formatTimespan(row[realTimesIdx] || ""),
         game_time: formatTimespan(row[gameTimesIdx] || ""),
       },
     ],
@@ -108,7 +106,6 @@ export function fetch_web_lss(source: WebLSSKind): Promise<FetchLSSResult> {
         result.data,
         source.split_names_idx,
         source.auto_split_names_idx,
-        source.real_times_idx,
         source.game_times_idx,
       );
       resolve({ success: true, data: liveSplit });
@@ -127,7 +124,6 @@ export type WebLSSKind = {
   sheet_url: string;
   split_names_idx: number;
   auto_split_names_idx: number;
-  real_times_idx: number;
   game_times_idx: number;
 };
 
@@ -140,7 +136,6 @@ export const WebLSS = {
       "https://docs.google.com/spreadsheets/d/1-Hy5k_h9dBUUPlwh_I14K-DEwGcNdVQ0utI-KX56d8c/edit?gid=2094941807#gid=2094941807",
     split_names_idx: 0,
     auto_split_names_idx: 1,
-    real_times_idx: 2,
     game_times_idx: 2,
   },
   AnyBellsRoute: {
@@ -151,7 +146,6 @@ export const WebLSS = {
       "https://docs.google.com/spreadsheets/d/1-Hy5k_h9dBUUPlwh_I14K-DEwGcNdVQ0utI-KX56d8c/edit?gid=7316953#gid=7316953",
     split_names_idx: 0,
     auto_split_names_idx: 1,
-    real_times_idx: 2,
     game_times_idx: 2,
   },
   TrueEnding891: {
@@ -162,7 +156,6 @@ export const WebLSS = {
       "https://docs.google.com/spreadsheets/d/1xZk3XRwhGBW64vsMfUhLkfUdud0V1iuWYxjg8v9ssGs/edit?gid=463520651#gid=463520651",
     split_names_idx: 0,
     auto_split_names_idx: 1,
-    real_times_idx: 2,
     game_times_idx: 2,
   },
   OneHundredPercentMonstahlerV6: {
@@ -173,7 +166,6 @@ export const WebLSS = {
       "https://docs.google.com/spreadsheets/d/1pam4Xeu3fC4VrDLcHGtacHD2oEbwDo_RX2rctOLvyX0/edit?gid=1808861139#gid=1808861139",
     split_names_idx: 0,
     auto_split_names_idx: 1,
-    real_times_idx: 2,
     game_times_idx: 2,
   },
   LowPercent: {
@@ -184,7 +176,6 @@ export const WebLSS = {
       "https://docs.google.com/spreadsheets/d/1VOfmmYpoLeAgdwi3k9CmCxJAPYk3-bvNQb1vHiAwELw/edit?gid=7752011#gid=7752011",
     split_names_idx: 0,
     auto_split_names_idx: 1,
-    real_times_idx: 2,
     game_times_idx: 2,
   },
   AllBosses: {
@@ -195,7 +186,6 @@ export const WebLSS = {
       "https://docs.google.com/spreadsheets/d/1juPDWzwMMg-BNKS2JvqqgQ-oRl76neLitUfoYfzl_2Q/edit?gid=1151571350#gid=1151571350",
     split_names_idx: 0,
     auto_split_names_idx: 1,
-    real_times_idx: 2,
     game_times_idx: 2,
   },
   AllBossesAct2: {
@@ -206,7 +196,6 @@ export const WebLSS = {
       "https://docs.google.com/spreadsheets/d/125RGkNo8FLEpzCnv_tYpoZzbRWKyWPuBmIk3e0XyG3o/edit?gid=0#gid=0",
     split_names_idx: 0,
     auto_split_names_idx: 1,
-    real_times_idx: 2,
     game_times_idx: 2,
   },
   AllBossesAct1: {
@@ -217,7 +206,6 @@ export const WebLSS = {
       "https://docs.google.com/spreadsheets/d/19tDgaU2f2DsYmtWl6E951yx6JqIwODv_Lx8scUZjr1w/edit?gid=617578394#gid=617578394",
     split_names_idx: 0,
     auto_split_names_idx: 1,
-    real_times_idx: 2,
     game_times_idx: 2,
   },
   AnyKeyRouteOldComsobPoints: {
@@ -228,7 +216,6 @@ export const WebLSS = {
       "https://docs.google.com/spreadsheets/d/1-Hy5k_h9dBUUPlwh_I14K-DEwGcNdVQ0utI-KX56d8c/edit?gid=443305765#gid=443305765",
     split_names_idx: 0,
     auto_split_names_idx: 1,
-    real_times_idx: 2,
     game_times_idx: 2,
   },
   AnyBellsRouteOldComsobPoints: {
@@ -239,7 +226,6 @@ export const WebLSS = {
       "https://docs.google.com/spreadsheets/d/1-Hy5k_h9dBUUPlwh_I14K-DEwGcNdVQ0utI-KX56d8c/edit?gid=43527522#gid=43527522",
     split_names_idx: 0,
     auto_split_names_idx: 1,
-    real_times_idx: 2,
     game_times_idx: 2,
   },
   TrueEnding891Old: {
@@ -250,7 +236,6 @@ export const WebLSS = {
       "https://docs.google.com/spreadsheets/d/1xZk3XRwhGBW64vsMfUhLkfUdud0V1iuWYxjg8v9ssGs/edit?gid=1416049146#gid=1416049146",
     split_names_idx: 0,
     auto_split_names_idx: 1,
-    real_times_idx: 2,
     game_times_idx: 2,
   },
   OneHundredPercentMathuluV2_1: {
@@ -261,7 +246,6 @@ export const WebLSS = {
       "https://docs.google.com/spreadsheets/d/1pam4Xeu3fC4VrDLcHGtacHD2oEbwDo_RX2rctOLvyX0/edit?gid=1396866315#gid=1396866315",
     split_names_idx: 0,
     auto_split_names_idx: 1,
-    real_times_idx: 2,
     game_times_idx: 2,
   },
   OneHundredPercentMonstahlerV6BB: {
@@ -272,7 +256,6 @@ export const WebLSS = {
       "https://docs.google.com/spreadsheets/d/1pam4Xeu3fC4VrDLcHGtacHD2oEbwDo_RX2rctOLvyX0/edit?gid=1151571350#gid=1151571350",
     split_names_idx: 0,
     auto_split_names_idx: 1,
-    real_times_idx: 2,
     game_times_idx: 2,
   },
 } as const satisfies Record<string, WebLSSKind>;

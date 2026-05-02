@@ -14,7 +14,6 @@ export type Segment = {
 
 export type SplitTime = {
   id: number;
-  real_time: Timespan;
   game_time: Timespan;
 };
 
@@ -55,10 +54,9 @@ export function parse_lss(contents: string): LiveSplit {
     const split_times: SplitTime[] = timeNodes
       .map((t) => ({
         id: Number(t["@_id"]),
-        real_time: readTimespan(t.RealTime),
         game_time: readTimespan(t.GameTime),
       }))
-      .filter((st) => st.real_time !== TS_ZERO || st.game_time !== TS_ZERO);
+      .filter((st) => st.game_time !== TS_ZERO);
     return {
       name: String(seg.Name ?? ""),
       auto_split_name: "",

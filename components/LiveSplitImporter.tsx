@@ -5,12 +5,10 @@ import Button from "@/components/Button";
 import SplitsView from "@/components/SplitsView";
 import { import_lss } from "@/lib/import_lss";
 import { Comparison } from "@/lib/comparison";
-import { TimingMethod } from "@/lib/timing_method";
 import { parse_lss, type LiveSplit } from "@/lib/lss_logic";
 import { formatTsDisplay, tsAdd, TS_ZERO, type Timespan } from "@/lib/timespan";
 
 type ComparisonKey = keyof typeof Comparison;
-type TimingMethodKey = keyof typeof TimingMethod;
 
 export default function LiveSplitImporter({
   title,
@@ -25,7 +23,6 @@ export default function LiveSplitImporter({
   const [importedFileName, setImportedFileName] = useState<string | null>(null);
   const [importError, setImportError] = useState<string | null>(null);
   const [choice, setChoice] = useState<ComparisonKey>("PersonalBest");
-  const [timing, setTiming] = useState<TimingMethodKey>("GameTime");
   const [bigSplits, setBigSplits] = useState<boolean>(true);
   const [generateError, setGenerateError] = useState<string | null>(null);
 
@@ -37,18 +34,17 @@ export default function LiveSplitImporter({
   const generatedStats = useMemo(() => {
     if (!generated) return null;
     const numSplits = generated.segments.length;
-    const tm = TimingMethod[timing];
     let total: Timespan = TS_ZERO;
     let allTimed = true;
     for (const seg of generated.segments) {
       if (seg.split_times.length === 1) {
-        total = tsAdd(total, tm.time_of_split(seg.split_times[0]));
+        total = tsAdd(total, seg.split_times[0].game_time);
       } else {
         allTimed = false;
       }
     }
     return { numSplits, totalTime: allTimed ? total : null };
-  }, [generated, timing]);
+  }, [generated]);
 
   const handleImport = async () => {
     setImportError(null);
@@ -81,19 +77,9 @@ export default function LiveSplitImporter({
     setGenerateError(null);
     try {
       setGenerated(
-        Comparison[choice].generate_comparison(
-          imported,
-          TimingMethod[timing],
-          bigSplits,
-        ),
+        Comparison[choice].generate_comparison(imported, bigSplits),
       );
-      console.log(
-        Comparison[choice].generate_comparison(
-          imported,
-          TimingMethod[timing],
-          bigSplits,
-        ),
-      );
+      console.log(Comparison[choice].generate_comparison(imported, bigSplits));
     } catch (e) {
       setGenerated(null);
       setGenerateError(
@@ -141,21 +127,6 @@ export default function LiveSplitImporter({
           </select>
         </label>
         <label className="flex items-center gap-1.5 disabled:opacity-50 disabled:pointer-events-none">
-          <span className="text-sm text-black dark:text-zinc-50">Timing</span>
-          <select
-            value={timing}
-            onChange={(e) => setTiming(e.target.value as TimingMethodKey)}
-            disabled={!imported}
-            className="h-9 rounded-full border border-black/10 bg-white px-3 text-sm text-black disabled:opacity-50 disabled:pointer-events-none dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
-          >
-            {(Object.keys(TimingMethod) as TimingMethodKey[]).map((key) => (
-              <option key={key} value={key}>
-                {TimingMethod[key].name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="flex items-center gap-1.5 disabled:opacity-50 disabled:pointer-events-none">
           <input
             type="checkbox"
             checked={bigSplits}
@@ -188,7 +159,6 @@ export default function LiveSplitImporter({
         data={generated}
         error={generateError}
         errorTitle="Timeline failed"
-        timingMethod={timing}
       />
     </>
   );

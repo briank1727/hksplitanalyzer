@@ -11,10 +11,8 @@ import {
   formatPercent,
   percentBgStyle,
 } from "@/lib/diff_format";
-import { TimingMethod } from "@/lib/timing_method";
 import { formatTsDisplay } from "@/lib/timespan";
 
-type TimingMethodKey = keyof typeof TimingMethod;
 type DiffSortByKey = keyof typeof DiffSortBy;
 
 export default function DiffSplitView({
@@ -26,7 +24,6 @@ export default function DiffSplitView({
 }) {
   const [sortBy, setSortBy] = useState<DiffSortByKey>("Order");
   const [isAscending, setIsAscending] = useState(true);
-  const [timing, setTiming] = useState<TimingMethodKey>("GameTime");
   const [swapped, setSwapped] = useState(false);
 
   const t1 = swapped ? timeline2 : timeline1;
@@ -47,18 +44,13 @@ export default function DiffSplitView({
       ? `Segment metadata differs between timelines; proceeding anyway:\n${mismatches.join("\n")}`
       : null;
 
-  const tm = TimingMethod[timing];
   const rows = t1.segments
     .map((seg1, i) => {
       const seg2 = t2.segments[i];
       const time1 =
-        seg1.split_times.length === 1
-          ? tm.time_of_split(seg1.split_times[0])
-          : null;
+        seg1.split_times.length === 1 ? seg1.split_times[0].game_time : null;
       const time2 =
-        seg2.split_times.length === 1
-          ? tm.time_of_split(seg2.split_times[0])
-          : null;
+        seg2.split_times.length === 1 ? seg2.split_times[0].game_time : null;
       if (time1 === null || time2 === null) return null;
       return new DiffTime(seg1.name, time1, time2);
     })
@@ -95,20 +87,6 @@ export default function DiffSplitView({
         >
           Swap Timelines
         </Button>
-        <label className="flex items-center gap-1.5">
-          <span className="text-sm text-black dark:text-zinc-50">Timing</span>
-          <select
-            value={timing}
-            onChange={(e) => setTiming(e.target.value as TimingMethodKey)}
-            className="h-9 rounded-full border border-black/10 bg-white px-3 text-sm text-black dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
-          >
-            {(Object.keys(TimingMethod) as TimingMethodKey[]).map((key) => (
-              <option key={key} value={key}>
-                {TimingMethod[key].name}
-              </option>
-            ))}
-          </select>
-        </label>
         <label className="flex items-center gap-1.5">
           <span className="text-sm text-black dark:text-zinc-50">Sort By</span>
           <select

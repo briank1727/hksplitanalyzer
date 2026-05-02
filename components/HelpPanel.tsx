@@ -24,10 +24,10 @@ export default function HelpPanel({ open, onClose }: HelpPanelProps) {
       <br />
       <br />
       First import a LiveSplit file or fetch splits from a supported web source.
-      Once you have imported your splits, use the dropdowns to select which
-      comparisons and timing methods you want to use, and click "Generate
-      Timeline" on each timeline panel to see the results (for ComSOBs it
-      doesn't matter since they are just one time anyway).
+      Once you have imported your splits, use the dropdown to select which
+      comparison you want to use, and click "Generate Timeline" on each timeline
+      panel to see the results (for ComSOBs it doesn't matter since they are
+      just one time anyway).
       <br />
       <br />
       Check the{" "}
