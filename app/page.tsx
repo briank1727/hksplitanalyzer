@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Button from "@/components/Button";
 import HelpDialog from "@/components/HelpDialog";
-import ComsobPage from "@/app/views/ComsobPage";
-import AnalyzeLSSPage from "@/app/views/AnalyzeLSSPage";
+import ComsobPage from "@/views/ComsobPage";
+import AnalyzeLSSPage from "@/views/AnalyzeLSSPage";
 
 type Tab = "compare" | "analyze";
 
