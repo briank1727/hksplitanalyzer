@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ComsobPage from "@/app/views/ComsobPage";
+import AnalyzeLSSPage from "@/app/views/AnalyzeLSSPage";
 
 type Tab = "compare" | "analyze";
 
@@ -17,13 +18,8 @@ export default function Home() {
 
   return (
     <div className="flex flex-col flex-1 bg-zinc-50 font-sans dark:bg-black">
-      <header className="flex flex-col items-center justify-center text-center px-8 pt-12 pb-6 gap-4">
-        <h1 className="text-5xl sm:text-6xl font-semibold tracking-tight text-black dark:text-zinc-50">
-          DeltaSOB
-        </h1>
-        <p className="text-lg sm:text-xl text-zinc-600 dark:text-zinc-400">
-          A speedrunner&apos;s tool for comparing times.
-        </p>
+      <header className="flex flex-col items-center justify-center text-center px-4 py-2">
+        <img src="/logo.png" alt="DeltaSOB" className="h-auto max-h-64" />
       </header>
 
       <div className="flex justify-center border-b border-black/10 dark:border-white/15 px-8">
@@ -45,7 +41,7 @@ export default function Home() {
         </div>
       </div>
 
-      <main className="flex flex-col flex-1 min-h-0">
+      <main className="flex flex-col flex-1 min-h-0 overflow-y-auto">
         <div
           className={`flex flex-col flex-1 min-h-0 ${tab === "compare" ? "" : "hidden"}`}
         >
@@ -53,7 +49,9 @@ export default function Home() {
         </div>
         <div
           className={`flex flex-col flex-1 min-h-0 ${tab === "analyze" ? "" : "hidden"}`}
-        />
+        >
+          <AnalyzeLSSPage />
+        </div>
       </main>
     </div>
   );

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -12,9 +13,31 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const trajanPro = localFont({
+  src: [
+    {
+      path: "../public/TrajanPro-Regular.ttf",
+      weight: "400",
+      style: "normal",
+    },
+  ],
+  variable: "--font-trajan",
+});
+
+const perpetua = localFont({
+  src: [
+    {
+      path: "../public/Perpetua-Regular.otf",
+      weight: "400",
+      style: "normal",
+    },
+  ],
+  variable: "--font-perpetua",
+});
+
 export const metadata: Metadata = {
-  title: "DeltaSOB",
-  description: "A speedrunner's tool for comparing times.",
+  title: "Hollow Knight Split Analyzer",
+  description: "A hollow knight speedrunner's tool for comparing times.",
 };
 
 export default function RootLayout({
@@ -25,9 +48,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${trajanPro.variable} ${perpetua.variable} h-full antialiased`}
     >
-      <body className="h-full flex flex-col overflow-hidden">{children}</body>
+      <body className="h-full flex flex-col">{children}</body>
     </html>
   );
 }
