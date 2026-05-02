@@ -154,7 +154,7 @@ export const WebLSS = {
     real_times_idx: 2,
     game_times_idx: 2,
   },
-  TrueEnding891New: {
+  TrueEnding891: {
     name: "True Ending (891)",
     top_left_cell: "B5",
     bottom_right_cell: "D68",
@@ -171,6 +171,50 @@ export const WebLSS = {
     bottom_right_cell: "D102",
     sheet_url:
       "https://docs.google.com/spreadsheets/d/1pam4Xeu3fC4VrDLcHGtacHD2oEbwDo_RX2rctOLvyX0/edit?gid=1808861139#gid=1808861139",
+    split_names_idx: 0,
+    auto_split_names_idx: 1,
+    real_times_idx: 2,
+    game_times_idx: 2,
+  },
+  LowPercent: {
+    name: "Low%",
+    top_left_cell: "B4",
+    bottom_right_cell: "D29",
+    sheet_url:
+      "https://docs.google.com/spreadsheets/d/1VOfmmYpoLeAgdwi3k9CmCxJAPYk3-bvNQb1vHiAwELw/edit?gid=7752011#gid=7752011",
+    split_names_idx: 0,
+    auto_split_names_idx: 1,
+    real_times_idx: 2,
+    game_times_idx: 2,
+  },
+  AllBosses: {
+    name: "All Bosses (Act 3)",
+    top_left_cell: "B4",
+    bottom_right_cell: "D95",
+    sheet_url:
+      "https://docs.google.com/spreadsheets/d/1juPDWzwMMg-BNKS2JvqqgQ-oRl76neLitUfoYfzl_2Q/edit?gid=1151571350#gid=1151571350",
+    split_names_idx: 0,
+    auto_split_names_idx: 1,
+    real_times_idx: 2,
+    game_times_idx: 2,
+  },
+  AllBossesAct2: {
+    name: "All Bosses (Act 2)",
+    top_left_cell: "B4",
+    bottom_right_cell: "D58",
+    sheet_url:
+      "https://docs.google.com/spreadsheets/d/125RGkNo8FLEpzCnv_tYpoZzbRWKyWPuBmIk3e0XyG3o/edit?gid=0#gid=0",
+    split_names_idx: 0,
+    auto_split_names_idx: 1,
+    real_times_idx: 2,
+    game_times_idx: 2,
+  },
+  AllBossesAct1: {
+    name: "All Bosses (Act 1)",
+    top_left_cell: "B4",
+    bottom_right_cell: "D25",
+    sheet_url:
+      "https://docs.google.com/spreadsheets/d/19tDgaU2f2DsYmtWl6E951yx6JqIwODv_Lx8scUZjr1w/edit?gid=617578394#gid=617578394",
     split_names_idx: 0,
     auto_split_names_idx: 1,
     real_times_idx: 2,

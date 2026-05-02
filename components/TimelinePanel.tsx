@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import Button from "@/components/Button";
 import Dialog from "@/components/Dialog";
 import LiveSplitView from "@/components/LiveSplitView";
@@ -8,6 +8,12 @@ import { import_lss, WebLSS, fetch_web_lss } from "@/lib/import_lss";
 import { Comparison } from "@/lib/comparison";
 import { TimingMethod } from "@/lib/timing_method";
 import { parse_lss, type LiveSplit } from "@/lib/lss_logic";
+import {
+  formatTsDisplay,
+  tsAdd,
+  TS_ZERO,
+  type Timespan,
+} from "@/lib/timespan";
 
 type ComparisonKey = keyof typeof Comparison;
 type TimingMethodKey = keyof typeof TimingMethod;
@@ -30,6 +36,27 @@ export default function TimelinePanel({
   const [bigSplits, setBigSplits] = useState<boolean>(true);
   const [generateError, setGenerateError] = useState<string | null>(null);
   const [webDialogOpen, setWebDialogOpen] = useState<boolean>(false);
+
+  const importedStats = useMemo(() => {
+    if (!imported) return null;
+    return { numSplits: imported.segments.length };
+  }, [imported]);
+
+  const generatedStats = useMemo(() => {
+    if (!generated) return null;
+    const numSplits = generated.segments.length;
+    const tm = TimingMethod[timing];
+    let total: Timespan = TS_ZERO;
+    let allTimed = true;
+    for (const seg of generated.segments) {
+      if (seg.split_times.length === 1) {
+        total = tsAdd(total, tm.time_of_split(seg.split_times[0]));
+      } else {
+        allTimed = false;
+      }
+    }
+    return { numSplits, totalTime: allTimed ? total : null };
+  }, [generated, timing]);
 
   const handleImport = async () => {
     setImportError(null);
@@ -114,13 +141,17 @@ export default function TimelinePanel({
         {title}
       </h2>
       <div className="flex flex-wrap items-center gap-2">
-        <Button size="sm" onClick={handleImport}>Import LSS File</Button>
-        <Button size="sm" onClick={() => setWebDialogOpen(true)}>Import from Web</Button>
+        <Button size="sm" onClick={handleImport}>
+          Import LSS File
+        </Button>
+        <Button size="sm" onClick={() => setWebDialogOpen(true)}>
+          Compare to ComSOB
+        </Button>
       </div>
       <Dialog
         open={webDialogOpen}
         onClose={() => setWebDialogOpen(false)}
-        title="Import from Web"
+        title="Compare to ComSOB"
       >
         <ul className="max-h-80 space-y-2 overflow-y-auto">
           {(Object.keys(WebLSS) as WebImportKey[]).map((key) => (
@@ -144,9 +175,13 @@ export default function TimelinePanel({
           ))}
         </ul>
       </Dialog>
-      {imported && importedFileName && (
+      {imported && importedFileName && importedStats && (
         <div className="mt-3 rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-200">
-          Successfully imported from {importedFileName}
+          <div>Successfully imported from {importedFileName}</div>
+          <div>
+            {importedStats.numSplits} split
+            {importedStats.numSplits === 1 ? "" : "s"}
+          </div>
         </div>
       )}
       {importError && (
@@ -173,9 +208,7 @@ export default function TimelinePanel({
           </select>
         </label>
         <label className="flex items-center gap-1.5 disabled:opacity-50 disabled:pointer-events-none">
-          <span className="text-sm text-black dark:text-zinc-50">
-            Timing
-          </span>
+          <span className="text-sm text-black dark:text-zinc-50">Timing</span>
           <select
             value={timing}
             onChange={(e) => setTiming(e.target.value as TimingMethodKey)}
@@ -207,6 +240,17 @@ export default function TimelinePanel({
           Generate Timeline
         </Button>
       </div>
+      {generated && generatedStats && (
+        <div className="mt-3 rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-200">
+          <div>Timeline generated successfully</div>
+          <div>
+            {generatedStats.numSplits} split
+            {generatedStats.numSplits === 1 ? "" : "s"}
+            {generatedStats.totalTime !== null &&
+              `, total ${formatTsDisplay(generatedStats.totalTime)}`}
+          </div>
+        </div>
+      )}
       <LiveSplitView
         data={generated}
         error={generateError}

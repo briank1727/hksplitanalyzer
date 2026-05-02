@@ -21,101 +21,60 @@ export default function DiffSplitView({
   timeline1,
   timeline2,
 }: {
-  timeline1: LiveSplit | null;
-  timeline2: LiveSplit | null;
+  timeline1: LiveSplit;
+  timeline2: LiveSplit;
 }) {
-  const [error, setError] = useState<string | null>(null);
-  const [warning, setWarning] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<DiffSortByKey>("Order");
   const [isAscending, setIsAscending] = useState(true);
   const [timing, setTiming] = useState<TimingMethodKey>("GameTime");
-  const [local1, setLocal1] = useState<LiveSplit | null>(null);
-  const [local2, setLocal2] = useState<LiveSplit | null>(null);
+  const [swapped, setSwapped] = useState(false);
 
-  const handleCompare = () => {
-    setError(null);
-    setWarning(null);
-    setLocal1(null);
-    setLocal2(null);
+  const t1 = swapped ? timeline2 : timeline1;
+  const t2 = swapped ? timeline1 : timeline2;
 
-    if (!timeline1 || !timeline2) {
-      setError("Both timelines must be generated before comparing.");
-      return;
-    }
-
-    if (timeline1.segments.length !== timeline2.segments.length) {
-      setError(
-        `Timelines have different numbers of splits (${timeline1.segments.length} vs ${timeline2.segments.length}).`,
-      );
-      return;
-    }
-
-    const copy1 = structuredClone(timeline1);
-    const copy2 = structuredClone(timeline2);
-
-    const mismatches: string[] = [];
-    for (let i = 0; i < copy1.segments.length; i++) {
-      const a = copy1.segments[i];
-      const b = copy2.segments[i];
-      if (a.auto_split_name !== b.auto_split_name) {
-        mismatches.push(
-          `Split ${i + 1}: auto split "${a.auto_split_name}" vs "${b.auto_split_name}"`,
-        );
-      }
-    }
-
-    if (mismatches.length > 0) {
-      setWarning(
-        `Segment metadata differs between timelines; proceeding anyway:\n${mismatches.join("\n")}`,
+  const mismatches: string[] = [];
+  for (let i = 0; i < t1.segments.length; i++) {
+    const a = t1.segments[i];
+    const b = t2.segments[i];
+    if (a.auto_split_name !== b.auto_split_name) {
+      mismatches.push(
+        `Split ${i + 1}: auto split "${a.auto_split_name}" vs "${b.auto_split_name}"`,
       );
     }
-    setLocal1(copy1);
-    setLocal2(copy2);
-  };
-
-  const handleSwap = () => {
-    setLocal1(local2);
-    setLocal2(local1);
-  };
-
-  const valid = local1 !== null && local2 !== null;
-  const showDiff = valid;
+  }
+  const warning =
+    mismatches.length > 0
+      ? `Segment metadata differs between timelines; proceeding anyway:\n${mismatches.join("\n")}`
+      : null;
 
   const tm = TimingMethod[timing];
-  const rows = showDiff
-    ? (local1!.segments
-        .map((seg1, i) => {
-          const seg2 = local2!.segments[i];
-          const time1 =
-            seg1.split_times.length === 1
-              ? tm.time_of_split(seg1.split_times[0])
-              : null;
-          const time2 =
-            seg2.split_times.length === 1
-              ? tm.time_of_split(seg2.split_times[0])
-              : null;
-          if (time1 === null || time2 === null) return null;
-          return new DiffTime(seg1.name, time1, time2);
-        })
-        .filter((row) => row !== null) as DiffTime[])
-    : [];
+  const rows = t1.segments
+    .map((seg1, i) => {
+      const seg2 = t2.segments[i];
+      const time1 =
+        seg1.split_times.length === 1
+          ? tm.time_of_split(seg1.split_times[0])
+          : null;
+      const time2 =
+        seg2.split_times.length === 1
+          ? tm.time_of_split(seg2.split_times[0])
+          : null;
+      if (time1 === null || time2 === null) return null;
+      return new DiffTime(seg1.name, time1, time2);
+    })
+    .filter((row) => row !== null) as DiffTime[];
 
-  // Calculate max absolute diff in milliseconds for gradient scaling
   const maxDiffMs =
     rows.length > 0
       ? Math.max(...rows.map((r) => Math.abs(Number(r.diff())) / 10000))
       : 0;
-  // Use at least 1ms as threshold to avoid division by zero
   const diffThresholdMs = Math.max(maxDiffMs, 1);
 
-  // Apply sorting
   let sortedRows = DiffSortBy[sortBy].sort(rows);
   if (!isAscending) {
     sortedRows = sortedRows.reverse();
   }
 
-  // Build pie slices from positive-only diffs (in ms). Non-positive diffs
-  // contribute 0, so when every split was at-or-ahead the total is 0.
   const pieSlices: SplitPieSlice[] = sortedRows.map((row) => ({
     name: row.name,
     time: Math.max(0, Number(row.diff()) / 10000),
@@ -123,40 +82,16 @@ export default function DiffSplitView({
   const pieTotal = pieSlices.reduce((sum, s) => sum + s.time, 0);
   const hasPieData = pieTotal > 0;
 
-  const percentSlices: SplitPieSlice[] = sortedRows.map((row) => ({
-    name: row.name,
-    time: Math.max(0, row.percent()),
-  }));
-  const percentTotal = percentSlices.reduce((sum, s) => sum + s.time, 0);
-  const hasPercentData = percentTotal > 0;
-
   return (
     <div>
       <h2 className="mb-3 text-lg font-semibold tracking-tight text-black dark:text-zinc-50">
         Delta
       </h2>
       <div className="flex flex-wrap items-center gap-2">
-        <span
-          title={
-            !timeline1 || !timeline2
-              ? "Generate two timelines first"
-              : undefined
-          }
-        >
-          <Button
-            size="sm"
-            variant="success"
-            onClick={handleCompare}
-            disabled={!timeline1 || !timeline2}
-          >
-            Compare
-          </Button>
-        </span>
         <Button
           size="sm"
           variant="secondary"
-          onClick={handleSwap}
-          disabled={!local1 && !local2}
+          onClick={() => setSwapped((s) => !s)}
         >
           Swap Timelines
         </Button>
@@ -196,15 +131,6 @@ export default function DiffSplitView({
           {isAscending ? "Ascending" : "Descending"}
         </Button>
       </div>
-      {error && (
-        <div
-          role="alert"
-          className="mt-4 text-sm rounded p-3 border border-red-500/40 bg-red-500/10 text-red-700 dark:text-red-300"
-        >
-          <div className="font-semibold">Comparison failed</div>
-          <div className="mt-1 break-words">{error}</div>
-        </div>
-      )}
       {warning && (
         <div
           role="alert"
@@ -216,16 +142,8 @@ export default function DiffSplitView({
           </pre>
         </div>
       )}
-      {valid && !warning && (
-        <div
-          role="status"
-          className="mt-4 text-sm rounded p-3 border border-green-500/40 bg-green-500/10 text-green-700 dark:text-green-300"
-        >
-          Comparisons are valid.
-        </div>
-      )}
-      {showDiff && (
-        <div className="mt-3 max-h-[60vh] overflow-auto rounded bg-[#2a1f3d] text-zinc-100 text-xs">
+      <div className="mt-3 flex gap-4">
+        <div className="flex-1 min-w-0 max-h-[60vh] overflow-auto rounded bg-[#2a1f3d] text-zinc-100 text-xs">
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-white/10 text-zinc-300">
@@ -263,9 +181,7 @@ export default function DiffSplitView({
             </tbody>
           </table>
         </div>
-      )}
-      {showDiff && (
-        <div className="mt-4">
+        <div className="flex-1 min-w-0">
           <h3 className="mb-2 text-md font-semibold tracking-tight text-black dark:text-zinc-50">
             Time Lost By Split
           </h3>
@@ -277,7 +193,7 @@ export default function DiffSplitView({
             </div>
           )}
         </div>
-      )}
+      </div>
     </div>
   );
 }
