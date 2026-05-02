@@ -87,11 +87,7 @@ export default function DiffSplitView({
         Delta
       </h2>
       <div className="flex flex-wrap items-center gap-2">
-        <Button
-          size="sm"
-          variant="secondary"
-          onClick={() => setSwapped((s) => !s)}
-        >
+        <Button size="sm" onClick={() => setSwapped((s) => !s)}>
           Swap Timelines
         </Button>
         <label className="flex items-center gap-1.5">
@@ -110,11 +106,7 @@ export default function DiffSplitView({
             ))}
           </select>
         </label>
-        <Button
-          size="sm"
-          variant="secondary"
-          onClick={() => setIsAscending(!isAscending)}
-        >
+        <Button size="sm" onClick={() => setIsAscending(!isAscending)}>
           {isAscending ? "Ascending" : "Descending"}
         </Button>
       </div>

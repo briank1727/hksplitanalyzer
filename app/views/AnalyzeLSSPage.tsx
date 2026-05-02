@@ -76,11 +76,7 @@ export default function AnalyzeLSSPage() {
     return (
       <div className="flex flex-col gap-4 pt-4 px-4">
         <div className="flex justify-center">
-          <Button
-            size="sm"
-            variant="secondary"
-            onClick={() => setShowDiff(false)}
-          >
+          <Button size="sm" onClick={() => setShowDiff(false)}>
             ← Back
           </Button>
         </div>
