@@ -201,7 +201,7 @@ export const WebLSS = {
   AllBossesAct1: {
     name: "All Bosses (Act 1)",
     top_left_cell: "B4",
-    bottom_right_cell: "D25",
+    bottom_right_cell: "D26",
     sheet_url:
       "https://docs.google.com/spreadsheets/d/19tDgaU2f2DsYmtWl6E951yx6JqIwODv_Lx8scUZjr1w/edit?gid=617578394#gid=617578394",
     split_names_idx: 0,
