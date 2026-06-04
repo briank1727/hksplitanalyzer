@@ -40,9 +40,9 @@ export default function SplitsTable({
       <div className="grid grid-cols-[1fr_1fr_6rem_6rem_6rem] gap-x-3 px-2 py-1.5 border-b border-white/10 font-semibold text-zinc-300">
         <div>Name</div>
         <div>Auto Split</div>
-        <div className="text-right">Date</div>
-        <div className="text-right">Time</div>
-        <div className="text-right">Segment</div>
+        <div className="text-left">Date</div>
+        <div className="text-left">Time</div>
+        <div className="text-left">Segment</div>
       </div>
       {data.segments.map((seg, i) => (
         <div
@@ -51,13 +51,13 @@ export default function SplitsTable({
         >
           <div className="truncate">{seg.name}</div>
           <div className="truncate text-zinc-400">{seg.auto_split_name}</div>
-          <div className="text-right tabular-nums text-zinc-400">
+          <div className="text-left tabular-nums text-zinc-400">
             {seg.split_times.length === 1 ? (seg.split_times[0].date ?? "") : ""}
           </div>
-          <div className="text-right tabular-nums font-semibold">
+          <div className="text-left tabular-nums font-semibold">
             {times[i] !== null ? formatTsDisplay(times[i] as Timespan) : ""}
           </div>
-          <div className="text-right tabular-nums font-semibold">
+          <div className="text-left tabular-nums font-semibold">
             {segmentDeltas[i] !== null
               ? formatTsDisplay(segmentDeltas[i] as Timespan)
               : ""}
