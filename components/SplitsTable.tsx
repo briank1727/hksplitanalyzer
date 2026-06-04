@@ -26,14 +26,31 @@ const INPUT_BASE =
   "w-full bg-transparent outline-none border border-zinc-700/50 rounded px-1 -mx-1 " +
   "hover:border-zinc-500 hover:bg-zinc-800/50 focus:border-zinc-400 focus:bg-zinc-800 transition-colors cursor-text";
 
+const GRID = "grid grid-cols-[1fr_1fr_6rem_6rem_2rem] gap-x-3 px-2";
+
 type SegmentRowProps = {
   seg: TimelineSegment;
   index: number;
   cumTime: Timespan | null;
   setTimeline: Dispatch<SetStateAction<Timeline | null>>;
+  isMenuOpen: boolean;
+  onMenuToggle: (e: React.MouseEvent) => void;
+  onDeleteRow: () => void;
+  onInsertAbove: () => void;
+  onInsertBelow: () => void;
 };
 
-function SegmentRow({ seg, index, cumTime, setTimeline }: SegmentRowProps) {
+function SegmentRow({
+  seg,
+  index,
+  cumTime,
+  setTimeline,
+  isMenuOpen,
+  onMenuToggle,
+  onDeleteRow,
+  onInsertAbove,
+  onInsertBelow,
+}: SegmentRowProps) {
   const [nameDraft, setNameDraft] = useState(seg.name);
   const [autoSplitDraft, setAutoSplitDraft] = useState(seg.auto_split_name);
   const [gameTimeDraft, setGameTimeDraft] = useState(formatTsDisplay(seg.game_time));
@@ -90,7 +107,7 @@ function SegmentRow({ seg, index, cumTime, setTimeline }: SegmentRowProps) {
   }
 
   return (
-    <div className="grid grid-cols-[1fr_1fr_6rem_6rem] gap-x-3 px-2 py-1 border-b border-white/5 last:border-b-0">
+    <div className={`${GRID} py-1 border-b border-white/5 last:border-b-0`}>
       <input
         ref={nameRef}
         type="text"
@@ -132,6 +149,37 @@ function SegmentRow({ seg, index, cumTime, setTimeline }: SegmentRowProps) {
       <div className="text-left tabular-nums font-semibold self-center">
         {cumTime !== null ? formatTsDisplay(cumTime) : ""}
       </div>
+      <div className="relative flex items-center justify-center">
+        <button
+          className="w-6 h-6 rounded flex items-center justify-center text-zinc-500 hover:text-zinc-100 hover:bg-zinc-700 transition-colors text-lg leading-none"
+          onClick={onMenuToggle}
+          aria-label="Row options"
+        >
+          ⋮
+        </button>
+        {isMenuOpen && (
+          <div className="absolute right-0 top-full mt-1 z-50 min-w-[160px] rounded border border-zinc-700 bg-zinc-800 shadow-lg py-1">
+            <button
+              className="w-full text-left px-3 py-1.5 text-sm text-zinc-100 hover:bg-zinc-700 transition-colors"
+              onClick={onDeleteRow}
+            >
+              Delete Row
+            </button>
+            <button
+              className="w-full text-left px-3 py-1.5 text-sm text-zinc-100 hover:bg-zinc-700 transition-colors"
+              onClick={onInsertAbove}
+            >
+              Insert Row Above
+            </button>
+            <button
+              className="w-full text-left px-3 py-1.5 text-sm text-zinc-100 hover:bg-zinc-700 transition-colors"
+              onClick={onInsertBelow}
+            >
+              Insert Row Below
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -147,6 +195,23 @@ export default function SplitsTable({
   error: string | null;
   errorTitle: string;
 }) {
+  const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (openMenuIndex === null) return;
+    function close() {
+      setOpenMenuIndex(null);
+    }
+    document.addEventListener("click", close);
+    return () => document.removeEventListener("click", close);
+  }, [openMenuIndex]);
+
+  function deleteRow(_index: number) {}
+
+  function insertRowAbove(_index: number) {}
+
+  function insertRowBelow(_index: number) {}
+
   if (error) {
     return (
       <div
@@ -169,11 +234,12 @@ export default function SplitsTable({
 
   return (
     <div className="mt-3 max-h-[60vh] overflow-auto rounded bg-gray-900 text-zinc-100 text-base">
-      <div className="grid grid-cols-[1fr_1fr_6rem_6rem] gap-x-3 px-2 py-1.5 border-b border-white/10 font-semibold text-zinc-300">
+      <div className={`${GRID} py-1.5 border-b border-white/10 font-semibold text-zinc-300`}>
         <div>Name</div>
         <div>Auto Split</div>
         <div className="text-left">Segment</div>
         <div className="text-left">Time</div>
+        <div />
       </div>
       {timeline.segments.map((seg, i) => (
         <SegmentRow
@@ -182,6 +248,14 @@ export default function SplitsTable({
           index={i}
           cumTime={times[i]}
           setTimeline={setTimeline}
+          isMenuOpen={openMenuIndex === i}
+          onMenuToggle={(e) => {
+            e.stopPropagation();
+            setOpenMenuIndex(openMenuIndex === i ? null : i);
+          }}
+          onDeleteRow={() => { deleteRow(i); setOpenMenuIndex(null); }}
+          onInsertAbove={() => { insertRowAbove(i); setOpenMenuIndex(null); }}
+          onInsertBelow={() => { insertRowBelow(i); setOpenMenuIndex(null); }}
         />
       ))}
     </div>
