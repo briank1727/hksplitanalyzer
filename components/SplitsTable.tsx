@@ -5,6 +5,7 @@ import type { Dispatch, SetStateAction } from "react";
 import type { Timeline, TimelineSegment } from "@/lib/timeline";
 import type { Timespan } from "@/lib/timespan";
 import { TS_ZERO, formatTsDisplay, tsAdd } from "@/lib/timespan";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 function parseGameTime(input: string): Timespan | null {
   const trimmed = input.trim();
@@ -151,11 +152,11 @@ function SegmentRow({
       </div>
       <div className="relative flex items-center justify-center">
         <button
-          className="w-6 h-6 rounded flex items-center justify-center text-zinc-500 hover:text-zinc-100 hover:bg-zinc-700 transition-colors text-lg leading-none"
+          className="w-6 h-6 rounded flex items-center justify-center text-zinc-500 hover:text-zinc-100 hover:bg-zinc-700 transition-colors"
           onClick={onMenuToggle}
           aria-label="Row options"
         >
-          ⋮
+          <MoreVertIcon fontSize="small" />
         </button>
         {isMenuOpen && (
           <div className="absolute right-0 top-full mt-1 z-50 min-w-[160px] rounded border border-zinc-700 bg-zinc-800 shadow-lg py-1">
