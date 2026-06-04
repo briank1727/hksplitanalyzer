@@ -13,7 +13,6 @@ export function formatPercent(p: number): string {
 }
 
 const PERCENT_FULL_INTENSITY = 20;
-const DIFF_FULL_INTENSITY_MS = 30000; // 30 seconds in milliseconds
 
 export function percentBgStyle(p: number | null): { backgroundColor?: string } {
   if (p === null || p === 0) return {};
