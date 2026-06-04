@@ -98,6 +98,7 @@ export default function SplitPieChart({
               isAnimationActive={false}
             />
             <Tooltip
+              isAnimationActive={false}
               content={
                 <CustomTooltip
                   valueLabel={valueLabel}
