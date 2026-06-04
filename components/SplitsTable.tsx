@@ -145,7 +145,7 @@ function SegmentRow({
         ref={gameTimeRef}
         type="text"
         value={gameTimeDraft}
-        className={`${INPUT_BASE} tabular-nums font-semibold ${
+        className={`${INPUT_BASE} tabular-nums font-semibold text-right ${
           gameTimeInvalid
             ? "border-red-500 bg-red-950/30 focus:border-red-500 focus:bg-red-950/30"
             : ""
@@ -157,7 +157,7 @@ function SegmentRow({
           if (e.key === "Enter") e.currentTarget.blur();
         }}
       />
-      <div className="text-left tabular-nums font-semibold self-center">
+      <div className="text-right tabular-nums font-semibold self-center">
         {cumTime !== null ? formatTsDisplay(cumTime) : ""}
       </div>
       <div className="relative flex items-center justify-center">
@@ -251,8 +251,8 @@ export default function SplitsTable({
       <div className={`${GRID} py-1.5 border-b border-white/10 font-semibold text-zinc-300`}>
         <div>Name</div>
         <div>Auto Split</div>
-        <div className="text-left">Segment</div>
-        <div className="text-left">Time</div>
+        <div className="text-right">Segment</div>
+        <div className="text-right">Time</div>
         <div />
       </div>
       {timeline.segments.map((seg, i) => (
