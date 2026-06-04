@@ -7,6 +7,7 @@ import DiffSplitView from "@/views/DiffSplitView";
 import { import_lss } from "@/lib/import_lss";
 import { Comparison } from "@/lib/comparison";
 import { parse_lss, type LiveSplit } from "@/lib/lss_logic";
+import type { Timeline } from "@/lib/timeline";
 
 type ComparisonKey = keyof typeof Comparison;
 
@@ -16,8 +17,8 @@ export default function AnalyzeLSSPage() {
   const [importError, setImportError] = useState<string | null>(null);
   const [choice1, setChoice1] = useState<ComparisonKey>("PersonalBest");
   const [choice2, setChoice2] = useState<ComparisonKey>("BestSegments");
-  const [timeline1, setTimeline1] = useState<LiveSplit | null>(null);
-  const [timeline2, setTimeline2] = useState<LiveSplit | null>(null);
+  const [timeline1, setTimeline1] = useState<Timeline | null>(null);
+  const [timeline2, setTimeline2] = useState<Timeline | null>(null);
   const [generateError, setGenerateError] = useState<string | null>(null);
   const [showDiff, setShowDiff] = useState(false);
   const [bigSplits, setBigSplits] = useState<boolean>(true);

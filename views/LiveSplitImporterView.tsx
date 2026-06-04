@@ -7,6 +7,7 @@ import { import_lss } from "@/lib/import_lss";
 import { Comparison } from "@/lib/comparison";
 import { parse_lss, type LiveSplit } from "@/lib/lss_logic";
 import { formatTsDisplay, tsAdd, TS_ZERO, type Timespan } from "@/lib/timespan";
+import type { Timeline } from "@/lib/timeline";
 
 type ComparisonKey = keyof typeof Comparison;
 
@@ -16,8 +17,8 @@ export default function LiveSplitImporter({
   setGenerated,
 }: {
   title: string;
-  generated: LiveSplit | null;
-  setGenerated: Dispatch<SetStateAction<LiveSplit | null>>;
+  generated: Timeline | null;
+  setGenerated: Dispatch<SetStateAction<Timeline | null>>;
 }) {
   const [imported, setImported] = useState<LiveSplit | null>(null);
   const [importedFileName, setImportedFileName] = useState<string | null>(null);
@@ -35,15 +36,10 @@ export default function LiveSplitImporter({
     if (!generated) return null;
     const numSplits = generated.segments.length;
     let total: Timespan = TS_ZERO;
-    let allTimed = true;
     for (const seg of generated.segments) {
-      if (seg.split_times.length === 1) {
-        total = tsAdd(total, seg.split_times[0].game_time);
-      } else {
-        allTimed = false;
-      }
+      total = tsAdd(total, seg.game_time);
     }
-    return { numSplits, totalTime: allTimed ? total : null };
+    return { numSplits, totalTime: total };
   }, [generated]);
 
   const handleImport = async () => {

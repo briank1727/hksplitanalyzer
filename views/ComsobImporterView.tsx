@@ -4,11 +4,11 @@ import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import Button from "@/components/Button";
 import Dialog from "@/components/Dialog";
 import SplitsTable from "@/components/SplitsTable";
-import { WebLSS, fetch_web_lss } from "@/lib/import_lss";
-import { type LiveSplit } from "@/lib/lss_logic";
+import { WebComsob, fetch_comsob_timeline } from "@/lib/import_comsob";
 import { formatTsDisplay, tsAdd, TS_ZERO, type Timespan } from "@/lib/timespan";
+import { Timeline } from "@/lib/timeline";
 
-type WebImportKey = keyof typeof WebLSS;
+type WebImportKey = keyof typeof WebComsob;
 
 export default function ComsobImporterView({
   title,
@@ -16,8 +16,8 @@ export default function ComsobImporterView({
   setGenerated,
 }: {
   title: string;
-  generated: LiveSplit | null;
-  setGenerated: Dispatch<SetStateAction<LiveSplit | null>>;
+  generated: Timeline | null;
+  setGenerated: Dispatch<SetStateAction<Timeline | null>>;
 }) {
   const [importedName, setImportedName] = useState<string | null>(null);
   const [importError, setImportError] = useState<string | null>(null);
@@ -27,15 +27,10 @@ export default function ComsobImporterView({
     if (!generated) return null;
     const numSplits = generated.segments.length;
     let total: Timespan = TS_ZERO;
-    let allTimed = true;
     for (const seg of generated.segments) {
-      if (seg.split_times.length === 1) {
-        total = tsAdd(total, seg.split_times[0].game_time);
-      } else {
-        allTimed = false;
-      }
+      total = tsAdd(total, seg.game_time);
     }
-    return { numSplits, totalTime: allTimed ? total : null };
+    return { numSplits, totalTime: total };
   }, [generated]);
 
   const handleWebImport = async (key: WebImportKey) => {
@@ -44,10 +39,10 @@ export default function ComsobImporterView({
     setGenerated(null);
     setImportedName(null);
     try {
-      const result = await fetch_web_lss(WebLSS[key]);
+      const result = await fetch_comsob_timeline(WebComsob[key]);
       if (result.success) {
         setGenerated(result.data);
-        setImportedName(WebLSS[key].name);
+        setImportedName(WebComsob[key].name);
       } else {
         setImportError(result.error);
       }
@@ -75,17 +70,17 @@ export default function ComsobImporterView({
           title="Select ComSOB"
         >
           <ul className="max-h-80 space-y-2 overflow-y-auto">
-            {(Object.keys(WebLSS) as WebImportKey[]).map((key) => (
+            {(Object.keys(WebComsob) as WebImportKey[]).map((key) => (
               <li key={key} className="flex items-center gap-6">
                 <Button
                   size="sm"
                   onClick={() => handleWebImport(key)}
                   className="flex-1"
                 >
-                  {WebLSS[key].name}
+                  {WebComsob[key].name}
                 </Button>
                 <a
-                  href={WebLSS[key].sheet_url}
+                  href={WebComsob[key].sheet_url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="mr-4 text-sm text-blue-600 underline hover:no-underline dark:text-blue-400"
@@ -101,8 +96,7 @@ export default function ComsobImporterView({
             <div>
               Imported {importedName} ({generatedStats.numSplits} split
               {generatedStats.numSplits === 1 ? "" : "s"}
-              {generatedStats.totalTime !== null &&
-                `, total time: ${formatTsDisplay(generatedStats.totalTime)}`}
+              {`, total time: ${formatTsDisplay(generatedStats.totalTime)}`}
               )
             </div>
           </div>

@@ -1,10 +1,11 @@
 import type { LiveSplit } from "@/lib/lss_logic";
 import type { Timespan } from "@/lib/timespan";
 import { TS_ZERO, tsAdd, tsAvg, tsCompare, tsToTicks } from "@/lib/timespan";
+import type { Timeline } from "@/lib/timeline";
 
 export type ComparisonKind = {
   name: string;
-  generate_comparison: (ls: LiveSplit, bigSplits: boolean) => LiveSplit;
+  generate_comparison: (ls: LiveSplit, bigSplits: boolean) => Timeline;
 };
 
 export class DiffTime {
@@ -127,12 +128,10 @@ function compress_big_splits(ls: LiveSplit): LiveSplit {
     const segment = ls.segments[i];
 
     if (segment.name.startsWith("-")) {
-      // Skip dashed segments, they'll be handled when we encounter the next big split
       i++;
       continue;
     }
 
-    // This is a big split, collect consecutive dashed segments before it
     const smallSplits: typeof ls.segments = [];
     let j = i - 1;
     while (j >= 0 && ls.segments[j].name.startsWith("-")) {
@@ -140,22 +139,18 @@ function compress_big_splits(ls: LiveSplit): LiveSplit {
       j--;
     }
 
-    // Merge small splits with the big split
     const mergedSegment = { ...segment };
 
     if (smallSplits.length > 0) {
       const newSplitTimes: typeof segment.split_times = [];
       const ids = new Set<number>();
 
-      // Get all IDs from the big split
       segment.split_times.forEach((st) => ids.add(st.id));
 
-      // For each ID, sum times from all segments that have it
       for (const id of ids) {
         let game_time = TS_ZERO;
         let found = false;
 
-        // Sum from small splits if they have this ID
         for (const s of smallSplits) {
           const st = s.split_times.find((t) => t.id === id);
           if (st) {
@@ -164,7 +159,6 @@ function compress_big_splits(ls: LiveSplit): LiveSplit {
           }
         }
 
-        // Always add the big split's time
         const bigSt = segment.split_times.find((t) => t.id === id);
         if (bigSt) {
           game_time = tsAdd(game_time, bigSt.game_time);
@@ -189,7 +183,7 @@ function compress_big_splits(ls: LiveSplit): LiveSplit {
 export const Comparison = {
   PersonalBest: {
     name: "Personal Best",
-    generate_comparison(ls: LiveSplit, bigSplits: boolean): LiveSplit {
+    generate_comparison(ls: LiveSplit, bigSplits: boolean): Timeline {
       if (bigSplits) ls = compress_big_splits(ls);
       const completedIds = new Set<number>();
       if (ls.segments.length > 0) {
@@ -220,49 +214,48 @@ export const Comparison = {
       }
 
       return {
-        ...ls,
         segments: ls.segments.map((seg) => ({
-          ...seg,
-          split_times: seg.split_times.filter((s) => s.id === bestId),
+          name: seg.name,
+          auto_split_name: seg.auto_split_name,
+          game_time: seg.split_times.find((s) => s.id === bestId)?.game_time ?? TS_ZERO,
         })),
       };
     },
   },
   BestSegments: {
     name: "Best Segments",
-    generate_comparison(ls: LiveSplit, bigSplits: boolean): LiveSplit {
+    generate_comparison(ls: LiveSplit, bigSplits: boolean): Timeline {
       if (bigSplits) ls = compress_big_splits(ls);
       return {
-        ...ls,
         segments: ls.segments.map((seg) => {
           const valid = seg.split_times.filter(
             (s) => tsToTicks(s.game_time) !== 0n,
           );
-          if (valid.length === 0) return { ...seg, split_times: [] };
+          if (valid.length === 0) {
+            return { name: seg.name, auto_split_name: seg.auto_split_name, game_time: TS_ZERO };
+          }
           const best = valid.reduce((a, b) =>
             tsCompare(a.game_time, b.game_time) <= 0 ? a : b,
           );
-          return { ...seg, split_times: [best] };
+          return { name: seg.name, auto_split_name: seg.auto_split_name, game_time: best.game_time };
         }),
       };
     },
   },
   AverageSegments: {
     name: "Average Segments",
-    generate_comparison(ls: LiveSplit, bigSplits: boolean): LiveSplit {
+    generate_comparison(ls: LiveSplit, bigSplits: boolean): Timeline {
       if (bigSplits) ls = compress_big_splits(ls);
       return {
-        ...ls,
         segments: ls.segments.map((seg) => {
           const valid = seg.split_times.filter(
             (s) => tsToTicks(s.game_time) !== 0n,
           );
-          if (valid.length === 0) return { ...seg, split_times: [] };
+          if (valid.length === 0) {
+            return { name: seg.name, auto_split_name: seg.auto_split_name, game_time: TS_ZERO };
+          }
           const game = tsAvg(valid.map((s) => s.game_time));
-          return {
-            ...seg,
-            split_times: [{ id: 0, game_time: game, date: null }],
-          };
+          return { name: seg.name, auto_split_name: seg.auto_split_name, game_time: game };
         }),
       };
     },

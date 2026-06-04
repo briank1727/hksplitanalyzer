@@ -5,18 +5,18 @@ import Button from "@/components/Button";
 import ComsobImporterView from "@/views/ComsobImporterView";
 import DiffSplitView from "@/views/DiffSplitView";
 import LiveSplitImporter from "@/views/LiveSplitImporterView";
-import type { LiveSplit } from "@/lib/lss_logic";
+import { Timeline } from "@/lib/timeline";
 
 export default function ComsobPage() {
-  const [timeline, setTimeline] = useState<LiveSplit | null>(null);
-  const [comsob, setComsob] = useState<LiveSplit | null>(null);
+  const [userTimeline, setUserTimeline] = useState<Timeline | null>(null);
+  const [comsobTimeline, setComsobTimeline] = useState<Timeline | null>(null);
   const [showDiff, setShowDiff] = useState(false);
 
   const compareDisabledReason =
-    !timeline || !comsob ? "Generate both timelines first" : undefined;
+    !userTimeline || !comsobTimeline ? "Generate both timelines first" : undefined;
   const canCompare = compareDisabledReason === undefined;
 
-  if (showDiff && timeline && comsob) {
+  if (showDiff && userTimeline && comsobTimeline) {
     return (
       <div className="flex flex-col gap-4 pt-4 px-4">
         <div className="flex justify-center">
@@ -24,7 +24,7 @@ export default function ComsobPage() {
             ← Back
           </Button>
         </div>
-        <DiffSplitView timeline1={timeline} timeline2={comsob} />
+        <DiffSplitView timeline1={userTimeline} timeline2={comsobTimeline} />
       </div>
     );
   }
@@ -48,18 +48,19 @@ export default function ComsobPage() {
         <section className="flex-1 p-4 border-r border-black/10 dark:border-white/15">
           <LiveSplitImporter
             title="Your Run"
-            generated={timeline}
-            setGenerated={setTimeline}
+            generated={userTimeline}
+            setGenerated={setUserTimeline}
           />
         </section>
         <section className="flex-1 p-4">
           <ComsobImporterView
             title="Comsob"
-            generated={comsob}
-            setGenerated={setComsob}
+            generated={comsobTimeline}
+            setGenerated={setComsobTimeline}
           />
         </section>
       </div>
     </div>
   );
 }
+

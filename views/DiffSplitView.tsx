@@ -4,8 +4,9 @@ import { useState } from "react";
 import Button from "@/components/Button";
 import SplitPieChart, { type SplitPieSlice } from "@/components/SplitPieChart";
 import SplitsCompareTable from "@/components/SplitsCompareTable";
-import type { LiveSplit } from "@/lib/lss_logic";
+import type { Timeline } from "@/lib/timeline";
 import { DiffTime, DiffSortBy } from "@/lib/comparison";
+import { tsToTicks } from "@/lib/timespan";
 
 type DiffSortByKey = keyof typeof DiffSortBy;
 
@@ -13,8 +14,8 @@ export default function DiffSplitView({
   timeline1,
   timeline2,
 }: {
-  timeline1: LiveSplit;
-  timeline2: LiveSplit;
+  timeline1: Timeline;
+  timeline2: Timeline;
 }) {
   const [sortBy, setSortBy] = useState<DiffSortByKey>("Order");
   const [isAscending, setIsAscending] = useState(true);
@@ -50,12 +51,8 @@ export default function DiffSplitView({
     .slice(0, compareLen)
     .map((seg1, i) => {
       const seg2 = t2.segments[i];
-      const time1 =
-        seg1.split_times.length === 1 ? seg1.split_times[0].game_time : null;
-      const time2 =
-        seg2.split_times.length === 1 ? seg2.split_times[0].game_time : null;
-      if (time1 === null || time2 === null) return null;
-      return new DiffTime(seg1.name, time1, time2);
+      if (tsToTicks(seg1.game_time) === 0n || tsToTicks(seg2.game_time) === 0n) return null;
+      return new DiffTime(seg1.name, seg1.game_time, seg2.game_time);
     })
     .filter((row) => row !== null) as DiffTime[];
 
