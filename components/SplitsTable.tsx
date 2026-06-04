@@ -60,6 +60,16 @@ function SegmentRow({
   const nameRef = useRef<HTMLInputElement>(null);
   const autoSplitRef = useRef<HTMLInputElement>(null);
   const gameTimeRef = useRef<HTMLInputElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const [menuDirection, setMenuDirection] = useState<"up" | "down">("down");
+
+  function handleMenuToggle(e: React.MouseEvent) {
+    if (menuButtonRef.current) {
+      const rect = menuButtonRef.current.getBoundingClientRect();
+      setMenuDirection(window.innerHeight - rect.bottom < 120 ? "up" : "down");
+    }
+    onMenuToggle(e);
+  }
 
   // Sync draft state when seg changes externally (new timeline loaded).
   // Skip whichever field currently has focus so in-progress typing is never clobbered.
@@ -152,14 +162,17 @@ function SegmentRow({
       </div>
       <div className="relative flex items-center justify-center">
         <button
+          ref={menuButtonRef}
           className="w-6 h-6 rounded flex items-center justify-center text-zinc-500 hover:text-zinc-100 hover:bg-zinc-700 transition-colors"
-          onClick={onMenuToggle}
+          onClick={handleMenuToggle}
           aria-label="Row options"
         >
           <MoreVertIcon fontSize="small" />
         </button>
         {isMenuOpen && (
-          <div className="absolute right-0 top-full mt-1 z-50 min-w-[160px] rounded border border-zinc-700 bg-zinc-800 shadow-lg py-1">
+          <div className={`absolute right-0 z-50 min-w-[160px] rounded border border-zinc-700 bg-zinc-800 shadow-lg py-1 ${
+            menuDirection === "up" ? "bottom-full mb-1" : "top-full mt-1"
+          }`}>
             <button
               className="w-full text-left px-3 py-1.5 text-sm text-zinc-100 hover:bg-zinc-700 transition-colors"
               onClick={onDeleteRow}
