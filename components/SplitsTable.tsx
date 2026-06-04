@@ -2,11 +2,11 @@ import type { Timeline } from "@/lib/timeline";
 import { TS_ZERO, formatTsDisplay, tsAdd, type Timespan } from "@/lib/timespan";
 
 export default function SplitsTable({
-  data,
+  timeline,
   error,
   errorTitle,
 }: {
-  data: Timeline | null;
+  timeline: Timeline | null;
   error: string | null;
   errorTitle: string;
 }) {
@@ -21,11 +21,11 @@ export default function SplitsTable({
       </div>
     );
   }
-  if (!data) return null;
+  if (!timeline) return null;
 
   const times: (Timespan | null)[] = [];
-  for (let i = 0; i < data.segments.length; i++) {
-    const seg = data.segments[i];
+  for (let i = 0; i < timeline.segments.length; i++) {
+    const seg = timeline.segments[i];
     const prev = i === 0 ? TS_ZERO : times[i - 1];
     times.push(prev !== null ? tsAdd(prev, seg.game_time) : null);
   }
@@ -38,7 +38,7 @@ export default function SplitsTable({
         <div className="text-left">Time</div>
         <div className="text-left">Segment</div>
       </div>
-      {data.segments.map((seg, i) => (
+      {timeline.segments.map((seg, i) => (
         <div
           key={i}
           className="grid grid-cols-[1fr_1fr_6rem_6rem] gap-x-3 px-2 py-1 border-b border-white/5 last:border-b-0"

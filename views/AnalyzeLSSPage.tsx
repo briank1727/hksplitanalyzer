@@ -168,14 +168,14 @@ export default function AnalyzeLSSPage() {
       <div className="flex flex-row">
         <section className="flex-1 p-4 border-r border-black/10 dark:border-white/15">
           <SplitsTable
-            data={timeline1}
+            timeline={timeline1}
             error={generateError}
             errorTitle="Timeline failed"
           />
         </section>
         <section className="flex-1 p-4">
           <SplitsTable
-            data={timeline2}
+            timeline={timeline2}
             error={generateError}
             errorTitle="Timeline failed"
           />
