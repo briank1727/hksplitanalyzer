@@ -10,11 +10,13 @@ export type ComparisonKind = {
 
 export class DiffTime {
   name: string;
+  auto_split_name: string;
   time1: Timespan;
   time2: Timespan;
 
-  constructor(name: string, time1: Timespan, time2: Timespan) {
+  constructor(name: string, auto_split_name: string, time1: Timespan, time2: Timespan) {
     this.name = name;
+    this.auto_split_name = auto_split_name;
     this.time1 = time1;
     this.time2 = time2;
   }

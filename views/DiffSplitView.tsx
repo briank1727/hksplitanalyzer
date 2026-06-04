@@ -52,7 +52,7 @@ export default function DiffSplitView({
     .map((seg1, i) => {
       const seg2 = t2.segments[i];
       if (tsToTicks(seg1.game_time) === 0n || tsToTicks(seg2.game_time) === 0n) return null;
-      return new DiffTime(seg1.name, seg1.game_time, seg2.game_time);
+      return new DiffTime(seg1.name, seg1.auto_split_name, seg1.game_time, seg2.game_time);
     })
     .filter((row) => row !== null) as DiffTime[];
 
