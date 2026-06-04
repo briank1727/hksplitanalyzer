@@ -169,6 +169,7 @@ export default function AnalyzeLSSPage() {
         <section className="flex-1 p-4 border-r border-black/10 dark:border-white/15">
           <SplitsTable
             timeline={timeline1}
+            setTimeline={setTimeline1}
             error={generateError}
             errorTitle="Timeline failed"
           />
@@ -176,6 +177,7 @@ export default function AnalyzeLSSPage() {
         <section className="flex-1 p-4">
           <SplitsTable
             timeline={timeline2}
+            setTimeline={setTimeline2}
             error={generateError}
             errorTitle="Timeline failed"
           />

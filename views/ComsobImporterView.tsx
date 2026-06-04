@@ -109,6 +109,7 @@ export default function ComsobImporterView({
       </div>
       <SplitsTable
         timeline={generated}
+        setTimeline={setGenerated}
         error={importError}
         errorTitle="Comsob failed"
       />

@@ -153,6 +153,7 @@ export default function LiveSplitImporter({
       </div>
       <SplitsTable
         timeline={generated}
+        setTimeline={setGenerated}
         error={generateError}
         errorTitle="Timeline failed"
       />

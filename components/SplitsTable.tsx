@@ -1,12 +1,15 @@
+import type { Dispatch, SetStateAction } from "react";
 import type { Timeline } from "@/lib/timeline";
 import { TS_ZERO, formatTsDisplay, tsAdd, type Timespan } from "@/lib/timespan";
 
 export default function SplitsTable({
   timeline,
+  setTimeline,
   error,
   errorTitle,
 }: {
   timeline: Timeline | null;
+  setTimeline: Dispatch<SetStateAction<Timeline | null>>;
   error: string | null;
   errorTitle: string;
 }) {
