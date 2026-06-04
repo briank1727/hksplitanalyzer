@@ -261,7 +261,7 @@ export const Comparison = {
           const game = tsAvg(valid.map((s) => s.game_time));
           return {
             ...seg,
-            split_times: [{ id: 0, game_time: game }],
+            split_times: [{ id: 0, game_time: game, date: null }],
           };
         }),
       };
