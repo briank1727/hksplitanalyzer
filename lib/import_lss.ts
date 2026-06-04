@@ -82,9 +82,9 @@ export function csv_to_lss(
       {
         id: 0,
         game_time: formatTimespan(row[gameTimesIdx] || ""),
+        date: null,
       },
     ],
-    date: null,
   }));
 
   return { segments };

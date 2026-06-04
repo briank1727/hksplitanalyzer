@@ -23,6 +23,8 @@ export default function SplitsTable({
   }
   if (!data) return null;
 
+
+
   const segmentDeltas: (Timespan | null)[] = data.segments.map((seg) =>
     seg.split_times.length === 1 ? seg.split_times[0].game_time : null,
   );
@@ -35,19 +37,23 @@ export default function SplitsTable({
 
   return (
     <div className="mt-3 max-h-[60vh] overflow-auto rounded bg-gray-900 text-zinc-100 text-base">
-      <div className="grid grid-cols-[1fr_1fr_6rem_6rem] gap-x-3 px-2 py-1.5 border-b border-white/10 font-semibold text-zinc-300">
+      <div className="grid grid-cols-[1fr_1fr_6rem_6rem_6rem] gap-x-3 px-2 py-1.5 border-b border-white/10 font-semibold text-zinc-300">
         <div>Name</div>
         <div>Auto Split</div>
+        <div className="text-right">Date</div>
         <div className="text-right">Time</div>
         <div className="text-right">Segment</div>
       </div>
       {data.segments.map((seg, i) => (
         <div
           key={i}
-          className="grid grid-cols-[1fr_1fr_6rem_6rem] gap-x-3 px-2 py-1 border-b border-white/5 last:border-b-0"
+          className="grid grid-cols-[1fr_1fr_6rem_6rem_6rem] gap-x-3 px-2 py-1 border-b border-white/5 last:border-b-0"
         >
           <div className="truncate">{seg.name}</div>
           <div className="truncate text-zinc-400">{seg.auto_split_name}</div>
+          <div className="text-right tabular-nums text-zinc-400">
+            {seg.split_times.length === 1 ? (seg.split_times[0].date ?? "") : ""}
+          </div>
           <div className="text-right tabular-nums font-semibold">
             {times[i] !== null ? formatTsDisplay(times[i] as Timespan) : ""}
           </div>

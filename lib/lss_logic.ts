@@ -10,12 +10,12 @@ export type Segment = {
   name: string;
   auto_split_name: string;
   split_times: SplitTime[];
-  date: string | null;
 };
 
 export type SplitTime = {
   id: number;
   game_time: Timespan;
+  date: string | null;
 };
 
 type XmlNode = Record<string, unknown>;
@@ -67,20 +67,19 @@ export function parse_lss(contents: string): LiveSplit {
       history?.Time as XmlNode | XmlNode[] | undefined,
     );
     const split_times: SplitTime[] = timeNodes
-      .map((t) => ({
-        id: Number(t["@_id"]),
-        game_time: readTimespan(t.GameTime),
-      }))
+      .map((t) => {
+        const id = Number(t["@_id"]);
+        return {
+          id,
+          game_time: readTimespan(t.GameTime),
+          date: attemptDateMap.get(id) ?? null,
+        };
+      })
       .filter((st) => st.game_time !== TS_ZERO);
-    const date =
-      split_times.length === 1
-        ? (attemptDateMap.get(split_times[0].id) ?? null)
-        : null;
     return {
       name: String(seg.Name ?? ""),
       auto_split_name: "",
       split_times,
-      date,
     };
   });
 

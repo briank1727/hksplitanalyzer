@@ -172,7 +172,7 @@ function compress_big_splits(ls: LiveSplit): LiveSplit {
         }
 
         if (found) {
-          newSplitTimes.push({ id, game_time });
+          newSplitTimes.push({ id, game_time, date: bigSt?.date ?? null });
         }
       }
 
