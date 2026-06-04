@@ -113,9 +113,6 @@ function SegmentRow({ seg, index, cumTime, setTimeline }: SegmentRowProps) {
           if (e.key === "Enter") e.currentTarget.blur();
         }}
       />
-      <div className="text-left tabular-nums font-semibold self-center">
-        {cumTime !== null ? formatTsDisplay(cumTime) : ""}
-      </div>
       <input
         ref={gameTimeRef}
         type="text"
@@ -132,6 +129,9 @@ function SegmentRow({ seg, index, cumTime, setTimeline }: SegmentRowProps) {
           if (e.key === "Enter") e.currentTarget.blur();
         }}
       />
+      <div className="text-left tabular-nums font-semibold self-center">
+        {cumTime !== null ? formatTsDisplay(cumTime) : ""}
+      </div>
     </div>
   );
 }
@@ -172,8 +172,8 @@ export default function SplitsTable({
       <div className="grid grid-cols-[1fr_1fr_6rem_6rem] gap-x-3 px-2 py-1.5 border-b border-white/10 font-semibold text-zinc-300">
         <div>Name</div>
         <div>Auto Split</div>
-        <div className="text-left">Time</div>
         <div className="text-left">Segment</div>
+        <div className="text-left">Time</div>
       </div>
       {timeline.segments.map((seg, i) => (
         <SegmentRow
