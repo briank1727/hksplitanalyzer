@@ -220,11 +220,33 @@ export default function SplitsTable({
     return () => document.removeEventListener("click", close);
   }, [openMenuIndex]);
 
-  function deleteRow(_index: number) {}
+  function deleteRow(index: number) {
+    setTimeline((prev) => {
+      if (!prev || prev.segments.length <= 1) return prev;
+      const segments = prev.segments.filter((_, i) => i !== index);
+      return { ...prev, segments };
+    });
+  }
 
-  function insertRowAbove(_index: number) {}
+  function insertRowAbove(index: number) {
+    setTimeline((prev) => {
+      if (!prev) return prev;
+      const newSeg = { name: "Split Name", auto_split_name: "AutoSplitName", game_time: TS_ZERO };
+      const segments = [...prev.segments];
+      segments.splice(index, 0, newSeg);
+      return { ...prev, segments };
+    });
+  }
 
-  function insertRowBelow(_index: number) {}
+  function insertRowBelow(index: number) {
+    setTimeline((prev) => {
+      if (!prev) return prev;
+      const newSeg = { name: "Split Name", auto_split_name: "AutoSplitName", game_time: TS_ZERO };
+      const segments = [...prev.segments];
+      segments.splice(index + 1, 0, newSeg);
+      return { ...prev, segments };
+    });
+  }
 
   if (error) {
     return (
