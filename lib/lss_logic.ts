@@ -10,6 +10,7 @@ export type Segment = {
   name: string;
   auto_split_name: string;
   split_times: SplitTime[];
+  date: string | null;
 };
 
 export type SplitTime = {
@@ -42,6 +43,20 @@ export function parse_lss(contents: string): LiveSplit {
   const run = doc.Run as XmlNode | undefined;
   if (!run) throw new Error("parse_lss: missing <Run> element");
 
+  const attemptHistory = run.AttemptHistory as XmlNode | undefined;
+  const attemptDateMap = new Map<number, string>();
+  for (const attempt of toArray<XmlNode>(
+    attemptHistory?.Attempt as XmlNode | XmlNode[] | undefined,
+  )) {
+    const id = Number(attempt["@_id"]);
+    const started = String(attempt["@_started"] ?? "");
+    if (started) {
+      const [datePart] = started.split(" ");
+      const [month, day, year] = datePart.split("/");
+      attemptDateMap.set(id, `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`);
+    }
+  }
+
   const segmentsContainer = run.Segments as XmlNode | undefined;
   const rawSegments = toArray<XmlNode>(
     segmentsContainer?.Segment as XmlNode | XmlNode[] | undefined,
@@ -57,10 +72,15 @@ export function parse_lss(contents: string): LiveSplit {
         game_time: readTimespan(t.GameTime),
       }))
       .filter((st) => st.game_time !== TS_ZERO);
+    const date =
+      split_times.length === 1
+        ? (attemptDateMap.get(split_times[0].id) ?? null)
+        : null;
     return {
       name: String(seg.Name ?? ""),
       auto_split_name: "",
       split_times,
+      date,
     };
   });
 

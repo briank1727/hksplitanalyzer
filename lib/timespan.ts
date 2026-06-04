@@ -97,7 +97,7 @@ export function formatTsDisplay(ts: Timespan): string {
       ? ((ticks + half) / TICKS_PER_HUNDREDTH) * TICKS_PER_HUNDREDTH
       : ((ticks - half) / TICKS_PER_HUNDREDTH) * TICKS_PER_HUNDREDTH;
   const neg = ticks < 0n;
-  let abs = neg ? -ticks : ticks;
+  const abs = neg ? -ticks : ticks;
   const totalSeconds = abs / TICKS_PER_SECOND;
   const fracHundredths = (abs % TICKS_PER_SECOND) / TICKS_PER_HUNDREDTH;
   const hours = totalSeconds / 3600n;

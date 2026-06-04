@@ -1,6 +1,5 @@
-import type { LiveSplit, Segment, SplitTime } from "@/lib/lss_logic";
-import { parse_lss } from "@/lib/lss_logic";
-import { TS_ZERO, formatTimespan } from "@/lib/timespan";
+import type { LiveSplit, Segment } from "@/lib/lss_logic";
+import {  formatTimespan } from "@/lib/timespan";
 
 export function import_lss(): Promise<{
   content: string;
@@ -85,6 +84,7 @@ export function csv_to_lss(
         game_time: formatTimespan(row[gameTimesIdx] || ""),
       },
     ],
+    date: null,
   }));
 
   return { segments };
