@@ -27,10 +27,10 @@ export class DiffTime {
     return t1 - t2;
   }
 
-  percent(): number {
+  percent(): number | null {
     const t1 = tsToTicks(this.time1);
     const t2 = tsToTicks(this.time2);
-    if (t2 === 0n) return 0;
+    if (t1 === 0n || t2 === 0n) return null;
     const diff = t1 - t2;
     return (Number(diff) / Number(t2)) * 100;
   }

@@ -7,7 +7,8 @@ export function formatDiff(ticks: bigint): string {
   return sign + formatTsDisplay(ticksToTs(abs));
 }
 
-export function formatPercent(p: number): string {
+export function formatPercent(p: number | null): string {
+  if (p === null) return "N/A";
   const sign = p > 0 ? "+" : "";
   return `${sign}${p.toFixed(2)}%`;
 }
