@@ -6,13 +6,6 @@ import SplitPieChart, { type SplitPieSlice } from "@/components/SplitPieChart";
 import SplitsCompareTable from "@/components/SplitsCompareTable";
 import type { LiveSplit } from "@/lib/lss_logic";
 import { DiffTime, DiffSortBy } from "@/lib/comparison";
-import {
-  diffBgStyle,
-  formatDiff,
-  formatPercent,
-  percentBgStyle,
-} from "@/lib/diff_format";
-import { formatTsDisplay } from "@/lib/timespan";
 
 type DiffSortByKey = keyof typeof DiffSortBy;
 
@@ -26,6 +19,8 @@ export default function DiffSplitView({
   const [sortBy, setSortBy] = useState<DiffSortByKey>("Order");
   const [isAscending, setIsAscending] = useState(true);
   const [swapped, setSwapped] = useState(false);
+  const [errorOpen, setErrorOpen] = useState(false);
+  const [warningOpen, setWarningOpen] = useState(false);
 
   const t1 = swapped ? timeline2 : timeline1;
   const t2 = swapped ? timeline1 : timeline2;
@@ -114,21 +109,38 @@ export default function DiffSplitView({
       {lengthError && (
         <div
           role="alert"
-          className="mt-4 text-sm rounded p-3 border border-red-200 bg-red-50 text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200"
+          className="mt-4 text-sm rounded border border-red-200 bg-red-50 text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200"
         >
-          <div className="font-semibold">Error</div>
-          <div className="mt-1">{lengthError}</div>
+          <button
+            className="w-full flex items-center gap-1.5 px-3 py-2 font-semibold text-left"
+            onClick={() => setErrorOpen((o) => !o)}
+          >
+            <span>{errorOpen ? "▾" : "▸"}</span>
+            <span className="text-base">Error</span>
+          </button>
+          {errorOpen && <div className="px-3 pb-3">{lengthError}</div>}
         </div>
       )}
       {warning && (
         <div
           role="alert"
-          className="mt-4 text-sm rounded p-3 border border-yellow-500/40 bg-yellow-500/10 text-yellow-700 dark:text-yellow-300"
+          className="mt-4 text-sm rounded border border-yellow-500/40 bg-yellow-500/10 text-yellow-700 dark:text-yellow-300"
         >
-          <div className="font-semibold">Warning</div>
-          <pre className="mt-1 whitespace-pre-wrap break-words font-sans">
-            {warning}
-          </pre>
+          <button
+            className="w-full flex items-center gap-1.5 px-3 py-2 font-semibold text-left"
+            onClick={() => setWarningOpen((o) => !o)}
+          >
+            <span>{warningOpen ? "▾" : "▸"}</span>
+            <span className="text-base">Warning</span>
+            {!warningOpen && (
+              <span className="ml-1 font-normal">({mismatches.length})</span>
+            )}
+          </button>
+          {warningOpen && (
+            <pre className="px-3 pb-3 whitespace-pre-wrap break-words font-sans">
+              {warning}
+            </pre>
+          )}
         </div>
       )}
       <div className="mt-3 flex gap-4">
