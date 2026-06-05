@@ -1,0 +1,147 @@
+{
+  "AnyVS": {
+    "name": "Any% Vengeful Spirit (1221)",
+    "top_left_cell": "B6",
+    "bottom_right_cell": "D22",
+    "sheet_url": "https://docs.google.com/spreadsheets/d/1kpTv1NTVrX2OycOEqflHGIBmyyRnwL2XquRd9Jza7Lk/edit?gid=2025520101#gid=2025520101",
+    "split_names_idx": 0,
+    "auto_split_names_idx": 1,
+    "game_times_idx": 2
+  },
+  "AnyFury": {
+    "name": "Any% Fury (1221)",
+    "top_left_cell": "B4",
+    "bottom_right_cell": "D21",
+    "sheet_url": "https://docs.google.com/spreadsheets/d/1kpTv1NTVrX2OycOEqflHGIBmyyRnwL2XquRd9Jza7Lk/edit?gid=976716176#gid=976716176",
+    "split_names_idx": 0,
+    "auto_split_names_idx": 1,
+    "game_times_idx": 2
+  },
+  "AnyFuryDM": {
+    "name": "Any% Fury + Dashmaster (1221)",
+    "top_left_cell": "B26",
+    "bottom_right_cell": "D43",
+    "sheet_url": "https://docs.google.com/spreadsheets/d/1kpTv1NTVrX2OycOEqflHGIBmyyRnwL2XquRd9Jza7Lk/edit?gid=976716176#gid=976716176",
+    "split_names_idx": 0,
+    "auto_split_names_idx": 1,
+    "game_times_idx": 2
+  },
+  "AllSkills": {
+    "name": "All Skills (1221)",
+    "top_left_cell": "B3",
+    "bottom_right_cell": "D31",
+    "sheet_url": "https://docs.google.com/spreadsheets/d/1sCbvjba6jU8-g63AUV6KhLCnOMKdSzdKoNjTUorIBuw/edit?gid=2084198947#gid=2084198947",
+    "split_names_idx": 0,
+    "auto_split_names_idx": 1,
+    "game_times_idx": 2
+  },
+  "112APB": {
+    "name": "112% All Pantheon Bosses",
+    "top_left_cell": "B3",
+    "bottom_right_cell": "D96",
+    "sheet_url": "https://docs.google.com/spreadsheets/d/12PI6oFv7iIdIqmSrh0E-Yms8kDlgtrlxn0prQ9F_H6o/edit?gid=804220363#gid=804220363",
+    "split_names_idx": 0,
+    "auto_split_names_idx": 1,
+    "game_times_idx": 2
+  },
+  "107AB": {
+    "name": "107% All Bosses",
+    "top_left_cell": "B3",
+    "bottom_right_cell": "D85",
+    "sheet_url": "https://docs.google.com/spreadsheets/d/1EtfucriVdOB-zjOt6RM9g6rzv6nxHIkC5prK1ntx5rU/edit?gid=791538524#gid=791538524",
+    "split_names_idx": 0,
+    "auto_split_names_idx": 1,
+    "game_times_idx": 2
+  },
+  "106TE": {
+    "name": "106% True Ending",
+    "top_left_cell": "B3",
+    "bottom_right_cell": "D85",
+    "sheet_url": "https://docs.google.com/spreadsheets/d/1LOPX17niTRi7s6DXk-76yYfoR0HffbPB5j8QX67LT8k/edit?gid=1678093976#gid=1678093976",
+    "split_names_idx": 0,
+    "auto_split_names_idx": 1,
+    "game_times_idx": 2
+  },
+  "TE": {
+    "name": "True Ending",
+    "top_left_cell": "B3",
+    "bottom_right_cell": "D35",
+    "sheet_url": "https://docs.google.com/spreadsheets/d/1rriIjKi-pEoHz9YtNDEKxEYaWkJkuWq4vksCWasuWEg/edit?gid=254799709#gid=254799709",
+    "split_names_idx": 0,
+    "auto_split_names_idx": 1,
+    "game_times_idx": 2
+  },
+  "Low": {
+    "name": "Low% (1221)",
+    "top_left_cell": "B3",
+    "bottom_right_cell": "D20",
+    "sheet_url": "https://docs.google.com/spreadsheets/d/1Sb823GgM2swOMouUQHuo2YqD2vrww792USSoqfvct7E/edit?gid=7752011#gid=7752011",
+    "split_names_idx": 0,
+    "auto_split_names_idx": 1,
+    "game_times_idx": 2
+  },
+
+  "AnyGlowingWomb": {
+    "name": "Any% Glowing Womb (1221)",
+    "top_left_cell": "B6",
+    "bottom_right_cell": "D21",
+    "sheet_url": "https://docs.google.com/spreadsheets/d/1kpTv1NTVrX2OycOEqflHGIBmyyRnwL2XquRd9Jza7Lk/edit?gid=1035144312#gid=1035144312",
+    "split_names_idx": 0,
+    "auto_split_names_idx": 1,
+    "game_times_idx": 2
+  },
+  "AnyIsmas": {
+    "name": "Any% Isma's Tear (LP)",
+    "top_left_cell": "B3",
+    "bottom_right_cell": "D20",
+    "sheet_url": "https://docs.google.com/spreadsheets/d/1UvcK40clalAp0xZE9_lr_Hq2qjeQoKwcwgmc9zUGM-s/edit?gid=321574714#gid=321574714",
+    "split_names_idx": 0,
+    "auto_split_names_idx": 1,
+    "game_times_idx": 2
+  },
+  "AnyCD": {
+    "name": "Any% Crystal Dash (LP)",
+    "top_left_cell": "B4",
+    "bottom_right_cell": "D20",
+    "sheet_url": "https://docs.google.com/spreadsheets/d/1UvcK40clalAp0xZE9_lr_Hq2qjeQoKwcwgmc9zUGM-s/edit?gid=321574714#gid=321574714",
+    "split_names_idx": 0,
+    "auto_split_names_idx": 1,
+    "game_times_idx": 2
+  },
+  "AnySporeShroom": {
+    "name": "Any% Spore Shroom (LP)",
+    "top_left_cell": "B4",
+    "bottom_right_cell": "D20",
+    "sheet_url": "https://docs.google.com/spreadsheets/d/1UvcK40clalAp0xZE9_lr_Hq2qjeQoKwcwgmc9zUGM-s/edit?gid=321574714#gid=321574714",
+    "split_names_idx": 0,
+    "auto_split_names_idx": 1,
+    "game_times_idx": 2
+  },
+  "AnyVK": {
+    "name": "Any% VK Route (1221) (Legacy)",
+    "top_left_cell": "B6",
+    "bottom_right_cell": "D21",
+    "sheet_url": "https://docs.google.com/spreadsheets/d/1kpTv1NTVrX2OycOEqflHGIBmyyRnwL2XquRd9Jza7Lk/edit?gid=1035144312#gid=1035144312",
+    "split_names_idx": 0,
+    "auto_split_names_idx": 1,
+    "game_times_idx": 2
+  },
+  "AnyMK": {
+    "name": "Any% MK No Rafters Route (1221) (Legacy)",
+    "top_left_cell": "B26",
+    "bottom_right_cell": "D41",
+    "sheet_url": "https://docs.google.com/spreadsheets/d/1kpTv1NTVrX2OycOEqflHGIBmyyRnwL2XquRd9Jza7Lk/edit?gid=1035144312#gid=1035144312",
+    "split_names_idx": 0,
+    "auto_split_names_idx": 1,
+    "game_times_idx": 2
+  },
+  "AllSkillsLP": {
+    "name": "All Skills (LP)",
+    "top_left_cell": "B3",
+    "bottom_right_cell": "D29",
+    "sheet_url": "https://docs.google.com/spreadsheets/d/1ADRMaO0J6ioVYGBdNz3s4WCVPjmhCZ6i7o9Sc5Jw-IY/edit?gid=1943496433#gid=1943496433",
+    "split_names_idx": 0,
+    "auto_split_names_idx": 1,
+    "game_times_idx": 2
+  }
+}

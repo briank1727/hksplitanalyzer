@@ -4,11 +4,12 @@ import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import Button from "@/components/Button";
 import Dialog from "@/components/Dialog";
 import SplitsTable from "@/components/SplitsTable";
-import { WebComsob, fetch_comsob_timeline } from "@/lib/import_comsob";
+import { HKWebComsob, SilksongWebComsob, fetch_comsob_timeline, type WebComsobKind } from "@/lib/import_comsob";
 import { formatTsDisplay, tsAdd, TS_ZERO, type Timespan } from "@/lib/timespan";
 import { Timeline } from "@/lib/timeline";
 
-type WebImportKey = keyof typeof WebComsob;
+type HKWebKey = keyof typeof HKWebComsob;
+type SilksongWebKey = keyof typeof SilksongWebComsob;
 
 export default function ComsobImporterView({
   title,
@@ -22,6 +23,14 @@ export default function ComsobImporterView({
   const [importedName, setImportedName] = useState<string | null>(null);
   const [importError, setImportError] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const [dialogTab, setDialogTab] = useState<"hk" | "silksong">("hk");
+
+  const tabClass = (active: boolean) =>
+    `px-4 py-2 text-lg font-medium border-b-2 -mb-px transition-colors ${
+      active
+        ? "border-black text-black dark:border-zinc-50 dark:text-zinc-50"
+        : "border-transparent text-zinc-500 hover:text-black dark:text-zinc-400 dark:hover:text-zinc-50"
+    }`;
 
   const generatedStats = useMemo(() => {
     if (!generated) return null;
@@ -33,16 +42,16 @@ export default function ComsobImporterView({
     return { numSplits, totalTime: total };
   }, [generated]);
 
-  const handleWebImport = async (key: WebImportKey) => {
+  const handleWebImport = async (comsob: WebComsobKind) => {
     setDialogOpen(false);
     setImportError(null);
     setGenerated(null);
     setImportedName(null);
     try {
-      const result = await fetch_comsob_timeline(WebComsob[key]);
+      const result = await fetch_comsob_timeline(comsob);
       if (result.success) {
         setGenerated(result.data);
-        setImportedName(WebComsob[key].name);
+        setImportedName(comsob.name);
       } else {
         setImportError(result.error);
       }
@@ -69,26 +78,54 @@ export default function ComsobImporterView({
           onClose={() => setDialogOpen(false)}
           title="Select ComSOB"
         >
-          <ul className="max-h-80 space-y-2 overflow-y-auto">
-            {(Object.keys(WebComsob) as WebImportKey[]).map((key) => (
-              <li key={key} className="flex items-center gap-6">
-                <Button
-                  size="sm"
-                  onClick={() => handleWebImport(key)}
-                  className="flex-1"
-                >
-                  {WebComsob[key].name}
-                </Button>
-                <a
-                  href={WebComsob[key].sheet_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mr-4 text-sm text-blue-600 underline hover:no-underline dark:text-blue-400"
-                >
-                  Sheet
-                </a>
-              </li>
-            ))}
+          <div className="flex gap-2 border-b border-black/10 dark:border-white/15 mb-4">
+            <button type="button" className={tabClass(dialogTab === "hk")} onClick={() => setDialogTab("hk")} style={{ fontFamily: "var(--font-trajan)" }}>
+              Hollow Knight
+            </button>
+            <button type="button" className={tabClass(dialogTab === "silksong")} onClick={() => setDialogTab("silksong")} style={{ fontFamily: "var(--font-trajan)" }}>
+              Silksong
+            </button>
+          </div>
+          <ul className="max-h-[70vh] space-y-2 overflow-y-auto">
+            {dialogTab === "hk"
+              ? (Object.keys(HKWebComsob) as HKWebKey[]).map((key) => (
+                  <li key={key} className="flex items-center gap-6">
+                    <Button
+                      size="sm"
+                      onClick={() => handleWebImport(HKWebComsob[key])}
+                      className="flex-1"
+                    >
+                      {HKWebComsob[key].name}
+                    </Button>
+                    <a
+                      href={HKWebComsob[key].sheet_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mr-4 text-sm text-blue-600 underline hover:no-underline dark:text-blue-400"
+                    >
+                      Sheet
+                    </a>
+                  </li>
+                ))
+              : (Object.keys(SilksongWebComsob) as SilksongWebKey[]).map((key) => (
+                  <li key={key} className="flex items-center gap-6">
+                    <Button
+                      size="sm"
+                      onClick={() => handleWebImport(SilksongWebComsob[key])}
+                      className="flex-1"
+                    >
+                      {SilksongWebComsob[key].name}
+                    </Button>
+                    <a
+                      href={SilksongWebComsob[key].sheet_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mr-4 text-sm text-blue-600 underline hover:no-underline dark:text-blue-400"
+                    >
+                      Sheet
+                    </a>
+                  </li>
+                ))}
           </ul>
         </Dialog>
         {generated && importedName && generatedStats && (

@@ -1,5 +1,7 @@
 import { formatTimespan } from "@/lib/timespan";
 import { Timeline, TimelineSegment } from "./timeline";
+import hkComsobData from "./hk_comsob_data.json";
+import silksongComsobData from "./silksong_comsob_data.json";
 
 type ExtractCellsResult =
   | { success: true; data: string[][] }
@@ -99,135 +101,6 @@ export type WebComsobKind = {
   game_times_idx: number;
 };
 
-export const WebComsob = {
-  AnyKeyRoute: {
-    name: "Any% Key Route (RP)",
-    top_left_cell: "B4",
-    bottom_right_cell: "D25",
-    sheet_url:
-      "https://docs.google.com/spreadsheets/d/1-Hy5k_h9dBUUPlwh_I14K-DEwGcNdVQ0utI-KX56d8c/edit?gid=2094941807#gid=2094941807",
-    split_names_idx: 0,
-    auto_split_names_idx: 1,
-    game_times_idx: 2,
-  },
-  AnyBellsRoute: {
-    name: "Any% Bells Route",
-    top_left_cell: "B4",
-    bottom_right_cell: "D26",
-    sheet_url:
-      "https://docs.google.com/spreadsheets/d/1-Hy5k_h9dBUUPlwh_I14K-DEwGcNdVQ0utI-KX56d8c/edit?gid=7316953#gid=7316953",
-    split_names_idx: 0,
-    auto_split_names_idx: 1,
-    game_times_idx: 2,
-  },
-  TrueEnding891: {
-    name: "True Ending (891)",
-    top_left_cell: "B5",
-    bottom_right_cell: "D68",
-    sheet_url:
-      "https://docs.google.com/spreadsheets/d/1xZk3XRwhGBW64vsMfUhLkfUdud0V1iuWYxjg8v9ssGs/edit?gid=463520651#gid=463520651",
-    split_names_idx: 0,
-    auto_split_names_idx: 1,
-    game_times_idx: 2,
-  },
-  OneHundredPercentMonstahlerV6: {
-    name: "100% Monstahler V6 (891)",
-    top_left_cell: "B4",
-    bottom_right_cell: "D102",
-    sheet_url:
-      "https://docs.google.com/spreadsheets/d/1pam4Xeu3fC4VrDLcHGtacHD2oEbwDo_RX2rctOLvyX0/edit?gid=1808861139#gid=1808861139",
-    split_names_idx: 0,
-    auto_split_names_idx: 1,
-    game_times_idx: 2,
-  },
-  LowPercent: {
-    name: "Low%",
-    top_left_cell: "B4",
-    bottom_right_cell: "D29",
-    sheet_url:
-      "https://docs.google.com/spreadsheets/d/1VOfmmYpoLeAgdwi3k9CmCxJAPYk3-bvNQb1vHiAwELw/edit?gid=7752011#gid=7752011",
-    split_names_idx: 0,
-    auto_split_names_idx: 1,
-    game_times_idx: 2,
-  },
-  AllBosses: {
-    name: "All Bosses (Act 3)",
-    top_left_cell: "B4",
-    bottom_right_cell: "D95",
-    sheet_url:
-      "https://docs.google.com/spreadsheets/d/1juPDWzwMMg-BNKS2JvqqgQ-oRl76neLitUfoYfzl_2Q/edit?gid=1151571350#gid=1151571350",
-    split_names_idx: 0,
-    auto_split_names_idx: 1,
-    game_times_idx: 2,
-  },
-  AllBossesAct2: {
-    name: "All Bosses (Act 2)",
-    top_left_cell: "B4",
-    bottom_right_cell: "D58",
-    sheet_url:
-      "https://docs.google.com/spreadsheets/d/125RGkNo8FLEpzCnv_tYpoZzbRWKyWPuBmIk3e0XyG3o/edit?gid=0#gid=0",
-    split_names_idx: 0,
-    auto_split_names_idx: 1,
-    game_times_idx: 2,
-  },
-  AllBossesAct1: {
-    name: "All Bosses (Act 1)",
-    top_left_cell: "B4",
-    bottom_right_cell: "D26",
-    sheet_url:
-      "https://docs.google.com/spreadsheets/d/19tDgaU2f2DsYmtWl6E951yx6JqIwODv_Lx8scUZjr1w/edit?gid=617578394#gid=617578394",
-    split_names_idx: 0,
-    auto_split_names_idx: 1,
-    game_times_idx: 2,
-  },
-  AnyKeyRouteOldComsobPoints: {
-    name: "Any% Key Route (Old ComSOB Points)",
-    top_left_cell: "B4",
-    bottom_right_cell: "D23",
-    sheet_url:
-      "https://docs.google.com/spreadsheets/d/1-Hy5k_h9dBUUPlwh_I14K-DEwGcNdVQ0utI-KX56d8c/edit?gid=443305765#gid=443305765",
-    split_names_idx: 0,
-    auto_split_names_idx: 1,
-    game_times_idx: 2,
-  },
-  AnyBellsRouteOldComsobPoints: {
-    name: "Any% Bells Route (Old ComSOB Points)",
-    top_left_cell: "B4",
-    bottom_right_cell: "D25",
-    sheet_url:
-      "https://docs.google.com/spreadsheets/d/1-Hy5k_h9dBUUPlwh_I14K-DEwGcNdVQ0utI-KX56d8c/edit?gid=43527522#gid=43527522",
-    split_names_idx: 0,
-    auto_split_names_idx: 1,
-    game_times_idx: 2,
-  },
-  TrueEnding891Old: {
-    name: "True Ending (891) (Old)",
-    top_left_cell: "B3",
-    bottom_right_cell: "D61",
-    sheet_url:
-      "https://docs.google.com/spreadsheets/d/1xZk3XRwhGBW64vsMfUhLkfUdud0V1iuWYxjg8v9ssGs/edit?gid=1416049146#gid=1416049146",
-    split_names_idx: 0,
-    auto_split_names_idx: 1,
-    game_times_idx: 2,
-  },
-  OneHundredPercentMathuluV2_1: {
-    name: "100% Mathulu V2.1 (LP)",
-    top_left_cell: "B4",
-    bottom_right_cell: "D103",
-    sheet_url:
-      "https://docs.google.com/spreadsheets/d/1pam4Xeu3fC4VrDLcHGtacHD2oEbwDo_RX2rctOLvyX0/edit?gid=1396866315#gid=1396866315",
-    split_names_idx: 0,
-    auto_split_names_idx: 1,
-    game_times_idx: 2,
-  },
-  OneHundredPercentMonstahlerV6BB: {
-    name: "100% Monstahler V6 (891) Old Bilewater Backup",
-    top_left_cell: "B4",
-    bottom_right_cell: "D102",
-    sheet_url:
-      "https://docs.google.com/spreadsheets/d/1pam4Xeu3fC4VrDLcHGtacHD2oEbwDo_RX2rctOLvyX0/edit?gid=1151571350#gid=1151571350",
-    split_names_idx: 0,
-    auto_split_names_idx: 1,
-    game_times_idx: 2,
-  },
-} as const satisfies Record<string, WebComsobKind>;
+export const SilksongWebComsob: Record<string, WebComsobKind> =
+  silksongComsobData;
+export const HKWebComsob: Record<string, WebComsobKind> = hkComsobData;
