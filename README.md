@@ -1,19 +1,70 @@
-# Hollow Knight Split Analyzer
+![](public/logo.png)
 
 https://hksplitanalyzer.vercel.app/
 
-(previously known as DeltaSOB)
+## What is Hollow Knight Split Analyzer? (HKSA)
 
-Hollow Knight Split Analyzer is a tool for speedrunners to compare their splits against different comparisons, such as their Personal Best, Best Segments, or the Community Sum of Best (ComSOB).
+HKSA is a tool for speedrunners to compare their splits against different comparisons, such as their Personal Best, Best Segments, or the Community Sum of Best (ComSOB).
 
-For ComSOBs, HKSA will automatically fetch the most recent times from linked Google Sheets (click the links in the ComSOB dialogue to see the raw data).
+![](public/demo.png)
 
-Important Note: HKSA will not consider any segment times that are manually inputted, so only splits which happened in a real run will be included in the analysis.
+## What is a ComSOB?
 
-## How to Use:
+A ComSOB is an individual level (IL) of a run that speedrunners like to practice in short segments.
 
-First select the tab you want to use at the top. The "Compare to ComSOB" tab allows you to import your splits and compare them to the ComSOB for your category, while the "Analyze Livesplit File" tab allows you to import a single LiveSplit file and analyze it on its own.
+Combining the best attempts from the community to create a run can simulate a theoretical sum of best that a human could (somewhat) realistically achieve.
 
-The analysis includes a splits table showing your segment times, the comparison times, and the difference between them. Segments where you are ahead of the comparison will be highlighted in green, while segments where you are behind will be highlighted in red.
+![](public/comsob.png)
 
-Check the [big splits option](https://www.speedrun.com/forums/speedrunning/xn8jj#rw8sp) if you want to treat segments with multiple split times as a single segment, using the best time among them (it won't impact lss files that don't have subsplits).
+For ComSOBs, HKSA will automatically fetch the most recent times from linked Google Sheets. Each Google Sheet will be directly linked.
+
+## How to Import a LiveSplit File:
+
+These instructions will pertain to the "Compare to ComSOB" tab since most users will use HKSA solely for this purpose.
+
+1. Click "Import LSS" and navigate to your LiveSplit file.
+
+2. Select the comparison you want to compare to (Personal Best, Best Segments, etc.).
+
+3. Check the big splits option if you want to treat segments with subsplits as a single segment as most premade LSS files splits up ComSOBs into multiple splits (it won't impact lss files that don't have subsplits).
+
+4. Click "Generate Timeline" and now you have your timeline to compare against!
+
+## How to Compare to ComSOB
+
+1. Click "Import ComSOB"
+
+2. Select the game you're running and then select the route you want to compare against.
+
+![](public/comsob_list.png)
+
+If your comparison is not listed on the ComSOBs there are several things you can do
+
+- Leave an issue on the GitHub
+- Fork this repository, modify lib/hk_comsob_data.json or lib/silksong_comsob_data.json, and create a pull request.
+- Ping me on the HK Speedrunning Discord @bim (https://discord.gg/3JtHPsBjHD)
+- Modify an existing ComSOB's timeline.
+
+## How to Modify a Timeline
+
+Each segment in a timeline will have the split's name, autosplit name, and segment time. Click on the textbox to modify it.
+
+If you click on the three dots on the right, you can add a segment above, add a segment below, or delete a row.
+
+![](public/timeline.png)
+
+**IMPORTANT** Make sure that your comparison and ComSOB comparison have the same number of segments. Otherwise the comparison may not be accurate.
+
+## Analysis
+
+The analysis includes a splits table showing your segment times, the comparison times, and the difference between them.
+
+Segments where you are ahead of the comparison will be highlighted in green, while segments where you are behind will be highlighted in red.
+
+The "Swap Timelines" button will switch the difference calculation.
+
+To change the order of the splits, select the order parameter and whether you want it ascending or descending.
+
+![](public/comparison.png)
+
+The pie chart shows all of the time loss (the red segments) in the run.

@@ -25,10 +25,20 @@ export default function Home() {
   return (
     <div className="flex flex-col flex-1 bg-zinc-50 font-sans dark:bg-black">
       <header className="flex flex-col items-center justify-center text-center px-4 py-2 relative">
-        <div className="relative">
-          <Image src={logo} alt="HK Split Analyzer" style={{ width: 'auto', height: 'auto', maxHeight: '16rem' }} />
-          <Image src={bench} alt="Bench" style={{ width: '80px', height: '80px', position: 'absolute', top: '120px', left: '277.5px'}} />
-        </div>
+        <Image
+          src={bench}
+          alt="Bench"
+          style={{
+            position: "absolute",
+            left: "10px",
+            top: "10px",
+          }}
+        />
+        <Image
+          src={logo}
+          alt="HK Split Analyzer"
+          style={{ width: "auto", height: "auto", maxHeight: "16rem" }}
+        />
         <div className="absolute right-4 top-4">
           <Button size="sm" onClick={() => setHelpOpen(true)}>
             Help
