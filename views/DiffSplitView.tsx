@@ -138,11 +138,13 @@ export default function DiffSplitView({
         </div>
       )}
       <div className="mt-3 flex gap-4">
-        <SplitsCompareTable
-          sortedRows={sortedRows}
-          diffThresholdMs={diffThresholdMs}
-        />
-        <div className="flex-1 min-w-0">
+        <div className="w-2/3 min-w-0">
+          <SplitsCompareTable
+            sortedRows={sortedRows}
+            diffThresholdMs={diffThresholdMs}
+          />
+        </div>
+        <div className="w-1/3 min-w-0">
           <h3 className="mb-2 text-md font-semibold tracking-tight text-black dark:text-zinc-50">
             Time Lost By Split
           </h3>
@@ -158,3 +160,4 @@ export default function DiffSplitView({
     </div>
   );
 }
+
