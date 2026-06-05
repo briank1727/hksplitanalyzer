@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import CloseIcon from '@mui/icons-material/Close';
 
 type DialogProps = {
   open: boolean;
@@ -34,7 +35,7 @@ export default function Dialog({ open, onClose, title, children }: DialogProps) 
             onClick={onClose}
             className="inline-flex h-8 w-8 items-center justify-center rounded-full text-black hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40 dark:text-zinc-50 dark:hover:bg-white/10 dark:focus-visible:ring-white/40"
           >
-            ×
+            <CloseIcon fontSize="small" />
           </button>
         </div>
         <div className="mt-4 text-sm text-zinc-700 dark:text-zinc-300">

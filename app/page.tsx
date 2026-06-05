@@ -1,10 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Button from "@/components/Button";
 import HelpDialog from "@/components/HelpDialog";
 import ComsobPage from "@/views/ComsobPage";
 import AnalyzeLSSPage from "@/views/AnalyzeLSSPage";
+import logo from "@/public/logo.png";
+import bench from "@/public/bench.png";
 
 type Tab = "compare" | "analyze";
 
@@ -22,14 +25,15 @@ export default function Home() {
   return (
     <div className="flex flex-col flex-1 bg-zinc-50 font-sans dark:bg-black">
       <header className="flex flex-col items-center justify-center text-center px-4 py-2 relative">
-        <img src="/logo.png" alt="DeltaSOB" className="h-auto max-h-64" />
-        <Button
-          size="sm"
-          onClick={() => setHelpOpen(true)}
-          className="absolute right-4 top-4 rounded-full w-10 h-10 flex items-center justify-center p-0 text-lg"
-        >
-          ?
-        </Button>
+        <div className="relative">
+          <Image src={logo} alt="HK Split Analyzer" style={{ width: 'auto', height: 'auto', maxHeight: '16rem' }} />
+          <Image src={bench} alt="Bench" style={{ width: '80px', height: '80px', position: 'absolute', top: '120px', left: '277.5px'}} />
+        </div>
+        <div className="absolute right-4 top-4">
+          <Button size="sm" onClick={() => setHelpOpen(true)}>
+            Help
+          </Button>
+        </div>
       </header>
 
       <div className="flex justify-center border-b border-black/10 dark:border-white/15 px-8">
