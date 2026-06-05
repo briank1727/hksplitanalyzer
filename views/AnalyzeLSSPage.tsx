@@ -78,7 +78,7 @@ export default function AnalyzeLSSPage() {
       <div className="flex flex-col gap-4 pt-4 px-4">
         <div className="flex justify-center">
           <Button size="sm" onClick={() => setShowDiff(false)}>
-            ← Back
+            Back
           </Button>
         </div>
         <DiffSplitView timeline1={timeline1} timeline2={timeline2} />

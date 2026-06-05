@@ -21,7 +21,7 @@ export default function ComsobPage() {
       <div className="flex flex-col gap-4 pt-4 px-4">
         <div className="flex justify-center">
           <Button size="sm" onClick={() => setShowDiff(false)}>
-            ← Back
+            Back
           </Button>
         </div>
         <DiffSplitView timeline1={userTimeline} timeline2={comsobTimeline} />
