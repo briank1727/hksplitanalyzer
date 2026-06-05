@@ -21,7 +21,7 @@ const variantStyles: Record<Variant, string> = {
 const sizeStyles: Record<Size, string> = {
   sm: "h-9 px-2 text-base",
   md: "h-11 px-3 text-lg",
-  lg: "h-13 px-4 text-xl",
+  lg: "h-13 px-4 text-xl font-[family-name:var(--font-trajan)]",
 };
 
 const embellishmentSize: Record<Size, number> = {
@@ -53,7 +53,9 @@ export default function Button({
         height={imgSize}
         className="shrink-0"
       />
-      {children}
+      <span className={size === "lg" ? "translate-y-0.5" : undefined}>
+        {children}
+      </span>
       <Image
         src="/button_embelishment.png"
         alt=""
