@@ -38,11 +38,11 @@ These instructions will pertain to the "Compare to ComSOB" tab since most users 
 
 ![](public/comsob_list.png)
 
-If your comparison is not listed on the ComSOBs there are several things you can do
+## What if my Route Isn't Listed?
 
+- Best Option: Ping me on the #silk-tech-support or #hk-tech-support channels in the HK Speedrunning Discord @bim (https://discord.gg/3JtHPsBjHD)
 - Leave an issue on the GitHub
 - Fork this repository, modify lib/hk_comsob_data.json or lib/silksong_comsob_data.json, and create a pull request.
-- Ping me on the HK Speedrunning Discord @bim (https://discord.gg/3JtHPsBjHD)
 - Modify an existing ComSOB's timeline.
 
 ## How to Modify a Timeline
@@ -68,3 +68,5 @@ To change the order of the splits, select the order parameter and whether you wa
 ![](public/comparison.png)
 
 The pie chart shows all of the time loss (the red segments) in the run.
+
+Hover over a slice to see what split to see more details.
