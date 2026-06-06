@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Image from "next/image";
 import Button from "@/components/Button";
-import HelpDialog from "@/components/HelpDialog";
 import ComsobPage from "@/views/ComsobPage";
 import AnalyzeLSSPage from "@/views/AnalyzeLSSPage";
 import logo from "@/public/logo.png";
@@ -13,7 +12,6 @@ type Tab = "compare" | "analyze";
 
 export default function Home() {
   const [tab, setTab] = useState<Tab>("compare");
-  const [helpOpen, setHelpOpen] = useState(false);
 
   const tabClass = (active: boolean) =>
     `px-4 py-2 text-lg font-medium border-b-2 -mb-px transition-colors ${
@@ -40,7 +38,16 @@ export default function Home() {
           style={{ width: "auto", height: "auto", maxHeight: "16rem" }}
         />
         <div className="absolute right-4 top-4">
-          <Button size="sm" onClick={() => setHelpOpen(true)}>
+          <Button
+            size="sm"
+            onClick={() =>
+              window.open(
+                "https://github.com/briank1727/hksplitanalyzer/blob/master/README.md",
+                "_blank",
+                "noopener,noreferrer",
+              )
+            }
+          >
             Help
           </Button>
         </div>
@@ -79,8 +86,6 @@ export default function Home() {
           <AnalyzeLSSPage />
         </div>
       </main>
-
-      <HelpDialog open={helpOpen} onClose={() => setHelpOpen(false)} />
     </div>
   );
 }
