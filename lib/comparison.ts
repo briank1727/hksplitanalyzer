@@ -113,6 +113,9 @@ export const DiffSortBy = {
         .sort((a, b) => {
           const aVal = a.row.percent();
           const bVal = b.row.percent();
+          if (aVal === null && bVal === null) return a.index - b.index;
+          if (aVal === null) return 1;
+          if (bVal === null) return -1;
           if (aVal < bVal) return -1;
           if (aVal > bVal) return 1;
           return a.index - b.index;
