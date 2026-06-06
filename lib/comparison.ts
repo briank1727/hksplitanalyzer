@@ -5,7 +5,11 @@ import type { Timeline } from "@/lib/timeline";
 
 export type ComparisonKind = {
   name: string;
-  generate_comparison: (ls: LiveSplit, bigSplits: boolean) => Timeline;
+  generate_comparison: (
+    ls: LiveSplit,
+    bigSplits: boolean,
+    manual_splits: boolean,
+  ) => Timeline;
 };
 
 export class DiffTime {
@@ -147,6 +151,13 @@ function compress_big_splits(ls: LiveSplit): LiveSplit {
     const mergedSegment = { ...segment };
 
     if (smallSplits.length > 0) {
+      // The merged manual times are the sum of the sub-segment manual times
+      // (the big split itself plus its preceding "-" small splits).
+      for (const s of smallSplits) {
+        mergedSegment.manual_pb = tsAdd(mergedSegment.manual_pb, s.manual_pb);
+        mergedSegment.manual_gold = tsAdd(mergedSegment.manual_gold, s.manual_gold);
+      }
+
       const newSplitTimes: typeof segment.split_times = [];
       const ids = new Set<number>();
 
@@ -188,8 +199,21 @@ function compress_big_splits(ls: LiveSplit): LiveSplit {
 export const Comparison = {
   PersonalBest: {
     name: "Personal Best",
-    generate_comparison(ls: LiveSplit, bigSplits: boolean): Timeline {
+    generate_comparison(
+      ls: LiveSplit,
+      bigSplits: boolean,
+      manual_splits: boolean,
+    ): Timeline {
       if (bigSplits) ls = compress_big_splits(ls);
+      if (manual_splits) {
+        return {
+          segments: ls.segments.map((seg) => ({
+            name: seg.name,
+            auto_split_name: seg.auto_split_name,
+            game_time: seg.manual_pb,
+          })),
+        };
+      }
       const completedIds = new Set<number>();
       if (ls.segments.length > 0) {
         for (const st of ls.segments[0].split_times) completedIds.add(st.id);
@@ -229,8 +253,21 @@ export const Comparison = {
   },
   BestSegments: {
     name: "Best Segments",
-    generate_comparison(ls: LiveSplit, bigSplits: boolean): Timeline {
+    generate_comparison(
+      ls: LiveSplit,
+      bigSplits: boolean,
+      manual_splits: boolean,
+    ): Timeline {
       if (bigSplits) ls = compress_big_splits(ls);
+      if (manual_splits) {
+        return {
+          segments: ls.segments.map((seg) => ({
+            name: seg.name,
+            auto_split_name: seg.auto_split_name,
+            game_time: seg.manual_gold,
+          })),
+        };
+      }
       return {
         segments: ls.segments.map((seg) => {
           const valid = seg.split_times.filter(

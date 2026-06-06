@@ -1,6 +1,6 @@
 import { XMLParser } from "fast-xml-parser";
 import type { Timespan } from "@/lib/timespan";
-import { TS_ZERO } from "@/lib/timespan";
+import { TS_ZERO, tsSub } from "@/lib/timespan";
 
 export type LiveSplit = {
   segments: Segment[];
@@ -10,6 +10,11 @@ export type Segment = {
   name: string;
   auto_split_name: string;
   split_times: SplitTime[];
+  // Game times imported directly from the .lss segment:
+  // manual_pb   = the "Personal Best" <SplitTime>'s <GameTime>
+  // manual_gold = the <BestSegmentTime>'s <GameTime>
+  manual_pb: Timespan;
+  manual_gold: Timespan;
 };
 
 export type SplitTime = {
@@ -61,7 +66,19 @@ export function parse_lss(contents: string): LiveSplit {
   const rawSegments = toArray<XmlNode>(
     segmentsContainer?.Segment as XmlNode | XmlNode[] | undefined,
   );
-  const segments: Segment[] = rawSegments.map((seg) => {
+  // The "Personal Best" SplitTime is a cumulative split time (total elapsed at
+  // that point in the run), so the per-segment time is its value minus the
+  // previous segment's. BestSegmentTime, by contrast, is already a per-segment
+  // duration and is used as-is.
+  const pbCumulative: Timespan[] = rawSegments.map((seg) => {
+    const splitTimesContainer = seg.SplitTimes as XmlNode | undefined;
+    const pbSplitTime = toArray<XmlNode>(
+      splitTimesContainer?.SplitTime as XmlNode | XmlNode[] | undefined,
+    ).find((st) => st["@_name"] === "Personal Best");
+    return readTimespan(pbSplitTime?.GameTime);
+  });
+
+  const segments: Segment[] = rawSegments.map((seg, i) => {
     const history = seg.SegmentHistory as XmlNode | undefined;
     const timeNodes = toArray<XmlNode>(
       history?.Time as XmlNode | XmlNode[] | undefined,
@@ -76,10 +93,22 @@ export function parse_lss(contents: string): LiveSplit {
         };
       })
       .filter((st) => st.game_time !== TS_ZERO);
+
+    const pbCurrent = pbCumulative[i];
+    const manual_pb =
+      pbCurrent === TS_ZERO || i === 0
+        ? pbCurrent
+        : tsSub(pbCurrent, pbCumulative[i - 1]);
+
+    const bestSegmentTime = seg.BestSegmentTime as XmlNode | undefined;
+    const manual_gold = readTimespan(bestSegmentTime?.GameTime);
+
     return {
       name: String(seg.Name ?? ""),
       auto_split_name: "",
       split_times,
+      manual_pb,
+      manual_gold,
     };
   });
 

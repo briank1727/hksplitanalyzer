@@ -28,7 +28,9 @@ These instructions will pertain to the "Compare to ComSOB" tab since most users 
 
 3. Check the big splits option if you want to treat segments with subsplits as a single segment as most premade LSS files splits up ComSOBs into multiple splits (it won't impact lss files that don't have subsplits).
 
-4. Click "Generate Timeline" and now you have your timeline to compare against!
+4. Check the manual splits option if you want to use manual times that you inputted for comparisons. If big splits is on and manual splits is off, it will extract the best big split you have actually run. If big splits is on and manual splits if on, it will sum up the golds of each subsplit to create the time (what LiveSplit does).
+
+5. Click "Generate Timeline" and now you have your timeline to compare against!
 
 ## How to Compare to ComSOB
 

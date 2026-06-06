@@ -22,6 +22,7 @@ export default function AnalyzeLSSPage() {
   const [generateError, setGenerateError] = useState<string | null>(null);
   const [showDiff, setShowDiff] = useState(false);
   const [bigSplits, setBigSplits] = useState<boolean>(true);
+  const [manualSplits, setManualSplits] = useState<boolean>(false);
 
   const compareDisabledReason =
     !timeline1 || !timeline2 ? "Generate timelines first" : undefined;
@@ -59,10 +60,10 @@ export default function AnalyzeLSSPage() {
     setGenerateError(null);
     try {
       setTimeline1(
-        Comparison[choice1].generate_comparison(imported, bigSplits),
+        Comparison[choice1].generate_comparison(imported, bigSplits, manualSplits),
       );
       setTimeline2(
-        Comparison[choice2].generate_comparison(imported, bigSplits),
+        Comparison[choice2].generate_comparison(imported, bigSplits, manualSplits),
       );
     } catch (e) {
       setTimeline1(null);
@@ -149,6 +150,18 @@ export default function AnalyzeLSSPage() {
           />
           <span className="text-sm text-black dark:text-zinc-50">
             Big Splits
+          </span>
+        </label>
+        <label className="flex items-center gap-1.5">
+          <input
+            type="checkbox"
+            checked={manualSplits}
+            onChange={(e) => setManualSplits(e.target.checked)}
+            disabled={!imported}
+            className="rounded border border-black/10 dark:border-white/15"
+          />
+          <span className="text-sm text-black dark:text-zinc-50">
+            Manual Splits
           </span>
         </label>
         <Button size="sm" onClick={handleGenerate} disabled={!imported}>

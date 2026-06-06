@@ -25,6 +25,7 @@ export default function LiveSplitImporter({
   const [importError, setImportError] = useState<string | null>(null);
   const [choice, setChoice] = useState<ComparisonKey>("PersonalBest");
   const [bigSplits, setBigSplits] = useState<boolean>(true);
+  const [manualSplits, setManualSplits] = useState<boolean>(false);
   const [generateError, setGenerateError] = useState<string | null>(null);
 
   const importedStats = useMemo(() => {
@@ -72,8 +73,20 @@ export default function LiveSplitImporter({
     if (!imported) return;
     setGenerateError(null);
     try {
-      setGenerated(Comparison[choice].generate_comparison(imported, bigSplits));
-      console.log(Comparison[choice].generate_comparison(imported, bigSplits));
+      setGenerated(
+        Comparison[choice].generate_comparison(
+          imported,
+          bigSplits,
+          manualSplits,
+        ),
+      );
+      console.log(
+        Comparison[choice].generate_comparison(
+          imported,
+          bigSplits,
+          manualSplits,
+        ),
+      );
     } catch (e) {
       setGenerated(null);
       setGenerateError(
@@ -131,6 +144,18 @@ export default function LiveSplitImporter({
             />
             <span className="text-base text-black dark:text-zinc-50">
               Big Splits
+            </span>
+          </label>
+          <label className="flex items-center gap-1.5 disabled:opacity-50 disabled:pointer-events-none">
+            <input
+              type="checkbox"
+              checked={manualSplits}
+              onChange={(e) => setManualSplits(e.target.checked)}
+              disabled={!imported}
+              className="rounded border border-black/10 dark:border-white/15"
+            />
+            <span className="text-base text-black dark:text-zinc-50">
+              Manual Splits
             </span>
           </label>
         </div>
