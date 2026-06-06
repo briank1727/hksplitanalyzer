@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import CloseIcon from '@mui/icons-material/Close';
 
 type DialogProps = {
@@ -11,6 +11,27 @@ type DialogProps = {
 };
 
 export default function Dialog({ open, onClose, title, children }: DialogProps) {
+  // Lock background scrolling while the dialog is open. The page's scroll
+  // container is <main> (html/body are pinned to the viewport height), so we
+  // lock that and the body for good measure, restoring both on close.
+  useEffect(() => {
+    if (!open) return;
+
+    const main = document.querySelector("main");
+    const previous = {
+      body: document.body.style.overflow,
+      main: main?.style.overflow,
+    };
+
+    document.body.style.overflow = "hidden";
+    if (main) main.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previous.body;
+      if (main) main.style.overflow = previous.main ?? "";
+    };
+  }, [open]);
+
   if (!open) return null;
 
   return (
