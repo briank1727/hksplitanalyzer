@@ -28,9 +28,7 @@ These instructions will pertain to the "Compare to ComSOB" tab since most users 
 
 3. Check the big splits option if you want to treat segments with subsplits as a single segment as most premade LSS files splits up ComSOBs into multiple splits (it won't impact lss files that don't have subsplits).
 
-4. Check the manual splits option if you want to use manual times that you inputted for comparisons, (for example if you have a fake gold and you changed it in you LSS file). If big splits is on and manual splits is off, it will extract the best big split you have actually run. If big splits is on and manual splits if on, it will sum up the golds of each subsplit to create the time (what LiveSplit does).
-
-5. Click "Generate Timeline" and now you have your timeline to compare against!
+4. Click "Generate Timeline" and now you have your timeline to compare against!
 
 ## How to Compare to ComSOB
 
@@ -72,3 +70,11 @@ To change the order of the splits, select the order parameter and whether you wa
 The pie chart shows all of the time loss (the red segments) in the run.
 
 Hover over a slice to see what split to see more details.
+
+## What Does Manual Splits Do?
+
+LiveSplit stores a Manual PB and Manual Gold time per segment directly in the `.lss` file, reflecting whatever LiveSplit last showed (including anything you hand-edited). With Manual Splits off, HKSA instead recalculates Personal Best and Best Segments from your actual attempt history.
+
+This is useful for "Big Splits" in particular. If you have your comparison set to Best Times and manual splits on, the time calculated will be the sum of your golds for each subsplit. In contrast, with manual splits off, the time calculated will be the fastest you actually completed that entire split in a run, representing your "real" gold for that split.
+
+Only those two comparisons use this toggle — Average Segments always uses attempt history regardless.

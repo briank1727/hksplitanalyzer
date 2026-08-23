@@ -134,30 +134,52 @@ export default function LiveSplitImporter({
               ))}
             </select>
           </label>
-          <label className="flex items-center gap-1.5 disabled:opacity-50 disabled:pointer-events-none">
-            <input
-              type="checkbox"
-              checked={bigSplits}
-              onChange={(e) => setBigSplits(e.target.checked)}
-              disabled={!imported}
-              className="rounded border border-black/10 dark:border-white/15"
-            />
-            <span className="text-base text-black dark:text-zinc-50">
-              Big Splits
-            </span>
-          </label>
-          <label className="flex items-center gap-1.5 disabled:opacity-50 disabled:pointer-events-none">
-            <input
-              type="checkbox"
-              checked={manualSplits}
-              onChange={(e) => setManualSplits(e.target.checked)}
-              disabled={!imported}
-              className="rounded border border-black/10 dark:border-white/15"
-            />
-            <span className="text-base text-black dark:text-zinc-50">
-              Manual Splits
-            </span>
-          </label>
+          <div className="flex items-center gap-1.5">
+            <label className="flex items-center gap-1.5 disabled:opacity-50 disabled:pointer-events-none">
+              <input
+                type="checkbox"
+                checked={bigSplits}
+                onChange={(e) => setBigSplits(e.target.checked)}
+                disabled={!imported}
+                className="rounded border border-black/10 dark:border-white/15"
+              />
+              <span className="text-base text-black dark:text-zinc-50">
+                Big Splits
+              </span>
+            </label>
+            <a
+              href="https://github.com/briank1727/hksplitanalyzer/blob/master/README.md#how-to-import-a-livesplit-file"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="About big splits"
+              className="flex h-4 w-4 items-center justify-center rounded-full border border-black/20 text-[10px] leading-none text-black/60 hover:bg-black/5 dark:border-white/25 dark:text-zinc-400 dark:hover:bg-white/10"
+            >
+              i
+            </a>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <label className="flex items-center gap-1.5 disabled:opacity-50 disabled:pointer-events-none">
+              <input
+                type="checkbox"
+                checked={manualSplits}
+                onChange={(e) => setManualSplits(e.target.checked)}
+                disabled={!imported}
+                className="rounded border border-black/10 dark:border-white/15"
+              />
+              <span className="text-base text-black dark:text-zinc-50">
+                Manual Splits
+              </span>
+            </label>
+            <a
+              href="https://github.com/briank1727/hksplitanalyzer/blob/master/README.md#what-does-manual-splits-do"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="About manual splits"
+              className="flex h-4 w-4 items-center justify-center rounded-full border border-black/20 text-[10px] leading-none text-black/60 hover:bg-black/5 dark:border-white/25 dark:text-zinc-400 dark:hover:bg-white/10"
+            >
+              i
+            </a>
+          </div>
         </div>
         <div className="mt-3 flex justify-center">
           <Button size="sm" onClick={handleGenerate} disabled={!imported}>
