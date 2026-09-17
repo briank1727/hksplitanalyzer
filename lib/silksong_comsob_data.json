@@ -21,20 +21,21 @@
     "name": "True Ending",
     "top_left_cell": "B5",
     "bottom_right_cell": "D74",
-    "sheet_url": "https://docs.google.com/spreadsheets/d/1xZk3XRwhGBW64vsMfUhLkfUdud0V1iuWYxjg8v9ssGs/edit?gid=463520651#gid=463520651",
+    "sheet_url": "https://docs.google.com/spreadsheets/d/1xZk3XRwhGBW64vsMfUhLkfUdud0V1iuWYxjg8v9ssGs/edit?gid=715160031#gid=715160031",
     "split_names_idx": 0,
     "auto_split_names_idx": 1,
     "game_times_idx": 2
   },
-  "OneHundredPercentMonstahlerV6": {
-    "name": "100% Monstahler V6",
+  "OneHundredPercentZ7": {
+    "name": "100% Z7",
     "top_left_cell": "B4",
-    "bottom_right_cell": "D103",
-    "sheet_url": "https://docs.google.com/spreadsheets/d/1pam4Xeu3fC4VrDLcHGtacHD2oEbwDo_RX2rctOLvyX0/edit?gid=1808861139#gid=1808861139",
+    "bottom_right_cell": "D120",
+    "sheet_url": "https://docs.google.com/spreadsheets/d/1pam4Xeu3fC4VrDLcHGtacHD2oEbwDo_RX2rctOLvyX0/edit?gid=97083592#gid=97083592",
     "split_names_idx": 0,
     "auto_split_names_idx": 1,
     "game_times_idx": 2
   },
+
   "LowPercent": {
     "name": "Low%",
     "top_left_cell": "B4",
@@ -71,11 +72,29 @@
     "auto_split_names_idx": 1,
     "game_times_idx": 2
   },
+  "TrueEnding891N2Trobbio": {
+    "name": "True Ending (N2 Trobbio)",
+    "top_left_cell": "B5",
+    "bottom_right_cell": "D74",
+    "sheet_url": "https://docs.google.com/spreadsheets/d/1xZk3XRwhGBW64vsMfUhLkfUdud0V1iuWYxjg8v9ssGs/edit?gid=463520651#gid=463520651",
+    "split_names_idx": 0,
+    "auto_split_names_idx": 1,
+    "game_times_idx": 2
+  },
   "TrueEnding891Old": {
     "name": "True Ending (Old)",
     "top_left_cell": "B5",
     "bottom_right_cell": "D68",
     "sheet_url": "https://docs.google.com/spreadsheets/d/1xZk3XRwhGBW64vsMfUhLkfUdud0V1iuWYxjg8v9ssGs/edit?gid=694378864#gid=694378864",
+    "split_names_idx": 0,
+    "auto_split_names_idx": 1,
+    "game_times_idx": 2
+  },
+  "OneHundredPercentMonstahlerV6": {
+    "name": "100% Monstahler V6",
+    "top_left_cell": "B4",
+    "bottom_right_cell": "D103",
+    "sheet_url": "https://docs.google.com/spreadsheets/d/1pam4Xeu3fC4VrDLcHGtacHD2oEbwDo_RX2rctOLvyX0/edit?gid=1808861139#gid=1808861139",
     "split_names_idx": 0,
     "auto_split_names_idx": 1,
     "game_times_idx": 2
