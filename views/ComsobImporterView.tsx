@@ -4,12 +4,18 @@ import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import Button from "@/components/Button";
 import Dialog from "@/components/Dialog";
 import SplitsTable from "@/components/SplitsTable";
+import Tabs from "@/components/Tabs";
 import { HKWebComsob, SilksongWebComsob, fetch_comsob_timeline, type WebComsobKind } from "@/lib/import_comsob";
 import { formatTsDisplay, tsAdd, TS_ZERO, type Timespan } from "@/lib/timespan";
 import { Timeline } from "@/lib/timeline";
 
 type HKWebKey = keyof typeof HKWebComsob;
 type SilksongWebKey = keyof typeof SilksongWebComsob;
+
+const GAME_TABS = [
+  { key: "hk", label: "Hollow Knight" },
+  { key: "silksong", label: "Silksong" },
+] as const;
 
 export default function ComsobImporterView({
   title,
@@ -24,13 +30,6 @@ export default function ComsobImporterView({
   const [importError, setImportError] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [dialogTab, setDialogTab] = useState<"hk" | "silksong">("hk");
-
-  const tabClass = (active: boolean) =>
-    `px-4 py-2 text-lg font-medium border-b-2 -mb-px transition-colors ${
-      active
-        ? "border-black text-black dark:border-zinc-50 dark:text-zinc-50"
-        : "border-transparent text-zinc-500 hover:text-black dark:text-zinc-400 dark:hover:text-zinc-50"
-    }`;
 
   const generatedStats = useMemo(() => {
     if (!generated) return null;
@@ -78,14 +77,12 @@ export default function ComsobImporterView({
           onClose={() => setDialogOpen(false)}
           title="Select ComSOB"
         >
-          <div className="flex gap-2 border-b border-black/10 dark:border-white/15 mb-4">
-            <button type="button" className={tabClass(dialogTab === "hk")} onClick={() => setDialogTab("hk")} style={{ fontFamily: "var(--font-trajan)" }}>
-              Hollow Knight
-            </button>
-            <button type="button" className={tabClass(dialogTab === "silksong")} onClick={() => setDialogTab("silksong")} style={{ fontFamily: "var(--font-trajan)" }}>
-              Silksong
-            </button>
-          </div>
+          <Tabs
+            tabs={GAME_TABS}
+            active={dialogTab}
+            onChange={setDialogTab}
+            className="mb-4"
+          />
           <ul className="max-h-[70vh] space-y-2 overflow-y-auto">
             {dialogTab === "hk"
               ? (Object.keys(HKWebComsob) as HKWebKey[]).map((key) => (

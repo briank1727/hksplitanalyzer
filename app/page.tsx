@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Button from "@/components/Button";
+import Tabs from "@/components/Tabs";
 import ComsobPage from "@/views/ComsobPage";
 import AnalyzeLSSPage from "@/views/AnalyzeLSSPage";
 import logo from "@/public/logo.png";
@@ -10,15 +11,13 @@ import bench from "@/public/bench.png";
 
 type Tab = "compare" | "analyze";
 
+const TABS = [
+  { key: "compare", label: "Compare to ComSOB" },
+  { key: "analyze", label: "Analyze Livesplit File" },
+] as const;
+
 export default function Home() {
   const [tab, setTab] = useState<Tab>("compare");
-
-  const tabClass = (active: boolean) =>
-    `px-4 py-2 text-lg font-medium border-b-2 -mb-px transition-colors ${
-      active
-        ? "border-black text-black dark:border-zinc-50 dark:text-zinc-50"
-        : "border-transparent text-zinc-500 hover:text-black dark:text-zinc-400 dark:hover:text-zinc-50"
-    }`;
 
   return (
     <div className="flex flex-col flex-1 bg-zinc-50 font-sans dark:bg-transparent">
@@ -58,26 +57,12 @@ export default function Home() {
         </div>
       </header>
 
-      <div className="flex justify-center border-b border-black/10 dark:border-white/15 px-8">
-        <div className="flex gap-2">
-          <button
-            type="button"
-            className={tabClass(tab === "compare")}
-            onClick={() => setTab("compare")}
-            style={{ fontFamily: "var(--font-trajan)" }}
-          >
-            Compare to ComSOB
-          </button>
-          <button
-            type="button"
-            className={tabClass(tab === "analyze")}
-            onClick={() => setTab("analyze")}
-            style={{ fontFamily: "var(--font-trajan)" }}
-          >
-            Analyze Livesplit File
-          </button>
-        </div>
-      </div>
+      <Tabs
+        tabs={TABS}
+        active={tab}
+        onChange={setTab}
+        className="justify-center px-8"
+      />
 
       <main className="flex flex-col flex-1">
         <div

@@ -1,5 +1,5 @@
 import { ButtonHTMLAttributes } from "react";
-import Image from "next/image";
+import Fleur from "@/components/Fleur";
 
 type Variant = "primary" | "secondary" | "success";
 type Size = "sm" | "md" | "lg";
@@ -28,10 +28,6 @@ const sizeStyles: Record<Size, string> = {
   lg: "h-13 px-4 text-xl font-[family-name:var(--font-trajan)]",
 };
 
-// Like the in-game menu, the fleurs only appear beside the hovered/focused item.
-const FLEUR =
-  "shrink-0 opacity-0 transition-[opacity,translate] duration-200 ease-out group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100";
-
 const embellishmentSize: Record<Size, number> = {
   sm: 16,
   md: 20,
@@ -46,10 +42,7 @@ export default function Button({
   children,
   ...props
 }: ButtonProps) {
-  const imgWidth = embellishmentSize[size];
-  // Keep the asset's 74x89 aspect ratio, and set the height inline so Tailwind's
-  // `img { height: auto }` can't make the rendered size differ from the props.
-  const imgHeight = Math.round((imgWidth * 89) / 74);
+  const fleurWidth = embellishmentSize[size];
 
   return (
     <button
@@ -57,25 +50,11 @@ export default function Button({
       className={`group inline-flex items-center justify-center gap-2 rounded-full font-medium transition-[color,background-color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40 dark:focus-visible:ring-white/40 ${DISABLED} ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
       {...props}
     >
-      <Image
-        src="/button_embelishment.png"
-        alt=""
-        width={imgWidth}
-        height={imgHeight}
-        style={{ height: imgHeight }}
-        className={`${FLEUR} -translate-x-1`}
-      />
+      <Fleur width={fleurWidth} side="left" />
       <span className={size === "lg" ? "translate-y-0.5" : undefined}>
         {children}
       </span>
-      <Image
-        src="/button_embelishment.png"
-        alt=""
-        width={imgWidth}
-        height={imgHeight}
-        style={{ height: imgHeight }}
-        className={`${FLEUR} translate-x-1 scale-x-[-1]`}
-      />
+      <Fleur width={fleurWidth} side="right" />
     </button>
   );
 }
