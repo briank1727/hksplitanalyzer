@@ -3,6 +3,7 @@
 import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import Button from "@/components/Button";
 import Dialog from "@/components/Dialog";
+import MessageBox from "@/components/MessageBox";
 import SplitsTable from "@/components/SplitsTable";
 import Tabs from "@/components/Tabs";
 import { HKWebComsob, SilksongWebComsob, fetch_comsob_timeline, type WebComsobKind } from "@/lib/import_comsob";
@@ -126,14 +127,18 @@ export default function ComsobImporterView({
           </ul>
         </Dialog>
         {generated && importedName && generatedStats && (
-          <div className="mt-3 rounded-lg border text-center border-green-200 bg-green-50 p-3 text-sm text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-200">
-            <div>
-              Imported {importedName} ({generatedStats.numSplits} split
-              {generatedStats.numSplits === 1 ? "" : "s"}
-              {`, total time: ${formatTsDisplay(generatedStats.totalTime)}`}
-              )
-            </div>
-          </div>
+          <MessageBox
+            status="success"
+            message={
+              <>
+                Imported {importedName} ({generatedStats.numSplits} split
+                {generatedStats.numSplits === 1 ? "" : "s"}
+                {`, total time: ${formatTsDisplay(generatedStats.totalTime)}`}
+                )
+              </>
+            }
+            className="mt-3 text-center"
+          />
         )}
         {!generated && !importError && (
           <div className="mt-4 flex h-48 flex-col items-center justify-center gap-1 rounded-lg border border-dashed border-black/15 text-center dark:border-white/15">
@@ -146,9 +151,11 @@ export default function ComsobImporterView({
           </div>
         )}
         {importError && (
-          <div className="mt-3 rounded-lg border text-center border-red-200 bg-red-50 p-3 text-sm text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
-            Import failed: {importError}
-          </div>
+          <MessageBox
+            status="error"
+            message={`Import failed: ${importError}`}
+            className="mt-3 text-center"
+          />
         )}
       </div>
       <SplitsTable

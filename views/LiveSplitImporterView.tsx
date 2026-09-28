@@ -2,6 +2,7 @@
 
 import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import Button from "@/components/Button";
+import MessageBox from "@/components/MessageBox";
 import SplitsTable from "@/components/SplitsTable";
 import { import_lss } from "@/lib/import_lss";
 import { Comparison } from "@/lib/comparison";
@@ -107,14 +108,18 @@ export default function LiveSplitImporter({
           </Button>
         </div>
         {imported && importedFileName && importedStats && (
-          <div className="mt-3 rounded-lg border border-green-200 bg-green-50 p-3 text-base text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-200">
-            <div>Successfully imported {importedFileName}</div>
-          </div>
+          <MessageBox
+            status="success"
+            message={`Successfully imported ${importedFileName}`}
+            className="mt-3"
+          />
         )}
         {importError && (
-          <div className="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 text-base text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
-            Import failed: {importError}
-          </div>
+          <MessageBox
+            status="error"
+            message={`Import failed: ${importError}`}
+            className="mt-3"
+          />
         )}
         <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
           <label className="flex items-center gap-1.5 disabled:opacity-50 disabled:pointer-events-none">
@@ -187,15 +192,19 @@ export default function LiveSplitImporter({
           </Button>
         </div>
         {generated && generatedStats && (
-          <div className="mt-3 rounded-lg border border-green-200 bg-green-50 p-3 text-base text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-200">
-            <div>
-              Timeline generated successfully ({generatedStats.numSplits} split
-              {generatedStats.numSplits === 1 ? "" : "s"}
-              {generatedStats.totalTime !== null &&
-                `, total time: ${formatTsDisplay(generatedStats.totalTime)}`}
-              )
-            </div>
-          </div>
+          <MessageBox
+            status="success"
+            message={
+              <>
+                Timeline generated successfully ({generatedStats.numSplits} split
+                {generatedStats.numSplits === 1 ? "" : "s"}
+                {generatedStats.totalTime !== null &&
+                  `, total time: ${formatTsDisplay(generatedStats.totalTime)}`}
+                )
+              </>
+            }
+            className="mt-3"
+          />
         )}
       </div>
       <SplitsTable

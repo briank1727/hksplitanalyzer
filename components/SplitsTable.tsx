@@ -6,6 +6,7 @@ import type { Timeline, TimelineSegment } from "@/lib/timeline";
 import type { Timespan } from "@/lib/timespan";
 import { TS_ZERO, formatTsDisplay, tsAdd } from "@/lib/timespan";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import MessageBox from "@/components/MessageBox";
 
 function parseGameTime(input: string): Timespan | null {
   const trimmed = input.trim();
@@ -250,13 +251,16 @@ export default function SplitsTable({
 
   if (error) {
     return (
-      <div
-        role="alert"
-        className="mt-4 text-sm rounded p-3 border border-red-500/40 bg-red-500/10 text-red-700 dark:text-red-300"
-      >
-        <div className="font-semibold">{errorTitle}</div>
-        <div className="mt-1 break-words">{error}</div>
-      </div>
+      <MessageBox
+        status="error"
+        message={
+          <>
+            <div className="font-semibold">{errorTitle}</div>
+            <div className="mt-1 break-words">{error}</div>
+          </>
+        }
+        className="mt-4"
+      />
     );
   }
   if (!timeline) return null;

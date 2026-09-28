@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Button from "@/components/Button";
+import MessageBox from "@/components/MessageBox";
 import SplitPieChart, { type SplitPieSlice } from "@/components/SplitPieChart";
 import SplitsCompareTable from "@/components/SplitsCompareTable";
 import type { Timeline } from "@/lib/timeline";
@@ -101,41 +102,47 @@ export default function DiffSplitView({
         </Button>
       </div>
       {lengthError && (
-        <div
-          role="alert"
-          className="mt-4 text-sm rounded border border-red-200 bg-red-50 text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200"
-        >
-          <button
-            className="w-full flex items-center gap-1.5 px-3 py-2 font-semibold text-left"
-            onClick={() => setErrorOpen((o) => !o)}
-          >
-            <span>{errorOpen ? "▾" : "▸"}</span>
-            <span className="text-base">Error</span>
-          </button>
-          {errorOpen && <div className="px-3 pb-3">{lengthError}</div>}
-        </div>
+        <MessageBox
+          status="error"
+          message={
+            <>
+              <button
+                className="w-full flex items-center gap-1.5 font-semibold text-left"
+                onClick={() => setErrorOpen((o) => !o)}
+              >
+                <span>{errorOpen ? "▾" : "▸"}</span>
+                <span>Error</span>
+              </button>
+              {errorOpen && <div className="pt-2">{lengthError}</div>}
+            </>
+          }
+          className="mt-4"
+        />
       )}
       {warning && (
-        <div
-          role="alert"
-          className="mt-4 text-sm rounded border border-yellow-500/40 bg-yellow-500/10 text-yellow-700 dark:text-yellow-300"
-        >
-          <button
-            className="w-full flex items-center gap-1.5 px-3 py-2 font-semibold text-left"
-            onClick={() => setWarningOpen((o) => !o)}
-          >
-            <span>{warningOpen ? "▾" : "▸"}</span>
-            <span className="text-base">Warning</span>
-            {!warningOpen && (
-              <span className="ml-1 font-normal">({mismatches.length})</span>
-            )}
-          </button>
-          {warningOpen && (
-            <pre className="px-3 pb-3 whitespace-pre-wrap break-words font-sans">
-              {warning}
-            </pre>
-          )}
-        </div>
+        <MessageBox
+          status="warning"
+          message={
+            <>
+              <button
+                className="w-full flex items-center gap-1.5 font-semibold text-left"
+                onClick={() => setWarningOpen((o) => !o)}
+              >
+                <span>{warningOpen ? "▾" : "▸"}</span>
+                <span>Warning</span>
+                {!warningOpen && (
+                  <span className="ml-1 font-normal">({mismatches.length})</span>
+                )}
+              </button>
+              {warningOpen && (
+                <pre className="pt-2 whitespace-pre-wrap break-words font-sans">
+                  {warning}
+                </pre>
+              )}
+            </>
+          }
+          className="mt-4"
+        />
       )}
       <div className="mt-3 flex gap-4">
         <div className="w-2/3 min-w-0">
