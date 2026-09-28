@@ -6,6 +6,7 @@ import {
   percentBgStyle,
 } from "@/lib/diff_format";
 import { formatTsDisplay } from "@/lib/timespan";
+import Panel, { NESTED_PANEL_COLOR } from "@/components/Panel";
 
 export default function SplitsCompareTable({
   sortedRows,
@@ -15,45 +16,47 @@ export default function SplitsCompareTable({
   diffThresholdMs: number;
 }) {
   return (
-    <div className="flex-1 min-w-0 max-h-[60vh] overflow-auto rounded bg-gray-900 text-zinc-100 text-base">
-      <table className="w-full border-collapse">
-        <thead>
-          <tr className="border-b border-white/10 text-zinc-300">
-            <th className="text-left font-semibold px-2 py-1.5">Name</th>
-            <th className="text-left font-semibold px-2 py-1.5">Auto Split</th>
-            <th className="text-right font-semibold px-2 py-1.5">T1</th>
-            <th className="text-right font-semibold px-2 py-1.5">T2</th>
-            <th className="text-right font-semibold px-2 py-1.5">+/-</th>
-            <th className="text-right font-semibold px-2 py-1.5">%</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sortedRows.map((row, i) => (
-            <tr key={i} className="border-b border-white/5 last:border-b-0">
-              <td className="text-left px-2 py-1">{row.name}</td>
-              <td className="text-left px-2 py-1 text-zinc-400">{row.auto_split_name}</td>
-              <td className="text-right px-2 py-1 tabular-nums font-semibold whitespace-nowrap">
-                {formatTsDisplay(row.time1)}
-              </td>
-              <td className="text-right px-2 py-1 tabular-nums font-semibold whitespace-nowrap">
-                {formatTsDisplay(row.time2)}
-              </td>
-              <td
-                style={diffBgStyle(row.diff(), diffThresholdMs)}
-                className="text-right px-2 py-1 tabular-nums font-semibold whitespace-nowrap"
-              >
-                {formatDiff(row.diff())}
-              </td>
-              <td
-                style={percentBgStyle(row.percent())}
-                className="text-right px-2 py-1 tabular-nums font-semibold whitespace-nowrap"
-              >
-                {formatPercent(row.percent())}
-              </td>
+    <Panel color={NESTED_PANEL_COLOR} className="text-zinc-100 text-base">
+      <div className="max-h-[60vh] overflow-auto">
+        <table className="w-full border-collapse">
+          <thead>
+            <tr className="border-b border-white/10 text-zinc-300">
+              <th className="text-left font-semibold px-2 py-1.5">Name</th>
+              <th className="text-left font-semibold px-2 py-1.5">Auto Split</th>
+              <th className="text-right font-semibold px-2 py-1.5">T1</th>
+              <th className="text-right font-semibold px-2 py-1.5">T2</th>
+              <th className="text-right font-semibold px-2 py-1.5">+/-</th>
+              <th className="text-right font-semibold px-2 py-1.5">%</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            {sortedRows.map((row, i) => (
+              <tr key={i} className="border-b border-white/5 last:border-b-0">
+                <td className="text-left px-2 py-1">{row.name}</td>
+                <td className="text-left px-2 py-1 text-zinc-400">{row.auto_split_name}</td>
+                <td className="text-right px-2 py-1 tabular-nums font-semibold whitespace-nowrap">
+                  {formatTsDisplay(row.time1)}
+                </td>
+                <td className="text-right px-2 py-1 tabular-nums font-semibold whitespace-nowrap">
+                  {formatTsDisplay(row.time2)}
+                </td>
+                <td
+                  style={diffBgStyle(row.diff(), diffThresholdMs)}
+                  className="text-right px-2 py-1 tabular-nums font-semibold whitespace-nowrap"
+                >
+                  {formatDiff(row.diff())}
+                </td>
+                <td
+                  style={percentBgStyle(row.percent())}
+                  className="text-right px-2 py-1 tabular-nums font-semibold whitespace-nowrap"
+                >
+                  {formatPercent(row.percent())}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </Panel>
   );
 }

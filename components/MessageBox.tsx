@@ -30,7 +30,7 @@ export default function MessageBox({
         color={background}
         // Errors interrupt screen readers; success and warning are announced politely.
         role={status === "error" ? "alert" : "status"}
-        className={`text-base ${text}`}
+        className={`text-left text-base ${text}`}
       >
         {message}
       </Panel>

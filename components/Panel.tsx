@@ -13,6 +13,9 @@ const TAPER_MASK: CSSProperties = {
   maskComposite: "intersect",
 };
 
+// For a panel that sits inside another (black) panel: gray-900 stands out from it.
+export const NESTED_PANEL_COLOR = "rgb(17, 24, 39)";
+
 type PanelProps = HTMLAttributes<HTMLElement> & {
   // Background colour: any CSS colour (e.g. "#0b1119", "rgb(20 30 45)").
   color?: string;

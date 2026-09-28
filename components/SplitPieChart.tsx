@@ -109,7 +109,7 @@ export default function SplitPieChart({
           </PieChart>
         )}
       </div>
-      <ul className="w-48 shrink-0 overflow-y-auto text-sm text-black dark:text-zinc-50 space-y-1 pr-1">
+      <ul className="w-48 shrink-0 overflow-y-auto text-sm text-zinc-50 space-y-1 pr-1">
         {data
           .filter((entry) => entry.percent > 0)
           .map((entry, i) => (

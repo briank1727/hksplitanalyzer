@@ -7,6 +7,7 @@ import type { Timespan } from "@/lib/timespan";
 import { TS_ZERO, formatTsDisplay, tsAdd } from "@/lib/timespan";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import MessageBox from "@/components/MessageBox";
+import Panel, { NESTED_PANEL_COLOR } from "@/components/Panel";
 
 function parseGameTime(input: string): Timespan | null {
   const trimmed = input.trim();
@@ -273,31 +274,35 @@ export default function SplitsTable({
   }
 
   return (
-    <div className="mt-3 max-h-[60vh] overflow-auto rounded bg-gray-900 text-zinc-100 text-base">
-      <div className={`${GRID} py-1.5 border-b border-white/10 font-semibold text-zinc-300`}>
-        <div>Name</div>
-        <div>Auto Split</div>
-        <div className="text-right">Segment</div>
-        <div className="text-right">Time</div>
-        <div />
-      </div>
-      {timeline.segments.map((seg, i) => (
-        <SegmentRow
-          key={i}
-          seg={seg}
-          index={i}
-          cumTime={times[i]}
-          setTimeline={setTimeline}
-          isMenuOpen={openMenuIndex === i}
-          onMenuToggle={(e) => {
-            e.stopPropagation();
-            setOpenMenuIndex(openMenuIndex === i ? null : i);
-          }}
-          onDeleteRow={() => { deleteRow(i); setOpenMenuIndex(null); }}
-          onInsertAbove={() => { insertRowAbove(i); setOpenMenuIndex(null); }}
-          onInsertBelow={() => { insertRowBelow(i); setOpenMenuIndex(null); }}
-        />
-      ))}
+    <div className="mt-2">
+      <Panel color={NESTED_PANEL_COLOR} className="text-zinc-100 text-base">
+        <div className="max-h-[60vh] overflow-auto">
+          <div className={`${GRID} py-1.5 border-b border-white/10 font-semibold text-zinc-300`}>
+            <div>Name</div>
+            <div>Auto Split</div>
+            <div className="text-right">Segment</div>
+            <div className="text-right">Time</div>
+            <div />
+          </div>
+          {timeline.segments.map((seg, i) => (
+            <SegmentRow
+              key={i}
+              seg={seg}
+              index={i}
+              cumTime={times[i]}
+              setTimeline={setTimeline}
+              isMenuOpen={openMenuIndex === i}
+              onMenuToggle={(e) => {
+                e.stopPropagation();
+                setOpenMenuIndex(openMenuIndex === i ? null : i);
+              }}
+              onDeleteRow={() => { deleteRow(i); setOpenMenuIndex(null); }}
+              onInsertAbove={() => { insertRowAbove(i); setOpenMenuIndex(null); }}
+              onInsertBelow={() => { insertRowBelow(i); setOpenMenuIndex(null); }}
+            />
+          ))}
+        </div>
+      </Panel>
     </div>
   );
 }
