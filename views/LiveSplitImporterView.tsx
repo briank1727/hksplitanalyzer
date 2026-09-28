@@ -97,11 +97,11 @@ export default function LiveSplitImporter({
 
   return (
     <>
-      <div className="h-80 overflow-hidden">
+      <div className="h-80 overflow-hidden text-center">
         <h2 className="mb-3 text-lg font-semibold tracking-tight text-black dark:text-zinc-50">
           {title}
         </h2>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center justify-center gap-2">
           <Button size="sm" onClick={handleImport}>
             Import LSS File
           </Button>
@@ -116,7 +116,7 @@ export default function LiveSplitImporter({
             Import failed: {importError}
           </div>
         )}
-        <div className="mt-4 flex flex-wrap items-center gap-2">
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
           <label className="flex items-center gap-1.5 disabled:opacity-50 disabled:pointer-events-none">
             <span className="text-base text-black dark:text-zinc-50">
               Comparison

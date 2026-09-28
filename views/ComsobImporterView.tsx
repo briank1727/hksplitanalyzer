@@ -64,10 +64,10 @@ export default function ComsobImporterView({
   return (
     <>
       <div className="h-80 overflow-hidden">
-        <h2 className="mb-3 text-lg font-semibold tracking-tight text-black dark:text-zinc-50">
+        <h2 className="mb-3 text-center text-lg font-semibold tracking-tight text-black dark:text-zinc-50">
           {title}
         </h2>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center justify-center gap-2">
           <Button size="sm" onClick={() => setDialogOpen(true)}>
             Select ComSOB
           </Button>
@@ -126,7 +126,7 @@ export default function ComsobImporterView({
           </ul>
         </Dialog>
         {generated && importedName && generatedStats && (
-          <div className="mt-3 rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-200">
+          <div className="mt-3 rounded-lg border text-center border-green-200 bg-green-50 p-3 text-sm text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-200">
             <div>
               Imported {importedName} ({generatedStats.numSplits} split
               {generatedStats.numSplits === 1 ? "" : "s"}
@@ -146,7 +146,7 @@ export default function ComsobImporterView({
           </div>
         )}
         {importError && (
-          <div className="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
+          <div className="mt-3 rounded-lg border text-center border-red-200 bg-red-50 p-3 text-sm text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
             Import failed: {importError}
           </div>
         )}
