@@ -52,11 +52,7 @@ export default function Button({
       {...props}
     >
       <Fleur width={fleurWidth} side="left" />
-      <span
-        className={`translate-y-0.5 ${LABEL_GLOW}`}
-      >
-        {children}
-      </span>
+      <span className={`translate-y-0.5 ${LABEL_GLOW}`}>{children}</span>
       <Fleur width={fleurWidth} side="right" />
     </button>
   );

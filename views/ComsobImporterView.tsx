@@ -6,7 +6,12 @@ import Dialog from "@/components/Dialog";
 import MessageBox from "@/components/MessageBox";
 import SplitsTable from "@/components/SplitsTable";
 import Tabs from "@/components/Tabs";
-import { HKWebComsob, SilksongWebComsob, fetch_comsob_timeline, type WebComsobKind } from "@/lib/import_comsob";
+import {
+  HKWebComsob,
+  SilksongWebComsob,
+  fetch_comsob_timeline,
+  type WebComsobKind,
+} from "@/lib/import_comsob";
 import { formatTsDisplay, tsAdd, TS_ZERO, type Timespan } from "@/lib/timespan";
 import { Timeline } from "@/lib/timeline";
 
@@ -105,25 +110,27 @@ export default function ComsobImporterView({
                     </a>
                   </li>
                 ))
-              : (Object.keys(SilksongWebComsob) as SilksongWebKey[]).map((key) => (
-                  <li key={key} className="flex items-center gap-6">
-                    <Button
-                      size="sm"
-                      onClick={() => handleWebImport(SilksongWebComsob[key])}
-                      className="flex-1"
-                    >
-                      {SilksongWebComsob[key].name}
-                    </Button>
-                    <a
-                      href={SilksongWebComsob[key].sheet_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mr-4 text-sm text-blue-600 underline hover:no-underline dark:text-blue-400"
-                    >
-                      Sheet
-                    </a>
-                  </li>
-                ))}
+              : (Object.keys(SilksongWebComsob) as SilksongWebKey[]).map(
+                  (key) => (
+                    <li key={key} className="flex items-center gap-6">
+                      <Button
+                        size="sm"
+                        onClick={() => handleWebImport(SilksongWebComsob[key])}
+                        className="flex-1"
+                      >
+                        {SilksongWebComsob[key].name}
+                      </Button>
+                      <a
+                        href={SilksongWebComsob[key].sheet_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mr-4 text-sm text-blue-600 underline hover:no-underline dark:text-blue-400"
+                      >
+                        Sheet
+                      </a>
+                    </li>
+                  ),
+                )}
           </ul>
         </Dialog>
         {generated && importedName && generatedStats && (
@@ -133,22 +140,11 @@ export default function ComsobImporterView({
               <>
                 Imported {importedName} ({generatedStats.numSplits} split
                 {generatedStats.numSplits === 1 ? "" : "s"}
-                {`, total time: ${formatTsDisplay(generatedStats.totalTime)}`}
-                )
+                {`, total time: ${formatTsDisplay(generatedStats.totalTime)}`})
               </>
             }
             className="mt-2"
           />
-        )}
-        {!generated && !importError && (
-          <div className="mt-4 flex h-48 flex-col items-center justify-center gap-1 rounded-lg border border-dashed border-black/15 text-center dark:border-white/15">
-            <span className="text-lg text-zinc-600 dark:text-zinc-300">
-              No ComSOB selected
-            </span>
-            <span className="max-w-xs text-sm text-zinc-500">
-              Pick a community sum of best to compare your run against.
-            </span>
-          </div>
         )}
         {importError && (
           <MessageBox
