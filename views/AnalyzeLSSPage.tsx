@@ -89,7 +89,7 @@ export default function AnalyzeLSSPage() {
   }
 
   return (
-    <div className="flex flex-col gap-4 pt-4 px-4">
+    <div className="flex flex-1 flex-col gap-4 pt-4 px-4">
       <Panel className="flex flex-wrap justify-around items-center gap-2">
         <Button size="sm" onClick={handleImport}>
           Import LSS

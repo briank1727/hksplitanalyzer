@@ -9,7 +9,7 @@ export default function CompareBar({
   onCompare: () => void;
 }) {
   return (
-    <div className="sticky bottom-0 z-10 -mx-4 flex flex-col items-center gap-1 bg-[radial-gradient(ellipse_45%_100%_at_50%_100%,rgba(250,250,250,0.95),transparent)] px-4 pt-6 pb-4 dark:bg-[radial-gradient(ellipse_45%_100%_at_50%_100%,rgba(0,0,0,0.92),transparent)]">
+    <div className="sticky bottom-0 z-10 -mx-4 mt-auto flex flex-col items-center gap-1 bg-[radial-gradient(ellipse_45%_100%_at_50%_100%,rgba(250,250,250,0.95),transparent)] px-4 pt-6 pb-4 dark:bg-[radial-gradient(ellipse_45%_100%_at_50%_100%,rgba(0,0,0,0.92),transparent)]">
       <span title={disabledReason}>
         <Button
           size="lg"

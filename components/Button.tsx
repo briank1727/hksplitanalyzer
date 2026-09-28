@@ -47,7 +47,7 @@ export default function Button({
   return (
     <button
       type={type}
-      className={`group inline-flex items-center justify-center gap-2 rounded-full font-medium transition-[color,background-color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40 dark:focus-visible:ring-white/40 disabled:opacity-50 disabled:pointer-events-none ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
+      className={`group inline-flex items-center justify-center gap-2 rounded-full font-medium transition-[color,background-color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40 dark:focus-visible:ring-white/40 disabled:pointer-events-none ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
       {...props}
     >
       <Image
