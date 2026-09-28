@@ -21,7 +21,7 @@ export default function Home() {
     }`;
 
   return (
-    <div className="flex flex-col flex-1 bg-zinc-50 font-sans dark:bg-black">
+    <div className="flex flex-col flex-1 bg-zinc-50 font-sans dark:bg-transparent">
       <header className="flex flex-col items-center justify-center text-center px-4 pt-16 sm:pt-3 relative">
         <Image
           src={bench}
