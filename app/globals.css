@@ -26,7 +26,6 @@ body {
   font-stretch: condensed;
 }
 
-/* Faint background texture; sits behind all content and never takes clicks. */
 @media (prefers-color-scheme: dark) {
   body::before {
     content: "";
@@ -36,5 +35,7 @@ body {
     pointer-events: none;
     background: url("/background.webp") center / cover no-repeat;
     opacity: 0.5;
+    /* Zoom in around the centre to crop out the image's own dark vignette. */
+    transform: scale(2);
   }
 }

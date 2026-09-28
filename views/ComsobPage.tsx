@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Button from "@/components/Button";
-import CompareBar from "@/components/CompareBar";
 import Panel from "@/components/Panel";
 import ComsobImporterView from "@/views/ComsobImporterView";
 import DiffSplitView from "@/views/DiffSplitView";
@@ -34,8 +33,21 @@ export default function ComsobPage() {
         </div>
       )}
       <div
-        className={`flex flex-1 flex-col gap-4 pt-4 px-4 ${diffVisible ? "hidden" : ""}`}
+        className={`flex flex-col gap-4 pt-4 px-4 ${diffVisible ? "hidden" : ""}`}
       >
+        <div className="flex justify-center">
+          <span title={compareDisabledReason}>
+            <Button
+              size="lg"
+              variant="success"
+              disabled={compareDisabledReason !== undefined}
+              onClick={() => setShowDiff(true)}
+              className="text-2xl"
+            >
+              Compare
+            </Button>
+          </span>
+        </div>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <Panel>
             <LiveSplitImporter
@@ -52,10 +64,6 @@ export default function ComsobPage() {
             />
           </Panel>
         </div>
-        <CompareBar
-          disabledReason={compareDisabledReason}
-          onCompare={() => setShowDiff(true)}
-        />
       </div>
     </>
   );

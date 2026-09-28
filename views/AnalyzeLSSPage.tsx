@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Button from "@/components/Button";
-import CompareBar from "@/components/CompareBar";
 import Panel from "@/components/Panel";
 import SplitsTable from "@/components/SplitsTable";
 import DiffSplitView from "@/views/DiffSplitView";
@@ -89,7 +88,20 @@ export default function AnalyzeLSSPage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-4 pt-4 px-4">
+    <div className="flex flex-col gap-4 pt-4 px-4">
+      <div className="flex justify-center">
+        <span title={compareDisabledReason}>
+          <Button
+            size="lg"
+            variant="success"
+            disabled={compareDisabledReason !== undefined}
+            onClick={() => setShowDiff(true)}
+            className="text-2xl"
+          >
+            Compare
+          </Button>
+        </span>
+      </div>
       <Panel className="flex flex-wrap justify-around items-center gap-2">
         <Button size="sm" onClick={handleImport}>
           Import LSS
@@ -208,10 +220,6 @@ export default function AnalyzeLSSPage() {
           </Panel>
         </div>
       )}
-      <CompareBar
-        disabledReason={compareDisabledReason}
-        onCompare={() => setShowDiff(true)}
-      />
     </div>
   );
 }
