@@ -61,10 +61,18 @@ export default function AnalyzeLSSPage() {
     setGenerateError(null);
     try {
       setTimeline1(
-        Comparison[choice1].generate_comparison(imported, bigSplits, manualSplits),
+        Comparison[choice1].generate_comparison(
+          imported,
+          bigSplits,
+          manualSplits,
+        ),
       );
       setTimeline2(
-        Comparison[choice2].generate_comparison(imported, bigSplits, manualSplits),
+        Comparison[choice2].generate_comparison(
+          imported,
+          bigSplits,
+          manualSplits,
+        ),
       );
     } catch (e) {
       setTimeline1(null);
