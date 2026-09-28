@@ -9,23 +9,24 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   size?: Size;
 };
 
+// Buttons have no background: the label always glows (in its own colour, dark mode
+// only) to set it apart from plain text, and the fleurs slide in on hover.
 const variantStyles: Record<Variant, string> = {
-  primary:
-    "bg-gray-900 text-white hover:bg-black dark:bg-gray-800 dark:text-white dark:hover:bg-gray-900",
-  secondary:
-    "bg-black text-white hover:bg-zinc-800 dark:bg-zinc-50 dark:text-black dark:hover:bg-zinc-200",
-  success:
-    "bg-green-600 text-white hover:bg-green-700 dark:bg-green-600 dark:text-white dark:hover:bg-green-500 shadow-[0_0_22px_rgba(34,197,94,0.35)] hover:shadow-[0_0_30px_rgba(34,197,94,0.55)]",
+  primary: "text-black dark:text-zinc-50",
+  secondary: "text-zinc-600 dark:text-zinc-300",
+  success: "text-green-700 dark:text-green-400",
 };
 
 // Shared by every variant so a disabled button always reads as greyed out.
-const DISABLED =
-  "disabled:pointer-events-none disabled:bg-zinc-300 disabled:text-zinc-500 disabled:shadow-none dark:disabled:bg-zinc-800 dark:disabled:text-zinc-500";
+const DISABLED = "disabled:pointer-events-none disabled:text-zinc-500";
+
+const LABEL_GLOW =
+  "dark:[text-shadow:0_0_8px_currentColor] group-disabled:[text-shadow:none]";
 
 const sizeStyles: Record<Size, string> = {
   sm: "h-9 px-2 text-base",
   md: "h-11 px-3 text-lg",
-  lg: "h-13 px-4 text-xl font-[family-name:var(--font-trajan)]",
+  lg: "h-13 px-4 text-xl",
 };
 
 const embellishmentSize: Record<Size, number> = {
@@ -47,11 +48,13 @@ export default function Button({
   return (
     <button
       type={type}
-      className={`group inline-flex items-center justify-center gap-2 rounded-full font-medium transition-[color,background-color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40 dark:focus-visible:ring-white/40 ${DISABLED} ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
+      className={`group inline-flex items-center justify-center gap-2 rounded font-medium font-[family-name:var(--font-trajan)] transition-[color,background-color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40 dark:focus-visible:ring-white/40 ${DISABLED} ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
       {...props}
     >
       <Fleur width={fleurWidth} side="left" />
-      <span className={size === "lg" ? "translate-y-0.5" : undefined}>
+      <span
+        className={`translate-y-0.5 ${LABEL_GLOW}`}
+      >
         {children}
       </span>
       <Fleur width={fleurWidth} side="right" />

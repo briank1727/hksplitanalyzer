@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import Fleur from "@/components/Fleur";
+import Fleur, { DARK_TEXT_GLOW_ON_HOVER } from "@/components/Fleur";
 
 export type TabItem<K extends string> = {
   key: K;
@@ -38,7 +38,9 @@ export default function Tabs<K extends string>({
             }`}
           >
             <Fleur width={18} side="left" active={isActive} />
-            <span className="translate-y-0.5">{tab.label}</span>
+            <span className={`translate-y-0.5 ${DARK_TEXT_GLOW_ON_HOVER}`}>
+              {tab.label}
+            </span>
             <Fleur width={18} side="right" active={isActive} />
           </button>
         );
