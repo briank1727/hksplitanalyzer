@@ -42,7 +42,10 @@ export default function Button({
   children,
   ...props
 }: ButtonProps) {
-  const imgSize = embellishmentSize[size];
+  const imgWidth = embellishmentSize[size];
+  // Keep the asset's 74x89 aspect ratio, and set the height inline so Tailwind's
+  // `img { height: auto }` can't make the rendered size differ from the props.
+  const imgHeight = Math.round((imgWidth * 89) / 74);
 
   return (
     <button
@@ -53,8 +56,9 @@ export default function Button({
       <Image
         src="/button_embelishment.png"
         alt=""
-        width={imgSize}
-        height={imgSize}
+        width={imgWidth}
+        height={imgHeight}
+        style={{ height: imgHeight }}
         className={`${FLEUR} -translate-x-1`}
       />
       <span className={size === "lg" ? "translate-y-0.5" : undefined}>
@@ -63,8 +67,9 @@ export default function Button({
       <Image
         src="/button_embelishment.png"
         alt=""
-        width={imgSize}
-        height={imgSize}
+        width={imgWidth}
+        height={imgHeight}
+        style={{ height: imgHeight }}
         className={`${FLEUR} translate-x-1 scale-x-[-1]`}
       />
     </button>
