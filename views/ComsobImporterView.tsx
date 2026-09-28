@@ -138,6 +138,16 @@ export default function ComsobImporterView({
             </div>
           </div>
         )}
+        {!generated && !importError && (
+          <div className="mt-4 flex h-48 flex-col items-center justify-center gap-1 rounded-lg border border-dashed border-black/15 text-center dark:border-white/15">
+            <span className="text-lg text-zinc-600 dark:text-zinc-300">
+              No ComSOB selected
+            </span>
+            <span className="max-w-xs text-sm text-zinc-500">
+              Pick a community sum of best to compare your run against.
+            </span>
+          </div>
+        )}
         {importError && (
           <div className="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
             Import failed: {importError}

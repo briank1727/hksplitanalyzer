@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Button from "@/components/Button";
+import CompareBar from "@/components/CompareBar";
+import Panel from "@/components/Panel";
 import SplitsTable from "@/components/SplitsTable";
 import DiffSplitView from "@/views/DiffSplitView";
 import { import_lss } from "@/lib/import_lss";
@@ -26,7 +28,6 @@ export default function AnalyzeLSSPage() {
 
   const compareDisabledReason =
     !timeline1 || !timeline2 ? "Generate timelines first" : undefined;
-  const canCompare = compareDisabledReason === undefined;
 
   const handleImport = async () => {
     setImportError(null);
@@ -89,20 +90,7 @@ export default function AnalyzeLSSPage() {
 
   return (
     <div className="flex flex-col gap-4 pt-4 px-4">
-      <div className="flex justify-center">
-        <span title={compareDisabledReason}>
-          <Button
-            size="lg"
-            variant="success"
-            disabled={!canCompare}
-            onClick={() => setShowDiff(true)}
-            className="text-2xl"
-          >
-            Compare
-          </Button>
-        </span>
-      </div>
-      <div className="flex flex-wrap justify-around items-center gap-2">
+      <Panel className="flex flex-wrap justify-around items-center gap-2">
         <Button size="sm" onClick={handleImport}>
           Import LSS
         </Button>
@@ -189,7 +177,7 @@ export default function AnalyzeLSSPage() {
         <Button size="sm" onClick={handleGenerate} disabled={!imported}>
           Generate Timelines
         </Button>
-      </div>
+      </Panel>
       {imported && importedFileName && (
         <div className="rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-200">
           Successfully imported {importedFileName}
@@ -200,24 +188,30 @@ export default function AnalyzeLSSPage() {
           Import failed: {importError}
         </div>
       )}
-      <div className="flex flex-row">
-        <section className="flex-1 p-4 border-r border-black/10 dark:border-white/15">
-          <SplitsTable
-            timeline={timeline1}
-            setTimeline={setTimeline1}
-            error={generateError}
-            errorTitle="Timeline failed"
-          />
-        </section>
-        <section className="flex-1 p-4">
-          <SplitsTable
-            timeline={timeline2}
-            setTimeline={setTimeline2}
-            error={generateError}
-            errorTitle="Timeline failed"
-          />
-        </section>
-      </div>
+      {(timeline1 || timeline2 || generateError) && (
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <Panel>
+            <SplitsTable
+              timeline={timeline1}
+              setTimeline={setTimeline1}
+              error={generateError}
+              errorTitle="Timeline failed"
+            />
+          </Panel>
+          <Panel>
+            <SplitsTable
+              timeline={timeline2}
+              setTimeline={setTimeline2}
+              error={generateError}
+              errorTitle="Timeline failed"
+            />
+          </Panel>
+        </div>
+      )}
+      <CompareBar
+        disabledReason={compareDisabledReason}
+        onCompare={() => setShowDiff(true)}
+      />
     </div>
   );
 }

@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Button from "@/components/Button";
+import CompareBar from "@/components/CompareBar";
+import Panel from "@/components/Panel";
 import ComsobImporterView from "@/views/ComsobImporterView";
 import DiffSplitView from "@/views/DiffSplitView";
 import LiveSplitImporter from "@/views/LiveSplitImporterView";
@@ -13,8 +15,7 @@ export default function ComsobPage() {
   const [showDiff, setShowDiff] = useState(false);
 
   const compareDisabledReason =
-    !userTimeline || !comsobTimeline ? "Generate both timelines first" : undefined;
-  const canCompare = compareDisabledReason === undefined;
+    !userTimeline || !comsobTimeline ? "Generate your timeline and select a ComSOB to compare" : undefined;
 
   if (showDiff && userTimeline && comsobTimeline) {
     return (
@@ -31,36 +32,26 @@ export default function ComsobPage() {
 
   return (
     <div className="flex flex-col gap-4 pt-4 px-4">
-      <div className="flex justify-center">
-        <span title={compareDisabledReason}>
-          <Button
-            size="lg"
-            variant="success"
-            disabled={!canCompare}
-            onClick={() => setShowDiff(true)}
-            className="text-2xl"
-          >
-            Compare
-          </Button>
-        </span>
-      </div>
-      <div className="flex flex-row">
-        <section className="flex-1 p-4 border-r border-black/10 dark:border-white/15">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <Panel>
           <LiveSplitImporter
             title="Your Run"
             generated={userTimeline}
             setGenerated={setUserTimeline}
           />
-        </section>
-        <section className="flex-1 p-4">
+        </Panel>
+        <Panel>
           <ComsobImporterView
             title="Comsob"
             generated={comsobTimeline}
             setGenerated={setComsobTimeline}
           />
-        </section>
+        </Panel>
       </div>
+      <CompareBar
+        disabledReason={compareDisabledReason}
+        onCompare={() => setShowDiff(true)}
+      />
     </div>
   );
 }
-

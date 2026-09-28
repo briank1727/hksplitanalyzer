@@ -15,7 +15,7 @@ const variantStyles: Record<Variant, string> = {
   secondary:
     "bg-black text-white hover:bg-zinc-800 dark:bg-zinc-50 dark:text-black dark:hover:bg-zinc-200",
   success:
-    "bg-green-600 text-white hover:bg-green-700 dark:bg-green-500 dark:text-white dark:hover:bg-green-400",
+    "bg-green-600 text-white hover:bg-green-700 dark:bg-green-600 dark:text-white dark:hover:bg-green-500 shadow-[0_0_22px_rgba(34,197,94,0.35)] hover:shadow-[0_0_30px_rgba(34,197,94,0.55)] disabled:bg-zinc-300 disabled:text-zinc-500 disabled:shadow-none dark:disabled:bg-zinc-800 dark:disabled:text-zinc-400",
 };
 
 const sizeStyles: Record<Size, string> = {
@@ -23,6 +23,10 @@ const sizeStyles: Record<Size, string> = {
   md: "h-11 px-3 text-lg",
   lg: "h-13 px-4 text-xl font-[family-name:var(--font-trajan)]",
 };
+
+// Like the in-game menu, the fleurs only appear beside the hovered/focused item.
+const FLEUR =
+  "shrink-0 opacity-0 transition-[opacity,translate] duration-200 ease-out group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100";
 
 const embellishmentSize: Record<Size, number> = {
   sm: 16,
@@ -43,7 +47,7 @@ export default function Button({
   return (
     <button
       type={type}
-      className={`inline-flex items-center justify-center gap-2 rounded-full font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40 dark:focus-visible:ring-white/40 disabled:opacity-50 disabled:pointer-events-none ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
+      className={`group inline-flex items-center justify-center gap-2 rounded-full font-medium transition-[color,background-color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40 dark:focus-visible:ring-white/40 disabled:opacity-50 disabled:pointer-events-none ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
       {...props}
     >
       <Image
@@ -51,7 +55,7 @@ export default function Button({
         alt=""
         width={imgSize}
         height={imgSize}
-        className="shrink-0"
+        className={`${FLEUR} -translate-x-1`}
       />
       <span className={size === "lg" ? "translate-y-0.5" : undefined}>
         {children}
@@ -61,7 +65,7 @@ export default function Button({
         alt=""
         width={imgSize}
         height={imgSize}
-        className="shrink-0 scale-x-[-1]"
+        className={`${FLEUR} translate-x-1 scale-x-[-1]`}
       />
     </button>
   );

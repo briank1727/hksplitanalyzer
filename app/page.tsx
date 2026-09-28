@@ -22,7 +22,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col flex-1 bg-zinc-50 font-sans dark:bg-black">
-      <header className="flex flex-col items-center justify-center text-center px-4 py-2 relative">
+      <header className="flex flex-col items-center justify-center text-center px-4 pt-16 sm:pt-3 relative">
         <Image
           src={bench}
           alt="Bench"
@@ -32,11 +32,16 @@ export default function Home() {
             top: "10px",
           }}
         />
-        <Image
-          src={logo}
-          alt="HK Split Analyzer"
-          style={{ width: "auto", height: "auto", maxHeight: "16rem" }}
-        />
+        {/* Crop off the logo's top ornament; percentage margins scale with the wrapper width. */}
+        <div className="w-full max-w-[26rem] overflow-hidden">
+          <Image
+            src={logo}
+            alt="HK Split Analyzer"
+            priority
+            className="block h-auto w-full"
+            style={{ marginTop: "-7.5%" }}
+          />
+        </div>
         <div className="absolute right-4 top-4">
           <Button
             size="sm"
@@ -74,7 +79,7 @@ export default function Home() {
         </div>
       </div>
 
-      <main className="flex flex-col flex-1 min-h-0 overflow-y-auto">
+      <main className="flex flex-col flex-1">
         <div
           className={`flex flex-col flex-1 min-h-0 ${tab === "compare" ? "" : "hidden"}`}
         >
