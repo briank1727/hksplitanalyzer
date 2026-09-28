@@ -259,7 +259,7 @@ export default function SplitsTable({
             <div className="mt-1 break-words">{error}</div>
           </>
         }
-        className="mt-4"
+        className="mt-2"
       />
     );
   }

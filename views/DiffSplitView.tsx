@@ -116,7 +116,7 @@ export default function DiffSplitView({
               {errorOpen && <div className="pt-2">{lengthError}</div>}
             </>
           }
-          className="mt-4"
+          className="mt-2"
         />
       )}
       {warning && (
@@ -141,10 +141,10 @@ export default function DiffSplitView({
               )}
             </>
           }
-          className="mt-4"
+          className="mt-2"
         />
       )}
-      <div className="mt-3 flex gap-4">
+      <div className="mt-2 flex gap-2">
         <div className="w-2/3 min-w-0">
           <SplitsCompareTable
             sortedRows={sortedRows}

@@ -23,7 +23,7 @@ export default function ComsobPage() {
   return (
     <>
       {diffVisible && (
-        <div className="flex flex-col gap-4 pt-4 px-4">
+        <div className="flex flex-col gap-2 pt-4 px-4">
           <div className="flex justify-center">
             <Button size="sm" onClick={() => setShowDiff(false)}>
               Back
@@ -33,7 +33,7 @@ export default function ComsobPage() {
         </div>
       )}
       <div
-        className={`flex flex-col gap-4 pt-4 px-4 ${diffVisible ? "hidden" : ""}`}
+        className={`flex flex-col gap-2 pt-4 px-4 ${diffVisible ? "hidden" : ""}`}
       >
         <div className="flex justify-center">
           <span title={compareDisabledReason}>
@@ -48,7 +48,7 @@ export default function ComsobPage() {
             </Button>
           </span>
         </div>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
           <Panel>
             <LiveSplitImporter
               title="Your Run"

@@ -111,14 +111,14 @@ export default function LiveSplitImporter({
           <MessageBox
             status="success"
             message={`Successfully imported ${importedFileName}`}
-            className="mt-3"
+            className="mt-2"
           />
         )}
         {importError && (
           <MessageBox
             status="error"
             message={`Import failed: ${importError}`}
-            className="mt-3"
+            className="mt-2"
           />
         )}
         <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
@@ -203,7 +203,7 @@ export default function LiveSplitImporter({
                 )
               </>
             }
-            className="mt-3"
+            className="mt-2"
           />
         )}
       </div>

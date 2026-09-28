@@ -137,7 +137,7 @@ export default function ComsobImporterView({
                 )
               </>
             }
-            className="mt-3 text-center"
+            className="mt-2 text-center"
           />
         )}
         {!generated && !importError && (
@@ -154,7 +154,7 @@ export default function ComsobImporterView({
           <MessageBox
             status="error"
             message={`Import failed: ${importError}`}
-            className="mt-3 text-center"
+            className="mt-2 text-center"
           />
         )}
       </div>

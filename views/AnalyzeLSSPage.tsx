@@ -77,7 +77,7 @@ export default function AnalyzeLSSPage() {
 
   if (showDiff && timeline1 && timeline2) {
     return (
-      <div className="flex flex-col gap-4 pt-4 px-4">
+      <div className="flex flex-col gap-2 pt-4 px-4">
         <div className="flex justify-center">
           <Button size="sm" onClick={() => setShowDiff(false)}>
             Back
@@ -89,7 +89,7 @@ export default function AnalyzeLSSPage() {
   }
 
   return (
-    <div className="flex flex-col gap-4 pt-4 px-4">
+    <div className="flex flex-col gap-2 pt-4 px-4">
       <div className="flex justify-center">
         <span title={compareDisabledReason}>
           <Button
@@ -201,7 +201,7 @@ export default function AnalyzeLSSPage() {
         <MessageBox status="error" message={`Import failed: ${importError}`} />
       )}
       {(timeline1 || timeline2 || generateError) && (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
           <Panel>
             <SplitsTable
               timeline={timeline1}
