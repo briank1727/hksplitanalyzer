@@ -17,41 +17,46 @@ export default function ComsobPage() {
   const compareDisabledReason =
     !userTimeline || !comsobTimeline ? "Generate your timeline and select a ComSOB to compare" : undefined;
 
-  if (showDiff && userTimeline && comsobTimeline) {
-    return (
-      <div className="flex flex-col gap-4 pt-4 px-4">
-        <div className="flex justify-center">
-          <Button size="sm" onClick={() => setShowDiff(false)}>
-            Back
-          </Button>
-        </div>
-        <DiffSplitView timeline1={userTimeline} timeline2={comsobTimeline} />
-      </div>
-    );
-  }
+  const diffVisible = showDiff && userTimeline && comsobTimeline;
 
+  // The setup view stays mounted while the diff is shown so the importers keep
+  // their state (e.g. the parsed LSS file) when the user clicks Back.
   return (
-    <div className="flex flex-1 flex-col gap-4 pt-4 px-4">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <Panel>
-          <LiveSplitImporter
-            title="Your Run"
-            generated={userTimeline}
-            setGenerated={setUserTimeline}
-          />
-        </Panel>
-        <Panel>
-          <ComsobImporterView
-            title="Comsob"
-            generated={comsobTimeline}
-            setGenerated={setComsobTimeline}
-          />
-        </Panel>
+    <>
+      {diffVisible && (
+        <div className="flex flex-col gap-4 pt-4 px-4">
+          <div className="flex justify-center">
+            <Button size="sm" onClick={() => setShowDiff(false)}>
+              Back
+            </Button>
+          </div>
+          <DiffSplitView timeline1={userTimeline} timeline2={comsobTimeline} />
+        </div>
+      )}
+      <div
+        className={`flex flex-1 flex-col gap-4 pt-4 px-4 ${diffVisible ? "hidden" : ""}`}
+      >
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <Panel>
+            <LiveSplitImporter
+              title="Your Run"
+              generated={userTimeline}
+              setGenerated={setUserTimeline}
+            />
+          </Panel>
+          <Panel>
+            <ComsobImporterView
+              title="Comsob"
+              generated={comsobTimeline}
+              setGenerated={setComsobTimeline}
+            />
+          </Panel>
+        </div>
+        <CompareBar
+          disabledReason={compareDisabledReason}
+          onCompare={() => setShowDiff(true)}
+        />
       </div>
-      <CompareBar
-        disabledReason={compareDisabledReason}
-        onCompare={() => setShowDiff(true)}
-      />
-    </div>
+    </>
   );
 }
