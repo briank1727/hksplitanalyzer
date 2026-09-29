@@ -20,8 +20,11 @@ const variantStyles: Record<Variant, string> = {
 // Shared by every variant so a disabled button always reads as greyed out.
 const DISABLED = "disabled:pointer-events-none disabled:text-zinc-500";
 
+// On hover the label lights up further, matching OptionSelect's value text. It's a
+// drop-shadow so it stacks on the text-shadow glow rather than replacing it.
 const LABEL_GLOW =
-  "dark:[text-shadow:0_0_8px_currentColor] group-disabled:[text-shadow:none]";
+  "dark:[text-shadow:0_0_8px_currentColor] group-disabled:[text-shadow:none] " +
+  "transition-[filter] duration-150 group-hover:drop-shadow-[0_0_6px_currentColor]";
 
 const sizeStyles: Record<Size, string> = {
   sm: "h-9 px-2 text-base",

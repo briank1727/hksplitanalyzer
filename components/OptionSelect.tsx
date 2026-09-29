@@ -109,11 +109,17 @@ export default function OptionSelect<K extends string>({
       {/*
         Every label is stacked in the same grid cell, with only the selected one
         visible. The cell fills the fixed width between the arrows, so they never
-        move as the value changes.
+        move as the value changes. Clicking it steps forward, like the right arrow;
+        it isn't focusable itself since the arrows already cover the keyboard.
       */}
       <span
         ref={labelsRef}
-        className="grid min-w-0 flex-1 grid-cols-[minmax(0,1fr)] translate-y-0.5 text-center"
+        onClick={() => step(1)}
+        className={`grid min-w-0 flex-1 grid-cols-[minmax(0,1fr)] translate-y-0.5 select-none text-center ${
+          disabled
+            ? ""
+            : "cursor-pointer transition-[filter] duration-150 hover:drop-shadow-[0_0_6px_rgba(255,255,255,0.9)]"
+        }`}
         aria-live="polite"
       >
         {options.map((option, i) => (
