@@ -1,15 +1,9 @@
 "use client";
 
-import {
-  useMemo,
-  useState,
-  type Dispatch,
-  type SetStateAction,
-} from "react";
+import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import Button from "@/components/Button";
 import MessageBox from "@/components/MessageBox";
 import OptionSelect, { TOGGLE_OPTIONS } from "@/components/OptionSelect";
-import Panel, { NESTED_PANEL_COLOR } from "@/components/Panel";
 import SplitsTable from "@/components/SplitsTable";
 import { import_lss } from "@/lib/import_lss";
 import { Comparison } from "@/lib/comparison";
@@ -132,45 +126,40 @@ export default function LiveSplitImporter({
             className="mt-2"
           />
         )}
-        <div className="mt-4">
-          <Panel
-            color={NESTED_PANEL_COLOR}
-            className="grid grid-cols-[auto_auto] items-center justify-center gap-x-4 gap-y-2 text-left"
-          >
-            <span className="text-base text-black dark:text-zinc-50">
-              Comparison
-            </span>
-            <OptionSelect
-              label="Comparison"
-              options={COMPARISON_OPTIONS}
-              value={choice}
-              onChange={setChoice}
-              disabled={!imported}
-              className="justify-self-center"
-            />
-            <span className="text-base text-black dark:text-zinc-50">
-              Big Splits
-            </span>
-            <OptionSelect
-              label="Big Splits"
-              options={TOGGLE_OPTIONS}
-              value={bigSplits ? "enabled" : "disabled"}
-              onChange={(v) => setBigSplits(v === "enabled")}
-              disabled={!imported}
-              className="justify-self-center"
-            />
-            <span className="text-base text-black dark:text-zinc-50">
-              Manual Splits
-            </span>
-            <OptionSelect
-              label="Manual Splits"
-              options={TOGGLE_OPTIONS}
-              value={manualSplits ? "enabled" : "disabled"}
-              onChange={(v) => setManualSplits(v === "enabled")}
-              disabled={!imported}
-              className="justify-self-center"
-            />
-          </Panel>
+        <div className="mt-4 grid grid-cols-[auto_auto] items-center justify-center gap-x-4 gap-y-2 text-left">
+          <span className="text-base text-black dark:text-zinc-50">
+            Comparison
+          </span>
+          <OptionSelect
+            label="Comparison"
+            options={COMPARISON_OPTIONS}
+            value={choice}
+            onChange={setChoice}
+            disabled={!imported}
+            className="justify-self-center"
+          />
+          <span className="text-base text-black dark:text-zinc-50">
+            Big Splits
+          </span>
+          <OptionSelect
+            label="Big Splits"
+            options={TOGGLE_OPTIONS}
+            value={bigSplits ? "enabled" : "disabled"}
+            onChange={(v) => setBigSplits(v === "enabled")}
+            disabled={!imported}
+            className="justify-self-center"
+          />
+          <span className="text-base text-black dark:text-zinc-50">
+            Manual Splits
+          </span>
+          <OptionSelect
+            label="Manual Splits"
+            options={TOGGLE_OPTIONS}
+            value={manualSplits ? "enabled" : "disabled"}
+            onChange={(v) => setManualSplits(v === "enabled")}
+            disabled={!imported}
+            className="justify-self-center"
+          />
         </div>
         <div className="mt-3 flex justify-center">
           <Button size="sm" onClick={handleGenerate} disabled={!imported}>
