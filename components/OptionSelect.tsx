@@ -115,10 +115,10 @@ export default function OptionSelect<K extends string>({
       <span
         ref={labelsRef}
         onClick={() => step(1)}
-        className={`grid min-w-0 flex-1 grid-cols-[minmax(0,1fr)] translate-y-0.5 select-none text-center ${
+        className={`grid min-w-0 flex-1 grid-cols-[minmax(0,1fr)] translate-y-0.5 cursor-default select-none text-center ${
           disabled
             ? ""
-            : "cursor-pointer transition-[filter] duration-150 hover:drop-shadow-[0_0_6px_rgba(255,255,255,0.9)]"
+            : "transition-[filter] duration-150 hover:drop-shadow-[0_0_6px_rgba(255,255,255,0.9)]"
         }`}
         aria-live="polite"
       >
@@ -128,7 +128,7 @@ export default function OptionSelect<K extends string>({
             aria-hidden={i !== index}
             className={`col-start-1 row-start-1 self-center justify-self-center whitespace-nowrap ${
               i === index
-                ? "dark:[text-shadow:0_0_8px_currentColor]"
+                ? "dark:[text-shadow:0_0_4px_color-mix(in_srgb,currentColor_50%,transparent)]"
                 : "invisible"
             }`}
           >
