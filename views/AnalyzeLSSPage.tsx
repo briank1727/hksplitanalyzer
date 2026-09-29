@@ -116,11 +116,11 @@ export default function AnalyzeLSSPage() {
           </Button>
         </span>
       </div>
-      <Panel className="flex flex-wrap justify-around items-center gap-2">
+      <Panel className="flex flex-col items-center gap-3">
         <Button size="sm" onClick={handleImport}>
           Import LSS
         </Button>
-        <div className="flex items-center gap-1.5">
+        <div className="grid grid-cols-[auto_auto] items-center gap-x-4 gap-y-2 text-left">
           <span className="text-sm text-black dark:text-zinc-50">
             Timeline 1 Comparison
           </span>
@@ -130,10 +130,8 @@ export default function AnalyzeLSSPage() {
             value={choice1}
             onChange={setChoice1}
             disabled={!imported}
-            className="text-sm"
+            className="justify-self-center text-sm"
           />
-        </div>
-        <div className="flex items-center gap-1.5">
           <span className="text-sm text-black dark:text-zinc-50">
             Timeline 2 Comparison
           </span>
@@ -143,10 +141,8 @@ export default function AnalyzeLSSPage() {
             value={choice2}
             onChange={setChoice2}
             disabled={!imported}
-            className="text-sm"
+            className="justify-self-center text-sm"
           />
-        </div>
-        <div className="flex items-center gap-1.5">
           <span className="text-sm text-black dark:text-zinc-50">
             Big Splits
           </span>
@@ -156,10 +152,8 @@ export default function AnalyzeLSSPage() {
             value={bigSplits ? "enabled" : "disabled"}
             onChange={(v) => setBigSplits(v === "enabled")}
             disabled={!imported}
-            className="text-sm"
+            className="justify-self-center text-sm"
           />
-        </div>
-        <div className="flex items-center gap-1.5">
           <span className="text-sm text-black dark:text-zinc-50">
             Manual Splits
           </span>
@@ -169,7 +163,7 @@ export default function AnalyzeLSSPage() {
             value={manualSplits ? "enabled" : "disabled"}
             onChange={(v) => setManualSplits(v === "enabled")}
             disabled={!imported}
-            className="text-sm"
+            className="justify-self-center text-sm"
           />
         </div>
         <Button size="sm" onClick={handleGenerate} disabled={!imported}>

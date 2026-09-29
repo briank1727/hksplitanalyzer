@@ -17,6 +17,11 @@ const SORT_OPTIONS = (Object.keys(DiffSortBy) as DiffSortByKey[]).map((key) => (
   label: DiffSortBy[key].name,
 }));
 
+const ORDER_OPTIONS = [
+  { value: "ascending", label: "Ascending" },
+  { value: "descending", label: "Descending" },
+] as const;
+
 export default function DiffSplitView({
   timeline1,
   timeline2,
@@ -85,24 +90,28 @@ export default function DiffSplitView({
         <h2 className="mb-3 text-center text-lg font-semibold tracking-tight text-zinc-50">
           Delta
         </h2>
-        <div className="flex flex-wrap items-center justify-center gap-2">
+        <div className="flex flex-col items-center gap-3">
           <Button size="sm" onClick={() => setSwapped((s) => !s)}>
             Swap Timelines
           </Button>
-          <div className="flex items-center gap-1.5">
-            <span className="text-base text-zinc-50">
-              Sort By
-            </span>
+          <div className="grid grid-cols-[auto_auto] items-center gap-x-4 gap-y-2 text-left">
+            <span className="text-base text-zinc-50">Sort By</span>
             <OptionSelect
               label="Sort By"
               options={SORT_OPTIONS}
               value={sortBy}
               onChange={setSortBy}
+              className="justify-self-center"
+            />
+            <span className="text-base text-zinc-50">Order</span>
+            <OptionSelect
+              label="Order"
+              options={ORDER_OPTIONS}
+              value={isAscending ? "ascending" : "descending"}
+              onChange={(v) => setIsAscending(v === "ascending")}
+              className="justify-self-center"
             />
           </div>
-          <Button size="sm" onClick={() => setIsAscending(!isAscending)}>
-            {isAscending ? "Ascending" : "Descending"}
-          </Button>
         </div>
         {lengthError && (
           <MessageBox
