@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  useId,
   useMemo,
   useState,
   type Dispatch,
@@ -9,7 +8,7 @@ import {
 } from "react";
 import Button from "@/components/Button";
 import MessageBox from "@/components/MessageBox";
-import OptionSelect from "@/components/OptionSelect";
+import OptionSelect, { TOGGLE_OPTIONS } from "@/components/OptionSelect";
 import Panel, { NESTED_PANEL_COLOR } from "@/components/Panel";
 import SplitsTable from "@/components/SplitsTable";
 import { import_lss } from "@/lib/import_lss";
@@ -39,8 +38,6 @@ export default function LiveSplitImporter({
   const [choice, setChoice] = useState<ComparisonKey>("PersonalBest");
   const [bigSplits, setBigSplits] = useState<boolean>(true);
   const [manualSplits, setManualSplits] = useState<boolean>(false);
-  const bigSplitsId = useId();
-  const manualSplitsId = useId();
   const [generateError, setGenerateError] = useState<string | null>(null);
 
   const importedStats = useMemo(() => {
@@ -151,33 +148,27 @@ export default function LiveSplitImporter({
               disabled={!imported}
               className="justify-self-center"
             />
-            <label
-              htmlFor={bigSplitsId}
-              className="text-base text-black dark:text-zinc-50"
-            >
+            <span className="text-base text-black dark:text-zinc-50">
               Big Splits
-            </label>
-            <input
-              id={bigSplitsId}
-              type="checkbox"
-              checked={bigSplits}
-              onChange={(e) => setBigSplits(e.target.checked)}
+            </span>
+            <OptionSelect
+              label="Big Splits"
+              options={TOGGLE_OPTIONS}
+              value={bigSplits ? "enabled" : "disabled"}
+              onChange={(v) => setBigSplits(v === "enabled")}
               disabled={!imported}
-              className="justify-self-center rounded border border-black/10 dark:border-white/15"
+              className="justify-self-center"
             />
-            <label
-              htmlFor={manualSplitsId}
-              className="text-base text-black dark:text-zinc-50"
-            >
+            <span className="text-base text-black dark:text-zinc-50">
               Manual Splits
-            </label>
-            <input
-              id={manualSplitsId}
-              type="checkbox"
-              checked={manualSplits}
-              onChange={(e) => setManualSplits(e.target.checked)}
+            </span>
+            <OptionSelect
+              label="Manual Splits"
+              options={TOGGLE_OPTIONS}
+              value={manualSplits ? "enabled" : "disabled"}
+              onChange={(v) => setManualSplits(v === "enabled")}
               disabled={!imported}
-              className="justify-self-center rounded border border-black/10 dark:border-white/15"
+              className="justify-self-center"
             />
           </Panel>
         </div>

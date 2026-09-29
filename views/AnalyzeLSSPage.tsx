@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Button from "@/components/Button";
 import MessageBox from "@/components/MessageBox";
-import OptionSelect from "@/components/OptionSelect";
+import OptionSelect, { TOGGLE_OPTIONS } from "@/components/OptionSelect";
 import Panel from "@/components/Panel";
 import SplitsTable from "@/components/SplitsTable";
 import DiffSplitView from "@/views/DiffSplitView";
@@ -146,30 +146,32 @@ export default function AnalyzeLSSPage() {
             className="text-sm"
           />
         </div>
-        <label className="flex items-center gap-1.5">
-          <input
-            type="checkbox"
-            checked={bigSplits}
-            onChange={(e) => setBigSplits(e.target.checked)}
-            disabled={!imported}
-            className="rounded border border-black/10 dark:border-white/15"
-          />
+        <div className="flex items-center gap-1.5">
           <span className="text-sm text-black dark:text-zinc-50">
             Big Splits
           </span>
-        </label>
-        <label className="flex items-center gap-1.5">
-          <input
-            type="checkbox"
-            checked={manualSplits}
-            onChange={(e) => setManualSplits(e.target.checked)}
+          <OptionSelect
+            label="Big Splits"
+            options={TOGGLE_OPTIONS}
+            value={bigSplits ? "enabled" : "disabled"}
+            onChange={(v) => setBigSplits(v === "enabled")}
             disabled={!imported}
-            className="rounded border border-black/10 dark:border-white/15"
+            className="text-sm"
           />
+        </div>
+        <div className="flex items-center gap-1.5">
           <span className="text-sm text-black dark:text-zinc-50">
             Manual Splits
           </span>
-        </label>
+          <OptionSelect
+            label="Manual Splits"
+            options={TOGGLE_OPTIONS}
+            value={manualSplits ? "enabled" : "disabled"}
+            onChange={(v) => setManualSplits(v === "enabled")}
+            disabled={!imported}
+            className="text-sm"
+          />
+        </div>
         <Button size="sm" onClick={handleGenerate} disabled={!imported}>
           Generate Timelines
         </Button>

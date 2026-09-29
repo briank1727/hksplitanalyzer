@@ -18,7 +18,12 @@ export class DiffTime {
   time1: Timespan;
   time2: Timespan;
 
-  constructor(name: string, auto_split_name: string, time1: Timespan, time2: Timespan) {
+  constructor(
+    name: string,
+    auto_split_name: string,
+    time1: Timespan,
+    time2: Timespan,
+  ) {
     this.name = name;
     this.auto_split_name = auto_split_name;
     this.time1 = time1;
@@ -155,7 +160,10 @@ function compress_big_splits(ls: LiveSplit): LiveSplit {
       // (the big split itself plus its preceding "-" small splits).
       for (const s of smallSplits) {
         mergedSegment.manual_pb = tsAdd(mergedSegment.manual_pb, s.manual_pb);
-        mergedSegment.manual_gold = tsAdd(mergedSegment.manual_gold, s.manual_gold);
+        mergedSegment.manual_gold = tsAdd(
+          mergedSegment.manual_gold,
+          s.manual_gold,
+        );
       }
 
       const newSplitTimes: typeof segment.split_times = [];
@@ -246,7 +254,8 @@ export const Comparison = {
         segments: ls.segments.map((seg) => ({
           name: seg.name,
           auto_split_name: seg.auto_split_name,
-          game_time: seg.split_times.find((s) => s.id === bestId)?.game_time ?? TS_ZERO,
+          game_time:
+            seg.split_times.find((s) => s.id === bestId)?.game_time ?? TS_ZERO,
         })),
       };
     },
@@ -274,12 +283,20 @@ export const Comparison = {
             (s) => tsToTicks(s.game_time) !== 0n,
           );
           if (valid.length === 0) {
-            return { name: seg.name, auto_split_name: seg.auto_split_name, game_time: TS_ZERO };
+            return {
+              name: seg.name,
+              auto_split_name: seg.auto_split_name,
+              game_time: TS_ZERO,
+            };
           }
           const best = valid.reduce((a, b) =>
             tsCompare(a.game_time, b.game_time) <= 0 ? a : b,
           );
-          return { name: seg.name, auto_split_name: seg.auto_split_name, game_time: best.game_time };
+          return {
+            name: seg.name,
+            auto_split_name: seg.auto_split_name,
+            game_time: best.game_time,
+          };
         }),
       };
     },
@@ -294,10 +311,18 @@ export const Comparison = {
             (s) => tsToTicks(s.game_time) !== 0n,
           );
           if (valid.length === 0) {
-            return { name: seg.name, auto_split_name: seg.auto_split_name, game_time: TS_ZERO };
+            return {
+              name: seg.name,
+              auto_split_name: seg.auto_split_name,
+              game_time: TS_ZERO,
+            };
           }
           const game = tsAvg(valid.map((s) => s.game_time));
-          return { name: seg.name, auto_split_name: seg.auto_split_name, game_time: game };
+          return {
+            name: seg.name,
+            auto_split_name: seg.auto_split_name,
+            game_time: game,
+          };
         }),
       };
     },

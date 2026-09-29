@@ -1,10 +1,23 @@
-import type { KeyboardEvent, ReactNode } from "react";
+import {
+  useLayoutEffect,
+  useRef,
+  type KeyboardEvent,
+  type ReactNode,
+} from "react";
 import Fleur from "@/components/Fleur";
 
 export type SelectOption<K extends string> = {
   value: K;
   label: ReactNode;
 };
+
+// Options for an on/off setting. Convert with `value === "enabled"` and
+// `on ? "enabled" : "disabled"`.
+export type Toggle = "enabled" | "disabled";
+export const TOGGLE_OPTIONS: readonly SelectOption<Toggle>[] = [
+  { value: "enabled", label: "Enabled" },
+  { value: "disabled", label: "Disabled" },
+];
 
 // A Hollow Knight options-menu style selector: `‹ Value ›`, where the arrows are
 // fleurs that step through the options (wrapping around at either end). Replaces a
@@ -25,6 +38,31 @@ export default function OptionSelect<K extends string>({
   disabled?: boolean;
   className?: string;
 }) {
+  const labelsRef = useRef<HTMLSpanElement>(null);
+
+  // The control has a fixed width; shrink any label too long for it. Each label's
+  // font size is reset, measured, then scaled down to the space available.
+  useLayoutEffect(() => {
+    const cell = labelsRef.current;
+    if (!cell) return;
+    const fit = () => {
+      const available = cell.clientWidth;
+      for (const el of Array.from(cell.children) as HTMLElement[]) {
+        el.style.fontSize = "";
+        const natural = el.scrollWidth;
+        if (natural > available && available > 0) {
+          el.style.fontSize = `${available / natural}em`;
+        }
+      }
+    };
+    fit();
+    // Re-fit once the webfont has loaded, and whenever the control resizes.
+    document.fonts?.ready.then(fit);
+    const observer = new ResizeObserver(fit);
+    observer.observe(cell);
+    return () => observer.disconnect();
+  }, [options]);
+
   const index = Math.max(
     0,
     options.findIndex((option) => option.value === value),
@@ -54,7 +92,7 @@ export default function OptionSelect<K extends string>({
       role="group"
       aria-label={label}
       onKeyDown={handleKeyDown}
-      className={`inline-flex items-center font-[family-name:var(--font-trajan)] ${
+      className={`inline-flex w-48 items-center font-[family-name:var(--font-trajan)] ${
         disabled ? "text-zinc-500" : "text-zinc-50"
       } ${className}`}
     >
@@ -70,15 +108,19 @@ export default function OptionSelect<K extends string>({
       </button>
       {/*
         Every label is stacked in the same grid cell, with only the selected one
-        visible, so the control is always as wide as its longest option and the
-        arrows don't jump around as the value changes.
+        visible. The cell fills the fixed width between the arrows, so they never
+        move as the value changes.
       */}
-      <span className="grid translate-y-0.5 text-center" aria-live="polite">
+      <span
+        ref={labelsRef}
+        className="grid min-w-0 flex-1 grid-cols-[minmax(0,1fr)] translate-y-0.5 text-center"
+        aria-live="polite"
+      >
         {options.map((option, i) => (
           <span
             key={option.value}
             aria-hidden={i !== index}
-            className={`col-start-1 row-start-1 ${
+            className={`col-start-1 row-start-1 self-center justify-self-center whitespace-nowrap ${
               i === index
                 ? "dark:[text-shadow:0_0_8px_currentColor]"
                 : "invisible"
