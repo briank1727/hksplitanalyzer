@@ -29,7 +29,7 @@ const INPUT_BASE =
   "w-full bg-transparent outline-none border border-zinc-700/50 rounded px-1 -mx-1 " +
   "hover:border-zinc-500 hover:bg-zinc-800/50 focus:border-zinc-400 focus:bg-zinc-800 transition-colors cursor-text";
 
-const GRID = "grid grid-cols-[1fr_1fr_6rem_6rem_2rem] gap-x-3 px-2";
+const GRID = "grid grid-cols-[2rem_1fr_1fr_6rem_6rem_2rem] gap-x-3 px-2";
 
 type SegmentRowProps = {
   seg: TimelineSegment;
@@ -121,6 +121,9 @@ function SegmentRow({
 
   return (
     <div className={`${GRID} py-1 border-b border-white/5 last:border-b-0`}>
+      <div className="text-right tabular-nums text-zinc-500 self-center">
+        {index + 1}
+      </div>
       <input
         ref={nameRef}
         type="text"
@@ -278,6 +281,7 @@ export default function SplitsTable({
       <Panel color={NESTED_PANEL_COLOR} className="text-zinc-100 text-base">
         <div className="max-h-[60vh] overflow-auto">
           <div className={`${GRID} py-1.5 border-b border-white/10 font-semibold text-zinc-300`}>
+            <div className="text-right">#</div>
             <div>Name</div>
             <div>Auto Split</div>
             <div className="text-right">Segment</div>
