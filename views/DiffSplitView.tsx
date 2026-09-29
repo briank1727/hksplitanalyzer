@@ -12,10 +12,12 @@ import { DiffTime, DiffSortBy } from "@/lib/comparison";
 
 type DiffSortByKey = keyof typeof DiffSortBy;
 
-const SORT_OPTIONS = (Object.keys(DiffSortBy) as DiffSortByKey[]).map((key) => ({
-  value: key,
-  label: DiffSortBy[key].name,
-}));
+const SORT_OPTIONS = (Object.keys(DiffSortBy) as DiffSortByKey[]).map(
+  (key) => ({
+    value: key,
+    label: DiffSortBy[key].name,
+  }),
+);
 
 const ORDER_OPTIONS = [
   { value: "ascending", label: "Ascending" },
@@ -59,12 +61,15 @@ export default function DiffSplitView({
       ? `Segment metadata differs between timelines; proceeding anyway:\n${mismatches.join("\n")}`
       : null;
 
-  const rows = t1.segments
-    .slice(0, compareLen)
-    .map((seg1, i) => {
-      const seg2 = t2.segments[i];
-      return new DiffTime(seg1.name, seg1.auto_split_name, seg1.game_time, seg2.game_time);
-    });
+  const rows = t1.segments.slice(0, compareLen).map((seg1, i) => {
+    const seg2 = t2.segments[i];
+    return new DiffTime(
+      seg1.name,
+      seg1.auto_split_name,
+      seg1.game_time,
+      seg2.game_time,
+    );
+  });
 
   const maxDiffMs =
     rows.length > 0
@@ -143,7 +148,9 @@ export default function DiffSplitView({
                   <span>{warningOpen ? "▾" : "▸"}</span>
                   <span>Warning</span>
                   {!warningOpen && (
-                    <span className="ml-1 font-normal">({mismatches.length})</span>
+                    <span className="ml-1 font-normal">
+                      ({mismatches.length})
+                    </span>
                   )}
                 </button>
                 {warningOpen && (
@@ -163,13 +170,25 @@ export default function DiffSplitView({
               diffThresholdMs={diffThresholdMs}
             />
           </div>
-          <div className="w-1/3 min-w-0">
-            <Panel color={NESTED_PANEL_COLOR}>
+          {/*
+            The table sets the row's height. The pie panel is taken out of flow
+            and fills this column, so it always matches the table (with a minimum
+            so the chart stays readable when there are only a few rows).
+          */}
+          <div className="relative w-1/3 min-w-0 min-h-80">
+            <Panel
+              color={NESTED_PANEL_COLOR}
+              showEmbellishments={false}
+              style={{ position: "absolute", inset: 0 }}
+              className="flex h-full flex-col"
+            >
               <h3 className="mb-2 text-center text-md font-semibold tracking-tight text-zinc-50">
                 Time Lost By Split
               </h3>
               {hasPieData ? (
-                <SplitPieChart slices={pieSlices} />
+                <div className="min-h-0 flex-1">
+                  <SplitPieChart slices={pieSlices} />
+                </div>
               ) : (
                 <p className="text-center text-sm text-zinc-300">
                   No time was lost on any split — nothing to chart.
@@ -182,4 +201,3 @@ export default function DiffSplitView({
     </div>
   );
 }
-

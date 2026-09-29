@@ -46,29 +46,39 @@ function CustomTooltip({
 
 export default function SplitPieChart({
   slices,
-  height = 400,
+  height,
   valueLabel = "Time",
   formatValue = defaultFormatValue,
 }: {
   slices: SplitPieSlice[];
+  // Fixed height in px; omit to fill the parent's height.
   height?: number;
   valueLabel?: string;
   formatValue?: (v: number) => string;
 }) {
   const chartRef = useRef<HTMLDivElement>(null);
-  const [chartWidth, setChartWidth] = useState(0);
+  const [chartSize, setChartSize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     const el = chartRef.current;
     if (!el) return;
-    setChartWidth(el.getBoundingClientRect().width);
+    const rect = el.getBoundingClientRect();
+    setChartSize({ width: rect.width, height: rect.height });
     const observer = new ResizeObserver((entries) => {
       const entry = entries[0];
-      if (entry) setChartWidth(entry.contentRect.width);
+      if (entry) {
+        setChartSize({
+          width: entry.contentRect.width,
+          height: entry.contentRect.height,
+        });
+      }
     });
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
+
+  // With no fixed height the chart fills its container's height instead.
+  const chartHeight = height ?? chartSize.height;
 
   const data = useMemo<SliceDatum[]>(() => {
     const total = slices.reduce((sum, s) => sum + s.time, 0);
@@ -80,10 +90,13 @@ export default function SplitPieChart({
   }, [slices]);
 
   return (
-    <div className="flex gap-4" style={{ height }}>
+    <div
+      className={`flex gap-4 ${height === undefined ? "h-full" : ""}`}
+      style={height === undefined ? undefined : { height }}
+    >
       <div ref={chartRef} className="flex-1 min-w-0">
-        {chartWidth > 0 && (
-          <PieChart width={chartWidth} height={height}>
+        {chartSize.width > 0 && chartHeight > 0 && (
+          <PieChart width={chartSize.width} height={chartHeight}>
             <Pie
               data={data}
               dataKey="time"

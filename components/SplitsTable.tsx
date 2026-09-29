@@ -5,7 +5,7 @@ import type { Dispatch, SetStateAction } from "react";
 import type { Timeline, TimelineSegment } from "@/lib/timeline";
 import type { Timespan } from "@/lib/timespan";
 import { TS_ZERO, formatTsDisplay, tsAdd } from "@/lib/timespan";
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import MessageBox from "@/components/MessageBox";
 import Panel, { NESTED_PANEL_COLOR } from "@/components/Panel";
 
@@ -56,7 +56,9 @@ function SegmentRow({
 }: SegmentRowProps) {
   const [nameDraft, setNameDraft] = useState(seg.name);
   const [autoSplitDraft, setAutoSplitDraft] = useState(seg.auto_split_name);
-  const [gameTimeDraft, setGameTimeDraft] = useState(formatTsDisplay(seg.game_time));
+  const [gameTimeDraft, setGameTimeDraft] = useState(
+    formatTsDisplay(seg.game_time),
+  );
   const [gameTimeInvalid, setGameTimeInvalid] = useState(false);
 
   const nameRef = useRef<HTMLInputElement>(null);
@@ -77,7 +79,8 @@ function SegmentRow({
   // Skip whichever field currently has focus so in-progress typing is never clobbered.
   useEffect(() => {
     if (document.activeElement !== nameRef.current) setNameDraft(seg.name);
-    if (document.activeElement !== autoSplitRef.current) setAutoSplitDraft(seg.auto_split_name);
+    if (document.activeElement !== autoSplitRef.current)
+      setAutoSplitDraft(seg.auto_split_name);
     if (document.activeElement !== gameTimeRef.current) {
       setGameTimeDraft(formatTsDisplay(seg.game_time));
       setGameTimeInvalid(false);
@@ -175,9 +178,11 @@ function SegmentRow({
           <MoreVertIcon fontSize="small" />
         </button>
         {isMenuOpen && (
-          <div className={`absolute right-0 z-50 min-w-[160px] rounded border border-zinc-700 bg-zinc-800 shadow-lg py-1 ${
-            menuDirection === "up" ? "bottom-full mb-1" : "top-full mt-1"
-          }`}>
+          <div
+            className={`absolute right-0 z-50 min-w-[160px] rounded border border-zinc-700 bg-zinc-800 shadow-lg py-1 ${
+              menuDirection === "up" ? "bottom-full mb-1" : "top-full mt-1"
+            }`}
+          >
             <button
               className="w-full text-left px-3 py-1.5 text-sm text-zinc-100 hover:bg-zinc-700 transition-colors"
               onClick={onDeleteRow}
@@ -236,7 +241,11 @@ export default function SplitsTable({
   function insertRowAbove(index: number) {
     setTimeline((prev) => {
       if (!prev) return prev;
-      const newSeg = { name: "Split Name", auto_split_name: "AutoSplitName", game_time: TS_ZERO };
+      const newSeg = {
+        name: "Split Name",
+        auto_split_name: "AutoSplitName",
+        game_time: TS_ZERO,
+      };
       const segments = [...prev.segments];
       segments.splice(index, 0, newSeg);
       return { ...prev, segments };
@@ -246,7 +255,11 @@ export default function SplitsTable({
   function insertRowBelow(index: number) {
     setTimeline((prev) => {
       if (!prev) return prev;
-      const newSeg = { name: "Split Name", auto_split_name: "AutoSplitName", game_time: TS_ZERO };
+      const newSeg = {
+        name: "Split Name",
+        auto_split_name: "AutoSplitName",
+        game_time: TS_ZERO,
+      };
       const segments = [...prev.segments];
       segments.splice(index + 1, 0, newSeg);
       return { ...prev, segments };
@@ -278,9 +291,15 @@ export default function SplitsTable({
 
   return (
     <div className="mt-2">
-      <Panel color={NESTED_PANEL_COLOR} className="text-zinc-100 text-base">
+      <Panel
+        color={NESTED_PANEL_COLOR}
+        showEmbellishments={false}
+        className="text-zinc-100 text-base"
+      >
         <div className="max-h-[60vh] overflow-auto">
-          <div className={`${GRID} py-1.5 border-b border-white/10 font-semibold text-zinc-300`}>
+          <div
+            className={`${GRID} py-1.5 border-b border-white/10 font-semibold text-zinc-300`}
+          >
             <div className="text-right">#</div>
             <div>Name</div>
             <div>Auto Split</div>
@@ -300,9 +319,18 @@ export default function SplitsTable({
                 e.stopPropagation();
                 setOpenMenuIndex(openMenuIndex === i ? null : i);
               }}
-              onDeleteRow={() => { deleteRow(i); setOpenMenuIndex(null); }}
-              onInsertAbove={() => { insertRowAbove(i); setOpenMenuIndex(null); }}
-              onInsertBelow={() => { insertRowBelow(i); setOpenMenuIndex(null); }}
+              onDeleteRow={() => {
+                deleteRow(i);
+                setOpenMenuIndex(null);
+              }}
+              onInsertAbove={() => {
+                insertRowAbove(i);
+                setOpenMenuIndex(null);
+              }}
+              onInsertBelow={() => {
+                insertRowBelow(i);
+                setOpenMenuIndex(null);
+              }}
             />
           ))}
         </div>

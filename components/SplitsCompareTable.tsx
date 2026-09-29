@@ -16,13 +16,19 @@ export default function SplitsCompareTable({
   diffThresholdMs: number;
 }) {
   return (
-    <Panel color={NESTED_PANEL_COLOR} className="text-zinc-100 text-base">
+    <Panel
+      color={NESTED_PANEL_COLOR}
+      showEmbellishments={false}
+      className="text-zinc-100 text-base"
+    >
       <div className="max-h-[60vh] overflow-auto">
         <table className="w-full border-collapse">
           <thead>
             <tr className="border-b border-white/10 text-zinc-300">
               <th className="text-left font-semibold px-2 py-1.5">Name</th>
-              <th className="text-left font-semibold px-2 py-1.5">Auto Split</th>
+              <th className="text-left font-semibold px-2 py-1.5">
+                Auto Split
+              </th>
               <th className="text-right font-semibold px-2 py-1.5">T1</th>
               <th className="text-right font-semibold px-2 py-1.5">T2</th>
               <th className="text-right font-semibold px-2 py-1.5">+/-</th>
@@ -33,7 +39,9 @@ export default function SplitsCompareTable({
             {sortedRows.map((row, i) => (
               <tr key={i} className="border-b border-white/5 last:border-b-0">
                 <td className="text-left px-2 py-1">{row.name}</td>
-                <td className="text-left px-2 py-1 text-zinc-400">{row.auto_split_name}</td>
+                <td className="text-left px-2 py-1 text-zinc-400">
+                  {row.auto_split_name}
+                </td>
                 <td className="text-right px-2 py-1 tabular-nums font-semibold whitespace-nowrap">
                   {formatTsDisplay(row.time1)}
                 </td>

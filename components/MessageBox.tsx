@@ -28,6 +28,7 @@ export default function MessageBox({
     <div className={className}>
       <Panel
         color={background}
+        showEmbellishments={false}
         // Errors interrupt screen readers; success and warning are announced politely.
         role={status === "error" ? "alert" : "status"}
         className={`text-left text-base ${text}`}

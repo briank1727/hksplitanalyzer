@@ -7,7 +7,7 @@ import Tabs from "@/components/Tabs";
 import ComsobPage from "@/views/ComsobPage";
 import AnalyzeLSSPage from "@/views/AnalyzeLSSPage";
 import logo from "@/public/logo.png";
-import bench from "@/public/bench.png";
+import dashmaster from "@/public/dashmaster.png";
 
 type Tab = "compare" | "analyze";
 
@@ -23,12 +23,15 @@ export default function Home() {
     <div className="flex flex-col flex-1 bg-zinc-50 font-sans dark:bg-transparent">
       <header className="flex flex-col items-center justify-center text-center px-4 pt-16 sm:pt-3 relative">
         <Image
-          src={bench}
+          src={dashmaster}
           alt="Bench"
           style={{
             position: "absolute",
             left: "10px",
             top: "10px",
+            scale: "50%",
+            // Shrink toward the corner so the image stays pinned 10px from it.
+            transformOrigin: "top left",
           }}
         />
         {/* Crop off the logo's top ornament; percentage margins scale with the wrapper width. */}

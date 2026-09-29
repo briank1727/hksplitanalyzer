@@ -1,4 +1,7 @@
 import type { CSSProperties, HTMLAttributes } from "react";
+import Image from "next/image";
+import dialogTop from "@/public/dialog_top.png";
+import dialogBottom from "@/public/dialog_bottom.png";
 
 // How far the background fades out from each edge.
 const TAPER = "6px";
@@ -21,7 +24,14 @@ type PanelProps = HTMLAttributes<HTMLElement> & {
   color?: string;
   // Background opacity from 0 to 1. Only the background fades, never the content.
   opacity?: number;
+  // Draw the Hollow Knight dialog flourishes on the top and bottom edges.
+  showEmbellishments?: boolean;
 };
+
+// The flourishes are centred on each edge and pushed partly outside the panel so
+// they stick out a little; the content gets extra vertical padding to clear them.
+const EMBELLISHMENT_CLASS =
+  "pointer-events-none absolute left-1/2 h-auto max-w-[80%]";
 
 // A background surface for grouping content, with softly tapered edges.
 // The tapered background is its own layer under the content, so the content is
@@ -31,6 +41,7 @@ type PanelProps = HTMLAttributes<HTMLElement> & {
 export default function Panel({
   color = "#000000",
   opacity = 1,
+  showEmbellishments = true,
   className = "",
   children,
   ...props
@@ -43,7 +54,27 @@ export default function Panel({
         // Inline because Tailwind can't generate classes for runtime values.
         style={{ backgroundColor: color, opacity, ...TAPER_MASK }}
       />
-      <div className={`relative p-4 ${className}`}>{children}</div>
+      {showEmbellishments && (
+        <>
+          <Image
+            src={dialogTop}
+            alt=""
+            aria-hidden="true"
+            className={`${EMBELLISHMENT_CLASS} top-0 w-88 -translate-x-1/2 -translate-y-1/3`}
+          />
+          <Image
+            src={dialogBottom}
+            alt=""
+            aria-hidden="true"
+            className={`${EMBELLISHMENT_CLASS} bottom-0 w-64 -translate-x-1/2 translate-y-1/3`}
+          />
+        </>
+      )}
+      <div
+        className={`relative px-4 ${showEmbellishments ? "pt-10 pb-7" : "py-4"} ${className}`}
+      >
+        {children}
+      </div>
     </section>
   );
 }
