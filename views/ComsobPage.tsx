@@ -14,7 +14,9 @@ export default function ComsobPage() {
   const [showDiff, setShowDiff] = useState(false);
 
   const compareDisabledReason =
-    !userTimeline || !comsobTimeline ? "Generate your timeline and select a ComSOB to compare" : undefined;
+    !userTimeline || !comsobTimeline
+      ? "Generate your timeline and select a ComSOB to compare"
+      : undefined;
 
   const diffVisible = showDiff && userTimeline && comsobTimeline;
 
@@ -58,7 +60,7 @@ export default function ComsobPage() {
           </Panel>
           <Panel>
             <ComsobImporterView
-              title="Comsob"
+              title="ComSOB"
               generated={comsobTimeline}
               setGenerated={setComsobTimeline}
             />

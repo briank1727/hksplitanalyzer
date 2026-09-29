@@ -158,7 +158,7 @@ export default function ComsobImporterView({
         timeline={generated}
         setTimeline={setGenerated}
         error={importError}
-        errorTitle="Comsob failed"
+        errorTitle="ComSOB failed"
       />
     </>
   );
