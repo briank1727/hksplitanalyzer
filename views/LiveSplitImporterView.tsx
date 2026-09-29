@@ -1,9 +1,16 @@
 "use client";
 
-import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
+import {
+  useId,
+  useMemo,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import Button from "@/components/Button";
 import MessageBox from "@/components/MessageBox";
 import OptionSelect from "@/components/OptionSelect";
+import Panel, { NESTED_PANEL_COLOR } from "@/components/Panel";
 import SplitsTable from "@/components/SplitsTable";
 import { import_lss } from "@/lib/import_lss";
 import { Comparison } from "@/lib/comparison";
@@ -32,6 +39,8 @@ export default function LiveSplitImporter({
   const [choice, setChoice] = useState<ComparisonKey>("PersonalBest");
   const [bigSplits, setBigSplits] = useState<boolean>(true);
   const [manualSplits, setManualSplits] = useState<boolean>(false);
+  const bigSplitsId = useId();
+  const manualSplitsId = useId();
   const [generateError, setGenerateError] = useState<string | null>(null);
 
   const importedStats = useMemo(() => {
@@ -103,7 +112,7 @@ export default function LiveSplitImporter({
 
   return (
     <>
-      <div className="h-80 overflow-hidden text-center">
+      <div className="h-96 overflow-hidden text-center">
         <h2 className="mb-3 text-lg font-semibold tracking-tight text-black dark:text-zinc-50">
           {title}
         </h2>
@@ -126,8 +135,11 @@ export default function LiveSplitImporter({
             className="mt-2"
           />
         )}
-        <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-          <div className="flex items-center gap-1.5">
+        <div className="mt-4">
+          <Panel
+            color={NESTED_PANEL_COLOR}
+            className="grid grid-cols-[auto_auto] items-center justify-center gap-x-4 gap-y-2 text-left"
+          >
             <span className="text-base text-black dark:text-zinc-50">
               Comparison
             </span>
@@ -137,54 +149,37 @@ export default function LiveSplitImporter({
               value={choice}
               onChange={setChoice}
               disabled={!imported}
+              className="justify-self-center"
             />
-          </div>
-          <div className="flex items-center gap-1.5">
-            <label className="flex items-center gap-1.5 disabled:opacity-50 disabled:pointer-events-none">
-              <input
-                type="checkbox"
-                checked={bigSplits}
-                onChange={(e) => setBigSplits(e.target.checked)}
-                disabled={!imported}
-                className="rounded border border-black/10 dark:border-white/15"
-              />
-              <span className="text-base text-black dark:text-zinc-50">
-                Big Splits
-              </span>
-            </label>
-            <a
-              href="https://github.com/briank1727/hksplitanalyzer/blob/master/README.md#how-to-import-a-livesplit-file"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="About big splits"
-              className="flex h-4 w-4 items-center justify-center rounded-full border border-black/20 text-[10px] leading-none text-black/60 hover:bg-black/5 dark:border-white/25 dark:text-zinc-400 dark:hover:bg-white/10"
+            <label
+              htmlFor={bigSplitsId}
+              className="text-base text-black dark:text-zinc-50"
             >
-              i
-            </a>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <label className="flex items-center gap-1.5 disabled:opacity-50 disabled:pointer-events-none">
-              <input
-                type="checkbox"
-                checked={manualSplits}
-                onChange={(e) => setManualSplits(e.target.checked)}
-                disabled={!imported}
-                className="rounded border border-black/10 dark:border-white/15"
-              />
-              <span className="text-base text-black dark:text-zinc-50">
-                Manual Splits
-              </span>
+              Big Splits
             </label>
-            <a
-              href="https://github.com/briank1727/hksplitanalyzer/blob/master/README.md#what-does-manual-splits-do"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="About manual splits"
-              className="flex h-4 w-4 items-center justify-center rounded-full border border-black/20 text-[10px] leading-none text-black/60 hover:bg-black/5 dark:border-white/25 dark:text-zinc-400 dark:hover:bg-white/10"
+            <input
+              id={bigSplitsId}
+              type="checkbox"
+              checked={bigSplits}
+              onChange={(e) => setBigSplits(e.target.checked)}
+              disabled={!imported}
+              className="justify-self-center rounded border border-black/10 dark:border-white/15"
+            />
+            <label
+              htmlFor={manualSplitsId}
+              className="text-base text-black dark:text-zinc-50"
             >
-              i
-            </a>
-          </div>
+              Manual Splits
+            </label>
+            <input
+              id={manualSplitsId}
+              type="checkbox"
+              checked={manualSplits}
+              onChange={(e) => setManualSplits(e.target.checked)}
+              disabled={!imported}
+              className="justify-self-center rounded border border-black/10 dark:border-white/15"
+            />
+          </Panel>
         </div>
         <div className="mt-3 flex justify-center">
           <Button size="sm" onClick={handleGenerate} disabled={!imported}>
@@ -196,7 +191,8 @@ export default function LiveSplitImporter({
             status="success"
             message={
               <>
-                Timeline generated successfully ({generatedStats.numSplits} split
+                Timeline generated successfully ({generatedStats.numSplits}{" "}
+                split
                 {generatedStats.numSplits === 1 ? "" : "s"}
                 {generatedStats.totalTime !== null &&
                   `, total time: ${formatTsDisplay(generatedStats.totalTime)}`}

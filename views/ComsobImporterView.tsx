@@ -69,7 +69,7 @@ export default function ComsobImporterView({
 
   return (
     <>
-      <div className="h-80 overflow-hidden">
+      <div className="h-96 overflow-hidden">
         <h2 className="mb-3 text-center text-lg font-semibold tracking-tight text-black dark:text-zinc-50">
           {title}
         </h2>
