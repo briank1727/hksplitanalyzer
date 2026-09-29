@@ -47,7 +47,11 @@ export default function Panel({
   ...props
 }: PanelProps) {
   return (
-    <section className="relative min-w-0" {...props}>
+    <section
+      // Leave room outside the panel for the part of each flourish that sticks out.
+      className={`relative min-w-0 ${showEmbellishments ? "mt-4 mb-3" : ""}`}
+      {...props}
+    >
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
