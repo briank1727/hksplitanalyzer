@@ -34,8 +34,7 @@ body {
     z-index: -1;
     pointer-events: none;
     background: url("/background.webp") center / cover no-repeat;
-    opacity: 0.5;
-    /* Zoom in around the centre to crop out the image's own dark vignette. */
+    opacity: 0.4;
     transform: scale(2);
   }
 }
