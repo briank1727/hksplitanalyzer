@@ -3,6 +3,7 @@
 import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import Button from "@/components/Button";
 import MessageBox from "@/components/MessageBox";
+import OptionSelect from "@/components/OptionSelect";
 import SplitsTable from "@/components/SplitsTable";
 import { import_lss } from "@/lib/import_lss";
 import { Comparison } from "@/lib/comparison";
@@ -11,6 +12,10 @@ import { formatTsDisplay, tsAdd, TS_ZERO, type Timespan } from "@/lib/timespan";
 import type { Timeline } from "@/lib/timeline";
 
 type ComparisonKey = keyof typeof Comparison;
+
+const COMPARISON_OPTIONS = (Object.keys(Comparison) as ComparisonKey[]).map(
+  (key) => ({ value: key, label: Comparison[key].name }),
+);
 
 export default function LiveSplitImporter({
   title,
@@ -122,23 +127,18 @@ export default function LiveSplitImporter({
           />
         )}
         <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-          <label className="flex items-center gap-1.5 disabled:opacity-50 disabled:pointer-events-none">
+          <div className="flex items-center gap-1.5">
             <span className="text-base text-black dark:text-zinc-50">
               Comparison
             </span>
-            <select
+            <OptionSelect
+              label="Comparison"
+              options={COMPARISON_OPTIONS}
               value={choice}
-              onChange={(e) => setChoice(e.target.value as ComparisonKey)}
+              onChange={setChoice}
               disabled={!imported}
-              className="h-9 rounded-full border border-black/10 bg-white px-3 text-base text-black disabled:opacity-50 disabled:pointer-events-none dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
-            >
-              {(Object.keys(Comparison) as ComparisonKey[]).map((key) => (
-                <option key={key} value={key}>
-                  {Comparison[key].name}
-                </option>
-              ))}
-            </select>
-          </label>
+            />
+          </div>
           <div className="flex items-center gap-1.5">
             <label className="flex items-center gap-1.5 disabled:opacity-50 disabled:pointer-events-none">
               <input

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Button from "@/components/Button";
 import MessageBox from "@/components/MessageBox";
+import OptionSelect from "@/components/OptionSelect";
 import Panel from "@/components/Panel";
 import SplitsTable from "@/components/SplitsTable";
 import DiffSplitView from "@/views/DiffSplitView";
@@ -12,6 +13,10 @@ import { parse_lss, type LiveSplit } from "@/lib/lss_logic";
 import type { Timeline } from "@/lib/timeline";
 
 type ComparisonKey = keyof typeof Comparison;
+
+const COMPARISON_OPTIONS = (Object.keys(Comparison) as ComparisonKey[]).map(
+  (key) => ({ value: key, label: Comparison[key].name }),
+);
 
 export default function AnalyzeLSSPage() {
   const [imported, setImported] = useState<LiveSplit | null>(null);
@@ -115,40 +120,32 @@ export default function AnalyzeLSSPage() {
         <Button size="sm" onClick={handleImport}>
           Import LSS
         </Button>
-        <label className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5">
           <span className="text-sm text-black dark:text-zinc-50">
             Timeline 1 Comparison
           </span>
-          <select
+          <OptionSelect
+            label="Timeline 1 Comparison"
+            options={COMPARISON_OPTIONS}
             value={choice1}
-            onChange={(e) => setChoice1(e.target.value as ComparisonKey)}
+            onChange={setChoice1}
             disabled={!imported}
-            className="h-9 rounded-full border border-black/10 bg-white px-3 text-sm text-black disabled:opacity-50 disabled:pointer-events-none dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
-          >
-            {(Object.keys(Comparison) as ComparisonKey[]).map((key) => (
-              <option key={key} value={key}>
-                {Comparison[key].name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="flex items-center gap-1.5">
+            className="text-sm"
+          />
+        </div>
+        <div className="flex items-center gap-1.5">
           <span className="text-sm text-black dark:text-zinc-50">
             Timeline 2 Comparison
           </span>
-          <select
+          <OptionSelect
+            label="Timeline 2 Comparison"
+            options={COMPARISON_OPTIONS}
             value={choice2}
-            onChange={(e) => setChoice2(e.target.value as ComparisonKey)}
+            onChange={setChoice2}
             disabled={!imported}
-            className="h-9 rounded-full border border-black/10 bg-white px-3 text-sm text-black disabled:opacity-50 disabled:pointer-events-none dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
-          >
-            {(Object.keys(Comparison) as ComparisonKey[]).map((key) => (
-              <option key={key} value={key}>
-                {Comparison[key].name}
-              </option>
-            ))}
-          </select>
-        </label>
+            className="text-sm"
+          />
+        </div>
         <div className="flex items-center gap-1.5">
           <label className="flex items-center gap-1.5">
             <input

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Button from "@/components/Button";
 import MessageBox from "@/components/MessageBox";
+import OptionSelect from "@/components/OptionSelect";
 import Panel, { NESTED_PANEL_COLOR } from "@/components/Panel";
 import SplitPieChart, { type SplitPieSlice } from "@/components/SplitPieChart";
 import SplitsCompareTable from "@/components/SplitsCompareTable";
@@ -10,6 +11,11 @@ import type { Timeline } from "@/lib/timeline";
 import { DiffTime, DiffSortBy } from "@/lib/comparison";
 
 type DiffSortByKey = keyof typeof DiffSortBy;
+
+const SORT_OPTIONS = (Object.keys(DiffSortBy) as DiffSortByKey[]).map((key) => ({
+  value: key,
+  label: DiffSortBy[key].name,
+}));
 
 export default function DiffSplitView({
   timeline1,
@@ -83,22 +89,17 @@ export default function DiffSplitView({
           <Button size="sm" onClick={() => setSwapped((s) => !s)}>
             Swap Timelines
           </Button>
-          <label className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5">
             <span className="text-base text-zinc-50">
               Sort By
             </span>
-            <select
+            <OptionSelect
+              label="Sort By"
+              options={SORT_OPTIONS}
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as DiffSortByKey)}
-              className="h-9 rounded-full border border-black/10 bg-white px-3 text-base text-black dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
-            >
-              {(Object.keys(DiffSortBy) as DiffSortByKey[]).map((key) => (
-                <option key={key} value={key}>
-                  {DiffSortBy[key].name}
-                </option>
-              ))}
-            </select>
-          </label>
+              onChange={setSortBy}
+            />
+          </div>
           <Button size="sm" onClick={() => setIsAscending(!isAscending)}>
             {isAscending ? "Ascending" : "Descending"}
           </Button>
