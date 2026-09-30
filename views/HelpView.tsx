@@ -51,7 +51,7 @@ function ExternalLink({
 
 function Code({ children }: { children: ReactNode }) {
   return (
-    <code className="rounded bg-black/60 px-1 py-0.5 break-all font-mono text-[0.8em] text-zinc-100">
+    <code className="rounded bg-black/60 px-1 py-0.5 break-words font-mono text-[0.8em] text-zinc-100">
       {children}
     </code>
   );
@@ -67,21 +67,42 @@ function SectionHeading({ children }: { children: ReactNode }) {
   );
 }
 
+// With an `aside` (e.g. a screenshot), the title and body form the left column
+// and the aside sits on the right, centred against the whole panel.
 function Section({
   title,
+  aside,
   className = "",
   children,
 }: {
   title: string;
+  aside?: ReactNode;
   className?: string;
   children: ReactNode;
 }) {
-  return (
-    <Panel color={NESTED_PANEL_COLOR} className={`h-full ${className}`}>
+  const content = (
+    <div>
       <SectionHeading>{title}</SectionHeading>
       <div className="flex flex-col gap-4 text-lg text-zinc-300">
         {children}
       </div>
+    </div>
+  );
+  return (
+    <Panel
+      color={NESTED_PANEL_COLOR}
+      // A panel can be stretched taller than its content by a neighbour in the
+      // same row, so centre the text-and-aside row within the full height.
+      className={`h-full ${aside ? "flex flex-col justify-center" : ""} ${className}`}
+    >
+      {aside ? (
+        <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+          {content}
+          {aside}
+        </div>
+      ) : (
+        content
+      )}
     </Panel>
   );
 }
@@ -150,26 +171,23 @@ export default function HelpView() {
           <Screenshot src={demoImage} alt="HKSA comparing a run to a ComSOB" />
         </div>
 
-        <Section title="What is a ComSOB?">
-          <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
-            <div className="flex flex-col gap-4">
-              <p className={PROSE}>
-                A ComSOB splits a run into individual levels (ILs): short
-                segments that speedrunners practice on their own.
-              </p>
-              <p className={PROSE}>
-                Stitching together the community&apos;s best attempt at each
-                segment gives a theoretical sum of best that a human could
-                (somewhat) realistically achieve.
-              </p>
-              <p className={PROSE}>
-                HKSA fetches the latest times straight from each ComSOB&apos;s
-                Google Sheet, and links to the sheet so you can check the
-                source.
-              </p>
-            </div>
-            <Screenshot src={comsobImage} alt="A ComSOB Google Sheet" />
-          </div>
+        <Section
+          title="What is a ComSOB?"
+          aside={<Screenshot src={comsobImage} alt="A ComSOB Google Sheet" />}
+        >
+          <p className={PROSE}>
+            A ComSOB splits a run into individual levels (ILs): short segments
+            that speedrunners practice on their own.
+          </p>
+          <p className={PROSE}>
+            Stitching together the community’s best attempt at each segment
+            gives a theoretical sum of best that a human could (somewhat)
+            realistically achieve.
+          </p>
+          <p className={PROSE}>
+            HKSA fetches the latest times straight from each ComSOB’s Google
+            Sheet, and links to the sheet so you can check the source.
+          </p>
         </Section>
 
         {/* The two halves of a comparison, side by side like on the Compare tab. */}
@@ -193,7 +211,7 @@ export default function HelpView() {
                   Turn on <Control>Big Splits</Control> to treat a segment with
                   subsplits as one segment. Most premade LSS files split each
                   ComSOB segment into several splits. Files without subsplits
-                  aren&apos;t affected.
+                  aren’t affected.
                 </>,
                 <>
                   Click <Control>Generate Timeline</Control>. Your timeline is
@@ -202,21 +220,23 @@ export default function HelpView() {
               ]}
             </Steps>
           </Section>
-          <Section title="Import a ComSOB">
-            <div className="grid items-start gap-6 sm:grid-cols-2">
-              <Steps>
-                {[
-                  <>
-                    Click <Control>Import ComSOB</Control>.
-                  </>,
-                  <>Choose your game, then the route to compare against.</>,
-                ]}
-              </Steps>
+          <Section
+            title="Import a ComSOB"
+            aside={
               <Screenshot
                 src={comsobListImage}
                 alt="The list of available ComSOBs"
               />
-            </div>
+            }
+          >
+            <Steps>
+              {[
+                <>
+                  Click <Control>Import ComSOB</Control>.
+                </>,
+                <>Choose your game, then the route to compare against.</>,
+              ]}
+            </Steps>
           </Section>
         </div>
 
@@ -236,13 +256,13 @@ export default function HelpView() {
         <Section title="Reading the analysis">
           <div className="grid gap-x-8 gap-y-4 md:grid-cols-2 xl:grid-cols-4">
             <p className={PROSE}>
-              The splits table lists your segment times, the comparison&apos;s
-              times, and the difference between them.
+              The splits table lists your segment times, the comparison’s times,
+              and the difference between them.
             </p>
             <p className={PROSE}>
-              Segments where you&apos;re{" "}
+              Segments where you’re{" "}
               <span className="font-semibold text-green-400">ahead</span> are
-              highlighted green; segments where you&apos;re{" "}
+              highlighted green; segments where you’re{" "}
               <span className="font-semibold text-red-400">behind</span> are
               highlighted red.
             </p>
@@ -253,7 +273,7 @@ export default function HelpView() {
             </p>
             <p className={PROSE}>
               The pie chart breaks down all the time you lost (the red
-              segments). Hover over a slice for that split&apos;s details.
+              segments). Hover over a slice for that split’s details.
             </p>
           </div>
           <Screenshot src={comparisonImage} alt="The analysis view" />
@@ -288,9 +308,9 @@ export default function HelpView() {
             </p>
             <p className={PROSE}>
               This matters most with <Control>Big Splits</Control>. With manual
-              splits on, a big split&apos;s best time is the sum of its subsplit
-              golds. With them off, it&apos;s the fastest you actually ran the
-              whole split in one attempt: your real gold for it.
+              splits on, a big split’s best time is the sum of its subsplit
+              golds. With them off, it’s the fastest you actually ran the whole
+              split in one attempt: your real gold for it.
             </p>
             <p className={`${PROSE} text-base text-zinc-400`}>
               Only Personal Best and Best Segments use this setting. Average
