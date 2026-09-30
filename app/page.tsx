@@ -6,6 +6,7 @@ import Button from "@/components/Button";
 import Tabs from "@/components/Tabs";
 import ComsobPage from "@/views/ComsobPage";
 import AnalyzeLSSPage from "@/views/AnalyzeLSSPage";
+import HelpView from "@/views/HelpView";
 import logo from "@/public/logo.png";
 import dashmaster from "@/public/dashmaster.png";
 
@@ -78,6 +79,7 @@ export default function Home() {
         >
           <AnalyzeLSSPage />
         </div>
+        <HelpView />
       </main>
     </div>
   );
