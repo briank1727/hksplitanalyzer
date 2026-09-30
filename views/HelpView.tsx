@@ -299,17 +299,24 @@ export default function HelpView() {
           </Section>
 
           <Section title="Route not listed?">
-            <div className="rounded border border-sky-300/40 bg-sky-950/30 p-4">
-              <p className={`${TRAJAN} mb-1 text-zinc-50`}>Best option</p>
-              <p className={PROSE}>
-                Ping <span className="text-zinc-50">@bim</span> in
-                #silk-tech-support or #hk-tech-support on the{" "}
-                <ExternalLink href={DISCORD_URL}>
-                  HK Speedrunning Discord
-                </ExternalLink>
-                .
-              </p>
-            </div>
+            <MessageBox
+              status="info"
+              message={
+                <>
+                  <p className={`${TRAJAN} mb-1 text-lg text-zinc-50`}>
+                    Best option
+                  </p>
+                  <p className={`${PROSE} text-lg`}>
+                    Ping <span className="text-zinc-50">@bim</span> in
+                    #silk-tech-support or #hk-tech-support on the{" "}
+                    <ExternalLink href={DISCORD_URL}>
+                      HK Speedrunning Discord
+                    </ExternalLink>
+                    .
+                  </p>
+                </>
+              }
+            />
             <p className={PROSE}>Or:</p>
             <ul className="flex list-disc flex-col gap-3 pl-6 marker:text-zinc-500">
               <li className={PROSE}>
