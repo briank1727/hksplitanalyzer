@@ -107,24 +107,14 @@ function Section({
   );
 }
 
-// Screenshots open full size in a new tab, since many are too detailed to read
-// at column width.
 function Screenshot({ src, alt }: { src: StaticImageData; alt: string }) {
   return (
-    <a
-      href={src.src}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="block rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-50"
-      title="Open full size"
-    >
-      <Image
-        src={src}
-        alt={alt}
-        sizes="(min-width: 1024px) 60vw, 100vw"
-        className="h-auto w-full rounded border border-zinc-700 transition-[border-color] hover:border-zinc-400"
-      />
-    </a>
+    <Image
+      src={src}
+      alt={alt}
+      sizes="(min-width: 1024px) 60vw, 100vw"
+      className="h-auto w-full rounded border border-zinc-700"
+    />
   );
 }
 
@@ -243,13 +233,15 @@ export default function HelpView() {
         <MessageBox
           status="warning"
           message={
-            <p className="text-lg">
-              <span className={`${TRAJAN} text-yellow-100`}>
+            <div className="text-lg">
+              <p className={`${TRAJAN} text-yellow-100`}>
                 Match your segment counts.
-              </span>{" "}
-              Your timeline and the ComSOB need the same number of segments, or
-              the comparison will line up the wrong splits.
-            </p>
+              </p>
+              <p>
+                Your timeline and the ComSOB need the same number of segments,
+                or the comparison will line up the wrong splits.
+              </p>
+            </div>
           }
         />
 
