@@ -184,6 +184,7 @@ function SegmentRow({
         {isMenuOpen && (
           <Panel
             color={POPUP_PANEL_COLOR}
+            fadeBorder={false}
             // Panel positions its outer element, so placement goes through `style`.
             style={{
               position: "absolute",

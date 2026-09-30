@@ -37,6 +37,7 @@ function CustomTooltip({
   return (
     <Panel
       color={POPUP_PANEL_COLOR}
+      fadeBorder={false}
       className="px-3! py-2! text-sm text-zinc-50"
     >
       <div className="font-semibold">{slice.name}</div>
