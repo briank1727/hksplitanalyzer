@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { PieChart, Pie, Tooltip } from "recharts";
+import Panel, { POPUP_PANEL_COLOR } from "@/components/Panel";
 import { formatTsDisplay, ticksToTs } from "@/lib/timespan";
 
 export type SplitPieSlice = {
@@ -34,13 +35,16 @@ function CustomTooltip({
   if (!active || !payload || payload.length === 0) return null;
   const slice = payload[0].payload;
   return (
-    <div className="rounded border border-black/10 bg-white px-3 py-2 text-sm shadow dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50">
+    <Panel
+      color={POPUP_PANEL_COLOR}
+      className="px-3! py-2! text-sm text-zinc-50"
+    >
       <div className="font-semibold">{slice.name}</div>
       <div className="tabular-nums">
         {valueLabel}: {formatValue(slice.time)}
       </div>
       <div className="tabular-nums">{slice.percent.toFixed(2)}%</div>
-    </div>
+    </Panel>
   );
 }
 

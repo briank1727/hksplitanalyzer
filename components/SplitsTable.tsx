@@ -6,8 +6,12 @@ import type { Timeline, TimelineSegment } from "@/lib/timeline";
 import type { Timespan } from "@/lib/timespan";
 import { TS_ZERO, formatTsDisplay, tsAdd } from "@/lib/timespan";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import Button from "@/components/Button";
 import MessageBox from "@/components/MessageBox";
-import Panel, { NESTED_PANEL_COLOR } from "@/components/Panel";
+import Panel, {
+  NESTED_PANEL_COLOR,
+  POPUP_PANEL_COLOR,
+} from "@/components/Panel";
 
 function parseGameTime(input: string): Timespan | null {
   const trimmed = input.trim();
@@ -178,30 +182,44 @@ function SegmentRow({
           <MoreVertIcon fontSize="small" />
         </button>
         {isMenuOpen && (
-          <div
-            className={`absolute right-0 z-50 min-w-[160px] rounded border border-zinc-700 bg-zinc-800 shadow-lg py-1 ${
-              menuDirection === "up" ? "bottom-full mb-1" : "top-full mt-1"
-            }`}
+          <Panel
+            color={POPUP_PANEL_COLOR}
+            // Panel positions its outer element, so placement goes through `style`.
+            style={{
+              position: "absolute",
+              right: 0,
+              zIndex: 50,
+              // Size to the widest button rather than the narrow cell it hangs off.
+              width: "max-content",
+              ...(menuDirection === "up"
+                ? { bottom: "100%", marginBottom: 4 }
+                : { top: "100%", marginTop: 4 }),
+            }}
+            // Stack the buttons with a little breathing room instead of Panel's default padding.
+            className="flex flex-col px-1! py-1!"
           >
-            <button
-              className="w-full text-left px-3 py-1.5 text-sm text-zinc-100 hover:bg-zinc-700 transition-colors"
+            <Button
+              size="xs"
+              className="w-full whitespace-nowrap"
               onClick={onDeleteRow}
             >
               Delete Row
-            </button>
-            <button
-              className="w-full text-left px-3 py-1.5 text-sm text-zinc-100 hover:bg-zinc-700 transition-colors"
+            </Button>
+            <Button
+              size="xs"
+              className="w-full whitespace-nowrap"
               onClick={onInsertAbove}
             >
               Insert Row Above
-            </button>
-            <button
-              className="w-full text-left px-3 py-1.5 text-sm text-zinc-100 hover:bg-zinc-700 transition-colors"
+            </Button>
+            <Button
+              size="xs"
+              className="w-full whitespace-nowrap"
               onClick={onInsertBelow}
             >
               Insert Row Below
-            </button>
-          </div>
+            </Button>
+          </Panel>
         )}
       </div>
     </div>
@@ -291,10 +309,7 @@ export default function SplitsTable({
 
   return (
     <div className="mt-2">
-      <Panel
-        color={NESTED_PANEL_COLOR}
-        className="text-zinc-100 text-base"
-      >
+      <Panel color={NESTED_PANEL_COLOR} className="text-zinc-100 text-base">
         <div className="max-h-[60vh] overflow-auto">
           <div
             className={`${GRID} py-1.5 border-b border-white/10 font-semibold text-zinc-300`}

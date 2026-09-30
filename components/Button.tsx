@@ -2,7 +2,7 @@ import { ButtonHTMLAttributes } from "react";
 import Fleur from "@/components/Fleur";
 
 type Variant = "primary" | "secondary" | "success";
-type Size = "sm" | "md" | "lg";
+type Size = "xs" | "sm" | "md" | "lg";
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: Variant;
@@ -27,12 +27,14 @@ const LABEL_GLOW =
   "transition-[filter] duration-150 group-hover:drop-shadow-[0_0_6px_currentColor]";
 
 const sizeStyles: Record<Size, string> = {
+  xs: "h-7 px-1.5 text-sm",
   sm: "h-9 px-2 text-base",
   md: "h-11 px-3 text-lg",
   lg: "h-13 px-4 text-xl",
 };
 
 const embellishmentSize: Record<Size, number> = {
+  xs: 12,
   sm: 16,
   md: 20,
   lg: 24,

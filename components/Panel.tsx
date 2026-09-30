@@ -19,6 +19,9 @@ const TAPER_MASK: CSSProperties = {
 // For a panel that sits inside another (black) panel: gray-900 stands out from it.
 export const NESTED_PANEL_COLOR = "rgb(17, 24, 39)";
 
+// For a popup (menu, tooltip) that floats over a nested panel: zinc-800 stands out from it.
+export const POPUP_PANEL_COLOR = "rgb(39, 39, 42)";
+
 type PanelProps = HTMLAttributes<HTMLElement> & {
   // Background colour: any CSS colour (e.g. "#0b1119", "rgb(20 30 45)").
   color?: string;
