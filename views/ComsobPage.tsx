@@ -51,14 +51,14 @@ export default function ComsobPage() {
           </span>
         </div>
         <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-          <Panel>
+          <Panel showEmbellishments>
             <LiveSplitImporter
               title="Your Run"
               generated={userTimeline}
               setGenerated={setUserTimeline}
             />
           </Panel>
-          <Panel>
+          <Panel showEmbellishments>
             <ComsobImporterView
               title="ComSOB"
               generated={comsobTimeline}

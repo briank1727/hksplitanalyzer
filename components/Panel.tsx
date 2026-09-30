@@ -41,7 +41,7 @@ const EMBELLISHMENT_CLASS =
 export default function Panel({
   color = "#000000",
   opacity = 1,
-  showEmbellishments = true,
+  showEmbellishments = false,
   className = "",
   children,
   ...props

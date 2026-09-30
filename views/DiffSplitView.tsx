@@ -91,7 +91,7 @@ export default function DiffSplitView({
 
   return (
     <div className="mb-8">
-      <Panel>
+      <Panel showEmbellishments>
         <h2 className="mb-3 text-center text-lg font-semibold tracking-tight text-zinc-50">
           Delta
         </h2>
@@ -178,7 +178,6 @@ export default function DiffSplitView({
           <div className="relative w-1/3 min-w-0 min-h-80">
             <Panel
               color={NESTED_PANEL_COLOR}
-              showEmbellishments={false}
               style={{ position: "absolute", inset: 0 }}
               className="flex h-full flex-col"
             >

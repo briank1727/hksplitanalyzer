@@ -116,7 +116,7 @@ export default function AnalyzeLSSPage() {
           </Button>
         </span>
       </div>
-      <Panel className="flex flex-col items-center gap-3">
+      <Panel showEmbellishments className="flex flex-col items-center gap-3">
         <Button size="sm" onClick={handleImport}>
           Import LSS
         </Button>
@@ -181,7 +181,7 @@ export default function AnalyzeLSSPage() {
       )}
       {(timeline1 || timeline2 || generateError) && (
         <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-          <Panel>
+          <Panel showEmbellishments>
             <SplitsTable
               timeline={timeline1}
               setTimeline={setTimeline1}
@@ -189,7 +189,7 @@ export default function AnalyzeLSSPage() {
               errorTitle="Timeline failed"
             />
           </Panel>
-          <Panel>
+          <Panel showEmbellishments>
             <SplitsTable
               timeline={timeline2}
               setTimeline={setTimeline2}

@@ -49,7 +49,7 @@ export default function Dialog({
     >
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
       <div className="relative z-10 w-full max-w-2xl">
-        <Panel color={NESTED_PANEL_COLOR}>
+        <Panel color={NESTED_PANEL_COLOR} showEmbellishments>
           <div className="flex items-start justify-between gap-4">
             <h2
               id="dialog-title"

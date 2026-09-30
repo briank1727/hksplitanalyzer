@@ -293,7 +293,6 @@ export default function SplitsTable({
     <div className="mt-2">
       <Panel
         color={NESTED_PANEL_COLOR}
-        showEmbellishments={false}
         className="text-zinc-100 text-base"
       >
         <div className="max-h-[60vh] overflow-auto">
