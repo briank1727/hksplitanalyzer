@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Button from "@/components/Button";
+import Panel from "@/components/Panel";
 import ComsobImporterView from "@/views/ComsobImporterView";
 import DiffSplitView from "@/views/DiffSplitView";
 import LiveSplitImporter from "@/views/LiveSplitImporterView";
@@ -13,54 +14,59 @@ export default function ComsobPage() {
   const [showDiff, setShowDiff] = useState(false);
 
   const compareDisabledReason =
-    !userTimeline || !comsobTimeline ? "Generate both timelines first" : undefined;
-  const canCompare = compareDisabledReason === undefined;
+    !userTimeline || !comsobTimeline
+      ? "Generate your timeline and select a ComSOB to compare"
+      : undefined;
 
-  if (showDiff && userTimeline && comsobTimeline) {
-    return (
-      <div className="flex flex-col gap-4 pt-4 px-4">
-        <div className="flex justify-center">
-          <Button size="sm" onClick={() => setShowDiff(false)}>
-            Back
-          </Button>
-        </div>
-        <DiffSplitView timeline1={userTimeline} timeline2={comsobTimeline} />
-      </div>
-    );
-  }
+  const diffVisible = showDiff && userTimeline && comsobTimeline;
 
+  // The setup view stays mounted while the diff is shown so the importers keep
+  // their state (e.g. the parsed LSS file) when the user clicks Back.
   return (
-    <div className="flex flex-col gap-4 pt-4 px-4">
-      <div className="flex justify-center">
-        <span title={compareDisabledReason}>
-          <Button
-            size="lg"
-            variant="success"
-            disabled={!canCompare}
-            onClick={() => setShowDiff(true)}
-            className="text-2xl"
-          >
-            Compare
-          </Button>
-        </span>
+    <>
+      {diffVisible && (
+        <div className="flex flex-col gap-2 pt-4 px-4">
+          <div className="flex justify-center">
+            <Button size="sm" onClick={() => setShowDiff(false)}>
+              Back
+            </Button>
+          </div>
+          <DiffSplitView timeline1={userTimeline} timeline2={comsobTimeline} />
+        </div>
+      )}
+      <div
+        className={`flex flex-col gap-2 pt-4 px-4 ${diffVisible ? "hidden" : ""}`}
+      >
+        <div className="flex justify-center">
+          <span title={compareDisabledReason}>
+            <Button
+              size="lg"
+              variant="success"
+              disabled={compareDisabledReason !== undefined}
+              onClick={() => setShowDiff(true)}
+              className="text-2xl"
+            >
+              Compare
+            </Button>
+          </span>
+        </div>
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+          <Panel showEmbellishments>
+            <LiveSplitImporter
+              title="Your Run"
+              generated={userTimeline}
+              setGenerated={setUserTimeline}
+            />
+          </Panel>
+          <Panel showEmbellishments>
+            <ComsobImporterView
+              title="ComSOB"
+              generated={comsobTimeline}
+              setGenerated={setComsobTimeline}
+            />
+          </Panel>
+        </div>
       </div>
-      <div className="flex flex-row">
-        <section className="flex-1 p-4 border-r border-black/10 dark:border-white/15">
-          <LiveSplitImporter
-            title="Your Run"
-            generated={userTimeline}
-            setGenerated={setUserTimeline}
-          />
-        </section>
-        <section className="flex-1 p-4">
-          <ComsobImporterView
-            title="Comsob"
-            generated={comsobTimeline}
-            setGenerated={setComsobTimeline}
-          />
-        </section>
-      </div>
-    </div>
+    </>
   );
 }
-

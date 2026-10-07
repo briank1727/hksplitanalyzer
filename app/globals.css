@@ -25,3 +25,16 @@ body {
   font-family: var(--font-perpetua), Arial, Helvetica, sans-serif;
   font-stretch: condensed;
 }
+
+@media (prefers-color-scheme: dark) {
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: url("/background.webp") center / cover no-repeat;
+    opacity: 0.4;
+    transform: scale(2);
+  }
+}

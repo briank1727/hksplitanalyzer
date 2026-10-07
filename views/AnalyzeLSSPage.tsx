@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import Button from "@/components/Button";
+import MessageBox from "@/components/MessageBox";
+import OptionSelect, { TOGGLE_OPTIONS } from "@/components/OptionSelect";
+import Panel from "@/components/Panel";
 import SplitsTable from "@/components/SplitsTable";
 import DiffSplitView from "@/views/DiffSplitView";
 import { import_lss } from "@/lib/import_lss";
@@ -10,6 +13,10 @@ import { parse_lss, type LiveSplit } from "@/lib/lss_logic";
 import type { Timeline } from "@/lib/timeline";
 
 type ComparisonKey = keyof typeof Comparison;
+
+const COMPARISON_OPTIONS = (Object.keys(Comparison) as ComparisonKey[]).map(
+  (key) => ({ value: key, label: Comparison[key].name }),
+);
 
 export default function AnalyzeLSSPage() {
   const [imported, setImported] = useState<LiveSplit | null>(null);
@@ -26,7 +33,6 @@ export default function AnalyzeLSSPage() {
 
   const compareDisabledReason =
     !timeline1 || !timeline2 ? "Generate timelines first" : undefined;
-  const canCompare = compareDisabledReason === undefined;
 
   const handleImport = async () => {
     setImportError(null);
@@ -60,10 +66,18 @@ export default function AnalyzeLSSPage() {
     setGenerateError(null);
     try {
       setTimeline1(
-        Comparison[choice1].generate_comparison(imported, bigSplits, manualSplits),
+        Comparison[choice1].generate_comparison(
+          imported,
+          bigSplits,
+          manualSplits,
+        ),
       );
       setTimeline2(
-        Comparison[choice2].generate_comparison(imported, bigSplits, manualSplits),
+        Comparison[choice2].generate_comparison(
+          imported,
+          bigSplits,
+          manualSplits,
+        ),
       );
     } catch (e) {
       setTimeline1(null);
@@ -76,7 +90,7 @@ export default function AnalyzeLSSPage() {
 
   if (showDiff && timeline1 && timeline2) {
     return (
-      <div className="flex flex-col gap-4 pt-4 px-4">
+      <div className="flex flex-col gap-2 pt-4 px-4">
         <div className="flex justify-center">
           <Button size="sm" onClick={() => setShowDiff(false)}>
             Back
@@ -88,13 +102,13 @@ export default function AnalyzeLSSPage() {
   }
 
   return (
-    <div className="flex flex-col gap-4 pt-4 px-4">
+    <div className="flex flex-col gap-2 pt-4 px-4">
       <div className="flex justify-center">
         <span title={compareDisabledReason}>
           <Button
             size="lg"
             variant="success"
-            disabled={!canCompare}
+            disabled={compareDisabledReason !== undefined}
             onClick={() => setShowDiff(true)}
             className="text-2xl"
           >
@@ -102,122 +116,89 @@ export default function AnalyzeLSSPage() {
           </Button>
         </span>
       </div>
-      <div className="flex flex-wrap justify-around items-center gap-2">
+      <Panel showEmbellishments className="flex flex-col items-center gap-3">
         <Button size="sm" onClick={handleImport}>
           Import LSS
         </Button>
-        <label className="flex items-center gap-1.5">
+        <div className="grid grid-cols-[auto_auto] items-center gap-x-4 gap-y-2 text-left">
           <span className="text-sm text-black dark:text-zinc-50">
             Timeline 1 Comparison
           </span>
-          <select
+          <OptionSelect
+            label="Timeline 1 Comparison"
+            options={COMPARISON_OPTIONS}
             value={choice1}
-            onChange={(e) => setChoice1(e.target.value as ComparisonKey)}
+            onChange={setChoice1}
             disabled={!imported}
-            className="h-9 rounded-full border border-black/10 bg-white px-3 text-sm text-black disabled:opacity-50 disabled:pointer-events-none dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
-          >
-            {(Object.keys(Comparison) as ComparisonKey[]).map((key) => (
-              <option key={key} value={key}>
-                {Comparison[key].name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="flex items-center gap-1.5">
+            className="justify-self-center text-sm"
+          />
           <span className="text-sm text-black dark:text-zinc-50">
             Timeline 2 Comparison
           </span>
-          <select
+          <OptionSelect
+            label="Timeline 2 Comparison"
+            options={COMPARISON_OPTIONS}
             value={choice2}
-            onChange={(e) => setChoice2(e.target.value as ComparisonKey)}
+            onChange={setChoice2}
             disabled={!imported}
-            className="h-9 rounded-full border border-black/10 bg-white px-3 text-sm text-black disabled:opacity-50 disabled:pointer-events-none dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
-          >
-            {(Object.keys(Comparison) as ComparisonKey[]).map((key) => (
-              <option key={key} value={key}>
-                {Comparison[key].name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <div className="flex items-center gap-1.5">
-          <label className="flex items-center gap-1.5">
-            <input
-              type="checkbox"
-              checked={bigSplits}
-              onChange={(e) => setBigSplits(e.target.checked)}
-              disabled={!imported}
-              className="rounded border border-black/10 dark:border-white/15"
-            />
-            <span className="text-sm text-black dark:text-zinc-50">
-              Big Splits
-            </span>
-          </label>
-          <a
-            href="https://github.com/briank1727/hksplitanalyzer/blob/master/README.md#how-to-import-a-livesplit-file"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="About big splits"
-            className="flex h-4 w-4 items-center justify-center rounded-full border border-black/20 text-[10px] leading-none text-black/60 hover:bg-black/5 dark:border-white/25 dark:text-zinc-400 dark:hover:bg-white/10"
-          >
-            i
-          </a>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <label className="flex items-center gap-1.5">
-            <input
-              type="checkbox"
-              checked={manualSplits}
-              onChange={(e) => setManualSplits(e.target.checked)}
-              disabled={!imported}
-              className="rounded border border-black/10 dark:border-white/15"
-            />
-            <span className="text-sm text-black dark:text-zinc-50">
-              Manual Splits
-            </span>
-          </label>
-          <a
-            href="https://github.com/briank1727/hksplitanalyzer/blob/master/README.md#what-does-manual-splits-do"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="About manual splits"
-            className="flex h-4 w-4 items-center justify-center rounded-full border border-black/20 text-[10px] leading-none text-black/60 hover:bg-black/5 dark:border-white/25 dark:text-zinc-400 dark:hover:bg-white/10"
-          >
-            i
-          </a>
+            className="justify-self-center text-sm"
+          />
+          <span className="text-sm text-black dark:text-zinc-50">
+            Big Splits
+          </span>
+          <OptionSelect
+            label="Big Splits"
+            options={TOGGLE_OPTIONS}
+            value={bigSplits ? "enabled" : "disabled"}
+            onChange={(v) => setBigSplits(v === "enabled")}
+            disabled={!imported}
+            className="justify-self-center text-sm"
+          />
+          <span className="text-sm text-black dark:text-zinc-50">
+            Manual Splits
+          </span>
+          <OptionSelect
+            label="Manual Splits"
+            options={TOGGLE_OPTIONS}
+            value={manualSplits ? "enabled" : "disabled"}
+            onChange={(v) => setManualSplits(v === "enabled")}
+            disabled={!imported}
+            className="justify-self-center text-sm"
+          />
         </div>
         <Button size="sm" onClick={handleGenerate} disabled={!imported}>
           Generate Timelines
         </Button>
-      </div>
+      </Panel>
       {imported && importedFileName && (
-        <div className="rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-200">
-          Successfully imported {importedFileName}
-        </div>
+        <MessageBox
+          status="success"
+          message={`Successfully imported ${importedFileName}`}
+        />
       )}
       {importError && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
-          Import failed: {importError}
+        <MessageBox status="error" message={`Import failed: ${importError}`} />
+      )}
+      {(timeline1 || timeline2 || generateError) && (
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+          <Panel showEmbellishments>
+            <SplitsTable
+              timeline={timeline1}
+              setTimeline={setTimeline1}
+              error={generateError}
+              errorTitle="Timeline failed"
+            />
+          </Panel>
+          <Panel showEmbellishments>
+            <SplitsTable
+              timeline={timeline2}
+              setTimeline={setTimeline2}
+              error={generateError}
+              errorTitle="Timeline failed"
+            />
+          </Panel>
         </div>
       )}
-      <div className="flex flex-row">
-        <section className="flex-1 p-4 border-r border-black/10 dark:border-white/15">
-          <SplitsTable
-            timeline={timeline1}
-            setTimeline={setTimeline1}
-            error={generateError}
-            errorTitle="Timeline failed"
-          />
-        </section>
-        <section className="flex-1 p-4">
-          <SplitsTable
-            timeline={timeline2}
-            setTimeline={setTimeline2}
-            error={generateError}
-            errorTitle="Timeline failed"
-          />
-        </section>
-      </div>
     </div>
   );
 }

@@ -2,6 +2,8 @@
 
 import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import Button from "@/components/Button";
+import MessageBox from "@/components/MessageBox";
+import OptionSelect, { TOGGLE_OPTIONS } from "@/components/OptionSelect";
 import SplitsTable from "@/components/SplitsTable";
 import { import_lss } from "@/lib/import_lss";
 import { Comparison } from "@/lib/comparison";
@@ -10,6 +12,10 @@ import { formatTsDisplay, tsAdd, TS_ZERO, type Timespan } from "@/lib/timespan";
 import type { Timeline } from "@/lib/timeline";
 
 type ComparisonKey = keyof typeof Comparison;
+
+const COMPARISON_OPTIONS = (Object.keys(Comparison) as ComparisonKey[]).map(
+  (key) => ({ value: key, label: Comparison[key].name }),
+);
 
 export default function LiveSplitImporter({
   title,
@@ -97,89 +103,63 @@ export default function LiveSplitImporter({
 
   return (
     <>
-      <div className="h-80 overflow-hidden">
+      <div className="h-96 overflow-hidden text-center">
         <h2 className="mb-3 text-lg font-semibold tracking-tight text-black dark:text-zinc-50">
           {title}
         </h2>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center justify-center gap-2">
           <Button size="sm" onClick={handleImport}>
             Import LSS File
           </Button>
         </div>
         {imported && importedFileName && importedStats && (
-          <div className="mt-3 rounded-lg border border-green-200 bg-green-50 p-3 text-base text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-200">
-            <div>Successfully imported {importedFileName}</div>
-          </div>
+          <MessageBox
+            status="success"
+            message={`Successfully imported ${importedFileName}`}
+            className="mt-2"
+          />
         )}
         {importError && (
-          <div className="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 text-base text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
-            Import failed: {importError}
-          </div>
+          <MessageBox
+            status="error"
+            message={`Import failed: ${importError}`}
+            className="mt-2"
+          />
         )}
-        <div className="mt-4 flex flex-wrap items-center gap-2">
-          <label className="flex items-center gap-1.5 disabled:opacity-50 disabled:pointer-events-none">
-            <span className="text-base text-black dark:text-zinc-50">
-              Comparison
-            </span>
-            <select
-              value={choice}
-              onChange={(e) => setChoice(e.target.value as ComparisonKey)}
-              disabled={!imported}
-              className="h-9 rounded-full border border-black/10 bg-white px-3 text-base text-black disabled:opacity-50 disabled:pointer-events-none dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
-            >
-              {(Object.keys(Comparison) as ComparisonKey[]).map((key) => (
-                <option key={key} value={key}>
-                  {Comparison[key].name}
-                </option>
-              ))}
-            </select>
-          </label>
-          <div className="flex items-center gap-1.5">
-            <label className="flex items-center gap-1.5 disabled:opacity-50 disabled:pointer-events-none">
-              <input
-                type="checkbox"
-                checked={bigSplits}
-                onChange={(e) => setBigSplits(e.target.checked)}
-                disabled={!imported}
-                className="rounded border border-black/10 dark:border-white/15"
-              />
-              <span className="text-base text-black dark:text-zinc-50">
-                Big Splits
-              </span>
-            </label>
-            <a
-              href="https://github.com/briank1727/hksplitanalyzer/blob/master/README.md#how-to-import-a-livesplit-file"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="About big splits"
-              className="flex h-4 w-4 items-center justify-center rounded-full border border-black/20 text-[10px] leading-none text-black/60 hover:bg-black/5 dark:border-white/25 dark:text-zinc-400 dark:hover:bg-white/10"
-            >
-              i
-            </a>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <label className="flex items-center gap-1.5 disabled:opacity-50 disabled:pointer-events-none">
-              <input
-                type="checkbox"
-                checked={manualSplits}
-                onChange={(e) => setManualSplits(e.target.checked)}
-                disabled={!imported}
-                className="rounded border border-black/10 dark:border-white/15"
-              />
-              <span className="text-base text-black dark:text-zinc-50">
-                Manual Splits
-              </span>
-            </label>
-            <a
-              href="https://github.com/briank1727/hksplitanalyzer/blob/master/README.md#what-does-manual-splits-do"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="About manual splits"
-              className="flex h-4 w-4 items-center justify-center rounded-full border border-black/20 text-[10px] leading-none text-black/60 hover:bg-black/5 dark:border-white/25 dark:text-zinc-400 dark:hover:bg-white/10"
-            >
-              i
-            </a>
-          </div>
+        <div className="mt-4 grid grid-cols-[auto_auto] items-center justify-center gap-x-4 gap-y-2 text-left">
+          <span className="text-base text-black dark:text-zinc-50">
+            Comparison
+          </span>
+          <OptionSelect
+            label="Comparison"
+            options={COMPARISON_OPTIONS}
+            value={choice}
+            onChange={setChoice}
+            disabled={!imported}
+            className="justify-self-center"
+          />
+          <span className="text-base text-black dark:text-zinc-50">
+            Big Splits
+          </span>
+          <OptionSelect
+            label="Big Splits"
+            options={TOGGLE_OPTIONS}
+            value={bigSplits ? "enabled" : "disabled"}
+            onChange={(v) => setBigSplits(v === "enabled")}
+            disabled={!imported}
+            className="justify-self-center"
+          />
+          <span className="text-base text-black dark:text-zinc-50">
+            Manual Splits
+          </span>
+          <OptionSelect
+            label="Manual Splits"
+            options={TOGGLE_OPTIONS}
+            value={manualSplits ? "enabled" : "disabled"}
+            onChange={(v) => setManualSplits(v === "enabled")}
+            disabled={!imported}
+            className="justify-self-center"
+          />
         </div>
         <div className="mt-3 flex justify-center">
           <Button size="sm" onClick={handleGenerate} disabled={!imported}>
@@ -187,15 +167,20 @@ export default function LiveSplitImporter({
           </Button>
         </div>
         {generated && generatedStats && (
-          <div className="mt-3 rounded-lg border border-green-200 bg-green-50 p-3 text-base text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-200">
-            <div>
-              Timeline generated successfully ({generatedStats.numSplits} split
-              {generatedStats.numSplits === 1 ? "" : "s"}
-              {generatedStats.totalTime !== null &&
-                `, total time: ${formatTsDisplay(generatedStats.totalTime)}`}
-              )
-            </div>
-          </div>
+          <MessageBox
+            status="success"
+            message={
+              <>
+                Timeline generated successfully ({generatedStats.numSplits}{" "}
+                split
+                {generatedStats.numSplits === 1 ? "" : "s"}
+                {generatedStats.totalTime !== null &&
+                  `, total time: ${formatTsDisplay(generatedStats.totalTime)}`}
+                )
+              </>
+            }
+            className="mt-2"
+          />
         )}
       </div>
       <SplitsTable

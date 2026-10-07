@@ -5,7 +5,13 @@ import type { Dispatch, SetStateAction } from "react";
 import type { Timeline, TimelineSegment } from "@/lib/timeline";
 import type { Timespan } from "@/lib/timespan";
 import { TS_ZERO, formatTsDisplay, tsAdd } from "@/lib/timespan";
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import Button from "@/components/Button";
+import MessageBox from "@/components/MessageBox";
+import Panel, {
+  NESTED_PANEL_COLOR,
+  POPUP_PANEL_COLOR,
+} from "@/components/Panel";
 
 function parseGameTime(input: string): Timespan | null {
   const trimmed = input.trim();
@@ -27,7 +33,7 @@ const INPUT_BASE =
   "w-full bg-transparent outline-none border border-zinc-700/50 rounded px-1 -mx-1 " +
   "hover:border-zinc-500 hover:bg-zinc-800/50 focus:border-zinc-400 focus:bg-zinc-800 transition-colors cursor-text";
 
-const GRID = "grid grid-cols-[1fr_1fr_6rem_6rem_2rem] gap-x-3 px-2";
+const GRID = "grid grid-cols-[2rem_1fr_1fr_6rem_6rem_2rem] gap-x-3 px-2";
 
 type SegmentRowProps = {
   seg: TimelineSegment;
@@ -54,7 +60,9 @@ function SegmentRow({
 }: SegmentRowProps) {
   const [nameDraft, setNameDraft] = useState(seg.name);
   const [autoSplitDraft, setAutoSplitDraft] = useState(seg.auto_split_name);
-  const [gameTimeDraft, setGameTimeDraft] = useState(formatTsDisplay(seg.game_time));
+  const [gameTimeDraft, setGameTimeDraft] = useState(
+    formatTsDisplay(seg.game_time),
+  );
   const [gameTimeInvalid, setGameTimeInvalid] = useState(false);
 
   const nameRef = useRef<HTMLInputElement>(null);
@@ -75,7 +83,8 @@ function SegmentRow({
   // Skip whichever field currently has focus so in-progress typing is never clobbered.
   useEffect(() => {
     if (document.activeElement !== nameRef.current) setNameDraft(seg.name);
-    if (document.activeElement !== autoSplitRef.current) setAutoSplitDraft(seg.auto_split_name);
+    if (document.activeElement !== autoSplitRef.current)
+      setAutoSplitDraft(seg.auto_split_name);
     if (document.activeElement !== gameTimeRef.current) {
       setGameTimeDraft(formatTsDisplay(seg.game_time));
       setGameTimeInvalid(false);
@@ -119,6 +128,9 @@ function SegmentRow({
 
   return (
     <div className={`${GRID} py-1 border-b border-white/5 last:border-b-0`}>
+      <div className="text-right tabular-nums text-zinc-500 self-center">
+        {index + 1}
+      </div>
       <input
         ref={nameRef}
         type="text"
@@ -170,28 +182,45 @@ function SegmentRow({
           <MoreVertIcon fontSize="small" />
         </button>
         {isMenuOpen && (
-          <div className={`absolute right-0 z-50 min-w-[160px] rounded border border-zinc-700 bg-zinc-800 shadow-lg py-1 ${
-            menuDirection === "up" ? "bottom-full mb-1" : "top-full mt-1"
-          }`}>
-            <button
-              className="w-full text-left px-3 py-1.5 text-sm text-zinc-100 hover:bg-zinc-700 transition-colors"
+          <Panel
+            color={POPUP_PANEL_COLOR}
+            fadeBorder={false}
+            // Panel positions its outer element, so placement goes through `style`.
+            style={{
+              position: "absolute",
+              right: 0,
+              zIndex: 50,
+              // Size to the widest button rather than the narrow cell it hangs off.
+              width: "max-content",
+              ...(menuDirection === "up"
+                ? { bottom: "100%", marginBottom: 4 }
+                : { top: "100%", marginTop: 4 }),
+            }}
+            // Stack the buttons with a little breathing room instead of Panel's default padding.
+            className="flex flex-col px-1! py-1!"
+          >
+            <Button
+              size="xs"
+              className="w-full whitespace-nowrap"
               onClick={onDeleteRow}
             >
               Delete Row
-            </button>
-            <button
-              className="w-full text-left px-3 py-1.5 text-sm text-zinc-100 hover:bg-zinc-700 transition-colors"
+            </Button>
+            <Button
+              size="xs"
+              className="w-full whitespace-nowrap"
               onClick={onInsertAbove}
             >
               Insert Row Above
-            </button>
-            <button
-              className="w-full text-left px-3 py-1.5 text-sm text-zinc-100 hover:bg-zinc-700 transition-colors"
+            </Button>
+            <Button
+              size="xs"
+              className="w-full whitespace-nowrap"
               onClick={onInsertBelow}
             >
               Insert Row Below
-            </button>
-          </div>
+            </Button>
+          </Panel>
         )}
       </div>
     </div>
@@ -231,7 +260,11 @@ export default function SplitsTable({
   function insertRowAbove(index: number) {
     setTimeline((prev) => {
       if (!prev) return prev;
-      const newSeg = { name: "Split Name", auto_split_name: "AutoSplitName", game_time: TS_ZERO };
+      const newSeg = {
+        name: "Split Name",
+        auto_split_name: "AutoSplitName",
+        game_time: TS_ZERO,
+      };
       const segments = [...prev.segments];
       segments.splice(index, 0, newSeg);
       return { ...prev, segments };
@@ -241,7 +274,11 @@ export default function SplitsTable({
   function insertRowBelow(index: number) {
     setTimeline((prev) => {
       if (!prev) return prev;
-      const newSeg = { name: "Split Name", auto_split_name: "AutoSplitName", game_time: TS_ZERO };
+      const newSeg = {
+        name: "Split Name",
+        auto_split_name: "AutoSplitName",
+        game_time: TS_ZERO,
+      };
       const segments = [...prev.segments];
       segments.splice(index + 1, 0, newSeg);
       return { ...prev, segments };
@@ -250,13 +287,16 @@ export default function SplitsTable({
 
   if (error) {
     return (
-      <div
-        role="alert"
-        className="mt-4 text-sm rounded p-3 border border-red-500/40 bg-red-500/10 text-red-700 dark:text-red-300"
-      >
-        <div className="font-semibold">{errorTitle}</div>
-        <div className="mt-1 break-words">{error}</div>
-      </div>
+      <MessageBox
+        status="error"
+        message={
+          <>
+            <div className="font-semibold">{errorTitle}</div>
+            <div className="mt-1 break-words">{error}</div>
+          </>
+        }
+        className="mt-2"
+      />
     );
   }
   if (!timeline) return null;
@@ -269,31 +309,47 @@ export default function SplitsTable({
   }
 
   return (
-    <div className="mt-3 max-h-[60vh] overflow-auto rounded bg-gray-900 text-zinc-100 text-base">
-      <div className={`${GRID} py-1.5 border-b border-white/10 font-semibold text-zinc-300`}>
-        <div>Name</div>
-        <div>Auto Split</div>
-        <div className="text-right">Segment</div>
-        <div className="text-right">Time</div>
-        <div />
-      </div>
-      {timeline.segments.map((seg, i) => (
-        <SegmentRow
-          key={i}
-          seg={seg}
-          index={i}
-          cumTime={times[i]}
-          setTimeline={setTimeline}
-          isMenuOpen={openMenuIndex === i}
-          onMenuToggle={(e) => {
-            e.stopPropagation();
-            setOpenMenuIndex(openMenuIndex === i ? null : i);
-          }}
-          onDeleteRow={() => { deleteRow(i); setOpenMenuIndex(null); }}
-          onInsertAbove={() => { insertRowAbove(i); setOpenMenuIndex(null); }}
-          onInsertBelow={() => { insertRowBelow(i); setOpenMenuIndex(null); }}
-        />
-      ))}
+    <div className="mt-2">
+      <Panel color={NESTED_PANEL_COLOR} className="text-zinc-100 text-base">
+        <div className="max-h-[60vh] overflow-auto">
+          <div
+            className={`${GRID} py-1.5 border-b border-white/10 font-semibold text-zinc-300`}
+          >
+            <div className="text-right">#</div>
+            <div>Name</div>
+            <div>Auto Split</div>
+            <div className="text-right">Segment</div>
+            <div className="text-right">Time</div>
+            <div />
+          </div>
+          {timeline.segments.map((seg, i) => (
+            <SegmentRow
+              key={i}
+              seg={seg}
+              index={i}
+              cumTime={times[i]}
+              setTimeline={setTimeline}
+              isMenuOpen={openMenuIndex === i}
+              onMenuToggle={(e) => {
+                e.stopPropagation();
+                setOpenMenuIndex(openMenuIndex === i ? null : i);
+              }}
+              onDeleteRow={() => {
+                deleteRow(i);
+                setOpenMenuIndex(null);
+              }}
+              onInsertAbove={() => {
+                insertRowAbove(i);
+                setOpenMenuIndex(null);
+              }}
+              onInsertBelow={() => {
+                insertRowBelow(i);
+                setOpenMenuIndex(null);
+              }}
+            />
+          ))}
+        </div>
+      </Panel>
     </div>
   );
 }

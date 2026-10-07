@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { PieChart, Pie, Tooltip } from "recharts";
+import Panel, { POPUP_PANEL_COLOR } from "@/components/Panel";
 import { formatTsDisplay, ticksToTs } from "@/lib/timespan";
 
 export type SplitPieSlice = {
@@ -34,41 +35,55 @@ function CustomTooltip({
   if (!active || !payload || payload.length === 0) return null;
   const slice = payload[0].payload;
   return (
-    <div className="rounded border border-black/10 bg-white px-3 py-2 text-sm shadow dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50">
+    <Panel
+      color={POPUP_PANEL_COLOR}
+      fadeBorder={false}
+      className="px-3! py-2! text-sm text-zinc-50"
+    >
       <div className="font-semibold">{slice.name}</div>
       <div className="tabular-nums">
         {valueLabel}: {formatValue(slice.time)}
       </div>
       <div className="tabular-nums">{slice.percent.toFixed(2)}%</div>
-    </div>
+    </Panel>
   );
 }
 
 export default function SplitPieChart({
   slices,
-  height = 400,
+  height,
   valueLabel = "Time",
   formatValue = defaultFormatValue,
 }: {
   slices: SplitPieSlice[];
+  // Fixed height in px; omit to fill the parent's height.
   height?: number;
   valueLabel?: string;
   formatValue?: (v: number) => string;
 }) {
   const chartRef = useRef<HTMLDivElement>(null);
-  const [chartWidth, setChartWidth] = useState(0);
+  const [chartSize, setChartSize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     const el = chartRef.current;
     if (!el) return;
-    setChartWidth(el.getBoundingClientRect().width);
+    const rect = el.getBoundingClientRect();
+    setChartSize({ width: rect.width, height: rect.height });
     const observer = new ResizeObserver((entries) => {
       const entry = entries[0];
-      if (entry) setChartWidth(entry.contentRect.width);
+      if (entry) {
+        setChartSize({
+          width: entry.contentRect.width,
+          height: entry.contentRect.height,
+        });
+      }
     });
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
+
+  // With no fixed height the chart fills its container's height instead.
+  const chartHeight = height ?? chartSize.height;
 
   const data = useMemo<SliceDatum[]>(() => {
     const total = slices.reduce((sum, s) => sum + s.time, 0);
@@ -80,10 +95,13 @@ export default function SplitPieChart({
   }, [slices]);
 
   return (
-    <div className="flex gap-4" style={{ height }}>
+    <div
+      className={`flex gap-4 ${height === undefined ? "h-full" : ""}`}
+      style={height === undefined ? undefined : { height }}
+    >
       <div ref={chartRef} className="flex-1 min-w-0">
-        {chartWidth > 0 && (
-          <PieChart width={chartWidth} height={height}>
+        {chartSize.width > 0 && chartHeight > 0 && (
+          <PieChart width={chartSize.width} height={chartHeight}>
             <Pie
               data={data}
               dataKey="time"
@@ -109,7 +127,7 @@ export default function SplitPieChart({
           </PieChart>
         )}
       </div>
-      <ul className="w-48 shrink-0 overflow-y-auto text-sm text-black dark:text-zinc-50 space-y-1 pr-1">
+      <ul className="w-48 shrink-0 overflow-y-auto text-sm text-zinc-50 space-y-1 pr-1">
         {data
           .filter((entry) => entry.percent > 0)
           .map((entry, i) => (
